@@ -1,0 +1,62 @@
+# Publishes the site to GitHub Pages with fresh content from my Notion databases.
+# The quotes, monthly faves and cooking menu are never stored in the repo: each deploy runs
+# `npm run sync` with the Notion token kept in repository secrets, and publishes the result.
+#
+# Runs when I push, after the Substack sync adds a post, every hour (to pick up Notion edits),
+# and on demand from the Actions tab: "Deploy site" > "Run workflow".
+# If Notion can't be read, the deploy stops and the last published site stays up.
+name: Deploy site
+
+on:
+  push:
+    branches: [main]
+  workflow_run:
+    workflows: [Sync Substack]
+    types: [completed]
+  schedule:
+    - cron: '7 * * * *'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+
+      - name: Pull content from Notion
+        run: npm run sync
+        env:
+          NOTION_TOKEN: ${{ secrets.NOTION_TOKEN }}
+          NOTION_QUOTES_DB: ${{ secrets.NOTION_QUOTES_DB }}
+          NOTION_FAVES_DB: ${{ secrets.NOTION_FAVES_DB }}
+          NOTION_COOKING_DB: ${{ secrets.NOTION_COOKING_DB }}
+
+      - name: Gather the published files
+        run: |
+          mkdir _site
+          cp -R index.html posts.json media data assets _site/
+
+      - uses: actions/configure-pages@v5
+
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: _site
+
+      - id: deployment
+        uses: actions/deploy-pages@v4

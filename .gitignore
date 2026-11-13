@@ -1,0 +1,17 @@
+# secrets: the Notion token lives here and must never be committed
+.env
+
+# macOS folder files
+.DS_Store
+
+# local preview tools (not part of the published site)
+.claude/
+preview/
+node_modules/
+
+# leftovers from an interrupted sync
+*.part
+
+# made from Notion on every deploy (see .github/workflows/deploy.yml), never committed
+data/
+assets/notion/

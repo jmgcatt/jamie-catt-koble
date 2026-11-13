@@ -1,0 +1,12 @@
+{
+  "name": "jamie-and-teos-house",
+  "private": true,
+  "type": "module",
+  "description": "My illustrated tiny-house portfolio. Content comes from Notion and Substack.",
+  "scripts": {
+    "sync": "node scripts/sync-notion.js"
+  },
+  "engines": {
+    "node": ">=18"
+  }
+}

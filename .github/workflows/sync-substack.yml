@@ -1,0 +1,45 @@
+# Checks my Substack every 30 minutes and adds any new post to the journal,
+# with full-resolution photos and videos. When it finishes, "Deploy site"
+# (deploy.yml) republishes GitHub Pages, so the site updates on its own.
+# Run it right away from the repo's Actions tab: "Sync Substack" > "Run workflow".
+name: Sync Substack
+
+on:
+  schedule:
+    - cron: '*/30 * * * *'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: sync-substack
+  cancel-in-progress: false
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Install Pillow (for full-resolution image handling)
+        run: pip install pillow
+
+      - name: Add new posts
+        run: python scripts/sync-substack.py
+
+      - name: Commit new posts
+        run: |
+          git add posts.json media/posts
+          if git diff --cached --quiet; then
+            echo "No new posts."
+            exit 0
+          fi
+          git config user.name "journal-sync"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git commit -m "Add new Substack post to the journal"
+          git push
