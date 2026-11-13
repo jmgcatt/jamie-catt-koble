@@ -30,14 +30,7 @@ If Notion can't be read (wrong token, database not shared), the deploy stops and
 
 2. **Share the databases with the connection.** Open the "Jamie Catt-Koble" page, click **•••** (top right) → **Connections** → **Connect to** → choose "Website sync". That covers all three databases inside it.
 
-3. **Add the secrets to GitHub.** In the repo: **Settings** → **Secrets and variables** → **Actions** → **New repository secret**. Add these four:
-
-   | Name | Value |
-   |---|---|
-   | `NOTION_TOKEN` | the token from step 1 |
-   | `NOTION_QUOTES_DB` | `4176e7463165808cb1ebc88caf971a90` |
-   | `NOTION_FAVES_DB` | `4176e7463165806284c9e8ea8825805c` |
-   | `NOTION_COOKING_DB` | `4176e7463165803aa174eaf587d2b804` |
+3. **Add the token to GitHub.** In the repo: **Settings** → **Secrets and variables** → **Actions** → **New repository secret**. Name it `NOTION_TOKEN` and paste the token from step 1. The three database IDs are already in `.github/workflows/deploy.yml`; add `NOTION_QUOTES_DB`, `NOTION_FAVES_DB` or `NOTION_COOKING_DB` secrets only if a database ever moves.
 
 4. **Let Actions publish the site.** **Settings** → **Pages** → under **Build and deployment**, set **Source** to **GitHub Actions**.
 

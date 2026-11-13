@@ -43,9 +43,10 @@ jobs:
         run: npm run sync
         env:
           NOTION_TOKEN: ${{ secrets.NOTION_TOKEN }}
-          NOTION_QUOTES_DB: ${{ secrets.NOTION_QUOTES_DB }}
-          NOTION_FAVES_DB: ${{ secrets.NOTION_FAVES_DB }}
-          NOTION_COOKING_DB: ${{ secrets.NOTION_COOKING_DB }}
+          # the database ids aren't private (they're in .env.example); a secret of the same name overrides them
+          NOTION_QUOTES_DB: ${{ secrets.NOTION_QUOTES_DB || '4176e7463165808cb1ebc88caf971a90' }}
+          NOTION_FAVES_DB: ${{ secrets.NOTION_FAVES_DB || '4176e7463165806284c9e8ea8825805c' }}
+          NOTION_COOKING_DB: ${{ secrets.NOTION_COOKING_DB || '4176e7463165803aa174eaf587d2b804' }}
 
       - name: Gather the published files
         run: |
