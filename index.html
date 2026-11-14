@@ -2529,7 +2529,7 @@ function buildAudio() {
   const ctx = sound.ctx = new AC();
   sound.master = ctx.createGain(); sound.master.gain.value = 0;
   // everything runs through a warm, slightly dull 'tape' filter and a small room
-  const tape = ctx.createBiquadFilter(); tape.type = 'lowpass'; tape.frequency.value = 3000; tape.Q.value = .4;
+  const tape = sound.tape = ctx.createBiquadFilter(); tape.type = 'lowpass'; tape.frequency.value = sound.album === 'christmas' ? 10000 : 3000; tape.Q.value = .4;
   const dry = ctx.createGain(), wet = ctx.createGain(), d1 = ctx.createDelay(), fb = ctx.createGain();
   d1.delayTime.value = .34; fb.gain.value = .25; wet.gain.value = .22;
   sound.master.connect(tape); tape.connect(dry); dry.connect(ctx.destination);
@@ -2560,14 +2560,14 @@ function hat(t, v) {
   n.connect(f); f.connect(g); g.connect(sound.drums); n.start(t, Math.random()); n.stop(t + .08);
 }
 // warm electric-piano chord
-function keys(notes, t, dur) {
+function keys(notes, t, dur, vol = .05) {
   const ctx = sound.ctx;
   notes.forEach((m, k) => {
     const o = ctx.createOscillator(), o2 = ctx.createOscillator(), g = ctx.createGain(), f = ctx.createBiquadFilter();
     o.type = 'sine'; o2.type = 'triangle'; o.frequency.value = hz(m); o2.frequency.value = hz(m) * 2;
     sound.wobG.connect(o.detune); sound.wobG.connect(o2.detune);
     f.type = 'lowpass'; f.frequency.value = 1300;
-    const s0 = t + k * .025; g.gain.setValueAtTime(0, s0); g.gain.linearRampToValueAtTime(.05, s0 + .02); g.gain.exponentialRampToValueAtTime(.004, s0 + dur);
+    const s0 = t + k * .025; g.gain.setValueAtTime(0, s0); g.gain.linearRampToValueAtTime(vol, s0 + .02); g.gain.exponentialRampToValueAtTime(.004, s0 + dur);
     const g2 = ctx.createGain(); g2.gain.value = .25; o2.connect(g2); g2.connect(f); o.connect(f); f.connect(g); g.connect(sound.notes);
     o.start(s0); o2.start(s0); o.stop(s0 + dur + .1); o2.stop(s0 + dur + .1);
     o.onended = () => { try { sound.wobG.disconnect(o.detune); sound.wobG.disconnect(o2.detune); } catch (e) { } };
@@ -2611,7 +2611,7 @@ function chime(t) {
 // celesta: a bell-bright music-box note
 function celesta(m, t) {
   const ctx = sound.ctx;
-  [[1, .05, 1.8], [4, .012, .5], [2.01, .02, 1]].forEach(([r, peak, dec]) => { const o = ctx.createOscillator(), g = ctx.createGain(); o.frequency.value = hz(m) * r; env(g, t, peak, .003, dec); o.connect(g); g.connect(sound.notes); o.start(t); o.stop(t + dec + .1); });
+  [[1, .12, 2.2], [4, .03, .6], [2.01, .05, 1.2], [3.01, .015, .5]].forEach(([r, peak, dec]) => { const o = ctx.createOscillator(), g = ctx.createGain(); o.frequency.value = hz(m) * r; env(g, t, peak, .003, dec); o.connect(g); g.connect(sound.notes); o.start(t); o.stop(t + dec + .1); });
 }
 // sleigh bells: a soft little jingle of high, shimmering noise
 function sleigh(t, v) {
@@ -2649,14 +2649,13 @@ function schedule() {
   if (!nextChime) nextChime = now + 14;
   while (sound.next < now + .6) {
     const t = sound.next + (step % 2 ? sixteenth * .18 : 0), s16 = step % 16;
-    if (s16 === 0 || s16 === 10) kick(t);
-    if (s16 === 4 || s16 === 12) snare(t);
-    if (xmas) { if (s16 % 2 === 0) sleigh(t, s16 % 4 === 0 ? .035 : .022); }
+    if (!xmas) { if (s16 === 0 || s16 === 10) kick(t); if (s16 === 4 || s16 === 12) snare(t); }
+    if (xmas) { sleigh(t, s16 % 4 === 0 ? .07 : s16 % 2 === 0 ? .045 : .02); if (s16 === 4 || s16 === 12) hat(t, .03); }
     else if (s16 % 2 === 0) hat(t, s16 % 4 === 0 ? .03 : .018); else if (Math.random() < .25) hat(t, .01);
     if (xmas) {
       const pos = step % 256, note = XMAS_TUNE.get(pos);
-      if (s16 === 0) keys(XMAS_BARS[pos >> 4], t, 3.2);
-      if (note) { celesta(note, t); celesta(note - 12, t + .004); }
+      if (s16 === 0) keys(XMAS_BARS[pos >> 4], t, 3.2, .03);
+      if (note) { celesta(note + 12, t); celesta(note, t + .004); }
     } else if (s16 === 0) keys(chords[Math.floor(step / 16) % 4], t, 3.4);
     if (!xmas && s16 % 4 === 2 && Math.random() < .45) {
       lastNote = Math.max(0, Math.min(melody.length - 1, lastNote + [-2, -1, 1, 1, 2][Math.floor(Math.random() * 5)]));
@@ -2764,6 +2763,7 @@ function playAlbum(id) {
   const nm = sheet.querySelector('.tt-name'); if (nm) nm.textContent = a.name;
   // start the new album at the top of its tune
   if (sound.on) { step = 0; sound.next = Math.max(sound.next, sound.ctx.currentTime + .05); }
+  if (sound.tape) sound.tape.frequency.setTargetAtTime(id === 'christmas' ? 10000 : 3000, sound.ctx.currentTime, .2);
   sheet.querySelectorAll('.sleeve').forEach(b => b.setAttribute('aria-pressed', b.dataset.album === id));
   sound.muted = false; if (!sound.vol) sound.vol = .4;
   sound.on ? applyVolume() : startSound();
