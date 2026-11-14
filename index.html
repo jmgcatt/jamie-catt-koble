@@ -660,8 +660,20 @@ blockquote{margin:0 0 28px;padding:0;font-family:var(--f-hand);font-size:30px;li
   .ticket-wrap{max-height:calc(100vh - 32px);max-height:calc(100dvh - 32px);overflow-y:auto}
 }
 @media (max-width:1100px) and (orientation:portrait){
-  .scroller{bottom:calc(92px + env(safe-area-inset-bottom,0px))}
-  .navbar{position:fixed;inset:auto 0 0;z-index:6;display:grid;gap:6px;padding:8px max(12px,env(safe-area-inset-right,0px)) calc(8px + env(safe-area-inset-bottom,0px)) max(12px,env(safe-area-inset-left,0px));background:var(--paper);border-top:1.5px solid var(--ink)}
+  /* the house fills the whole screen; the bar floats over it, with a soft dark fade at the top and bottom so the white controls read */
+  .scroller{bottom:0}
+  .scroller::before,.scroller::after{content:"";position:absolute;left:0;right:0;z-index:3;pointer-events:none}
+  .scroller::before{top:0;height:calc(130px + env(safe-area-inset-top,0px));background:linear-gradient(rgba(34,24,18,.62),rgba(34,24,18,.28) 50%,rgba(34,24,18,0))}
+  .scroller::after{bottom:0;height:calc(150px + env(safe-area-inset-bottom,0px));background:linear-gradient(rgba(34,24,18,0),rgba(34,24,18,.32) 45%,rgba(34,24,18,.66))}
+  .navbar{position:fixed;inset:auto 0 0;z-index:6;display:grid;gap:6px;padding:8px max(12px,env(safe-area-inset-right,0px)) calc(8px + env(safe-area-inset-bottom,0px)) max(12px,env(safe-area-inset-left,0px));background:none;border:0;color:#fffaf0}
+  .top,.top .mark h1,.top .mark p{color:#fffaf0}
+  .navbar .nav-name{color:#fffaf0}
+  .navbar .dots i{border-color:#fffaf0}
+  .navbar .dots i.on{background:#fffaf0}
+  .menu-btn,.stub-btn,.navbar .sound{background:none;border-color:#fffaf0;color:#fffaf0}
+  .navbar .snd-btn{color:#fffaf0}
+  .stub-btn .stub-fill{fill:none}
+  .top .mark h1,.navbar .nav-name{text-shadow:0 1px 6px rgba(34,24,18,.35)}
   .edge-tab{display:none!important}
   .ticket-wrap{inset:12px 0 calc(var(--nav-h,92px) + 10px);max-height:calc(100vh - var(--nav-h,92px) - 22px);max-height:calc(100dvh - var(--nav-h,92px) - 22px);overflow-y:auto;overscroll-behavior:contain}
 }
@@ -714,7 +726,7 @@ blockquote{margin:0 0 28px;padding:0;font-family:var(--f-hand);font-size:30px;li
         <input type="range" id="sndVol" min="0" max="1" step="0.05" value="0.4" aria-label="Music volume">
       </div>
       <button class="stub-btn" id="stubBtn" type="button" aria-label="Your ephemera: no keepsakes yet" aria-controls="tDrawer" aria-expanded="false">
-        <svg viewBox="0 0 30 30" aria-hidden="true"><g fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"><path d="M4.5 9.2 H25.5 V12.6 Q23 13.2 23 15 Q23 16.8 25.5 17.4 V20.8 H4.5 V17.4 Q7 16.8 7 15 Q7 13.2 4.5 12.6 Z" fill="#fffaf0"/><path d="M17.6 9.6 V20.4" stroke-dasharray="1.6 2"/><path d="M8.6 13.4 H14.6 M8.6 16.6 H13" stroke-width="1.3"/></g></svg>
+        <svg viewBox="0 0 30 30" aria-hidden="true"><g fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"><path d="M4.5 9.2 H25.5 V12.6 Q23 13.2 23 15 Q23 16.8 25.5 17.4 V20.8 H4.5 V17.4 Q7 16.8 7 15 Q7 13.2 4.5 12.6 Z" class="stub-fill" fill="#fffaf0"/><path d="M17.6 9.6 V20.4" stroke-dasharray="1.6 2"/><path d="M8.6 13.4 H14.6 M8.6 16.6 H13" stroke-width="1.3"/></g></svg>
         <span class="badge" id="stubCount" hidden>0</span>
       </button>
       <div class="menu">
