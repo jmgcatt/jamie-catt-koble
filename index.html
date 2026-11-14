@@ -484,6 +484,9 @@ body.playing .turntable .arm{transform:none}
 .ghost .jb-face::after{display:none}
 .jb-pages.can-fwd .jb-view{cursor:e-resize}
 .jb-pages.can-back:not(.can-fwd) .jb-view{cursor:w-resize}
+.jb-toc-btn{position:absolute;top:8px;right:8px;z-index:5;display:grid;place-items:center;width:44px;height:44px;padding:0;background:none;border:0;color:var(--ink);cursor:pointer}
+.jb-toc-btn svg{width:26px;height:26px;filter:url(#ink)}
+.jb-toc-btn:hover{color:var(--link)}
 .jb-toc{list-style:none;margin:0;padding:0}
 .jb-toc li{break-inside:avoid}
 .jb-toc button{display:flex;justify-content:space-between;align-items:baseline;gap:14px;width:100%;padding:10px 0 12px;text-align:left;background:url("data:image/svg+xml,%3Csvg%20xmlns=%27http://www.w3.org/2000/svg%27%20viewBox=%270%200%20400%208%27%20preserveAspectRatio=%27none%27%3E%3Cpath%20d=%27M1,4%20C40,2.6%2090,5.2%20140,3.8%20S240,2.4%20290,4.4%20S370,5%20399,3.2%27%20fill=%27none%27%20stroke=%27%2376614f%27%20stroke-width=%271.5%27%20stroke-linecap=%27round%27%20opacity=%27.55%27%20vector-effect=%27non-scaling-stroke%27/%3E%3C/svg%3E") left bottom/100% 7px no-repeat;border:0;color:var(--ink);cursor:pointer}
@@ -1935,13 +1938,20 @@ function openPost(i) {
     .replace(/<video controls playsinline preload="metadata"/g, '<video autoplay muted loop playsinline preload="auto"');
   openBook(`<p class="jb-date">${esc(p.date)}</p><h2 id="sheetTitle" tabindex="-1">${esc(p.title)}</h2>${text}
       <p class="jb-end"><button class="btn-plain" type="button" data-journal>Back to the contents</button></p>`, false);
+  book.post = i;
+}
+// the entry after this one (the contents page leads to the first entry); null at the end of the journal
+function nextEntry() {
+  if (!book || postsState !== 'ready') return null;
+  const i = book.toc ? 0 : book.post == null ? null : book.post + 1;
+  return i != null && i < POSTS.length ? i : null;
 }
 // the notebook: pages turn by clicking the right or left page (or swiping, or the arrow keys)
 function openBook(html, toc) {
   openSheet(`<div class="jbook" id="jbook"><div class="jb-pages" id="jbPages" aria-label="Click the right page to turn forward, the left page to turn back">
     <div class="jb-page jb-l"></div><div class="jb-page jb-r"></div>
     <div class="jb-view"><article class="post jb-flow" id="jbFlow">${html}${toc ? '<p class="jb-end"></p>' : ''}</article></div>
-    <span class="jb-no jb-no-l" aria-hidden="true"></span><span class="jb-no jb-no-r" aria-live="polite"></span></div></div>`, false, null);
+    <span class="jb-no jb-no-l" aria-hidden="true"></span><span class="jb-no jb-no-r" aria-live="polite"></span>${toc ? '' : `<button class="jb-toc-btn" type="button" data-journal aria-label="Back to the contents"><svg viewBox="0 0 30 30" aria-hidden="true"><g fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M10.5 8.6 Q16 7.8 24.6 8.4"/><path d="M10.4 15.2 Q17 14.6 24.2 15.4"/><path d="M10.6 21.6 Q15.6 21.1 21.8 21.8"/></g><g fill="currentColor"><circle cx="5.6" cy="8.5" r="1.7"/><circle cx="5.4" cy="15.2" r="1.7"/><circle cx="5.7" cy="21.6" r="1.7"/></g></svg></button>`}</div></div>`, false, null);
   sheet.classList.add('book');
   book = { at: 0, busy: false, toc };
   layoutBook();
@@ -1992,6 +2002,11 @@ function bookFace(k, cls) {
 async function turnPage(dir) {
   if (!book || book.busy) return;
   const { P, spread } = book, step = spread ? 2 : 1, from = book.at, to = from + dir * step;
+  if (dir > 0 && to > book.n - 1) {
+    const nx = nextEntry(); if (nx == null) return;
+    if (!spread && CURL_OK && !reduceMotion.matches) return curlTurn(1);
+    return openPost(nx);
+  }
   if (to < 0 || to > book.n - 1) return;
     if (reduceMotion.matches) { book.at = to; return showBook(); }
   if (!spread && CURL_OK) return curlTurn(dir);
@@ -2067,11 +2082,11 @@ function foldBand(parent, cls) { const b = document.createElement('i'); b.classN
 function placeBand(b, M, ang, len, grad) {
   Object.assign(b.style, { left: M[0] + 'px', top: M[1] + 'px', width: Math.max(1, len) + 'px', transform: `rotate(${ang}rad) translateY(-50%)`, background: grad });
 }
-function makeCurl(turning) {
+function makeCurl(turning, face) {
   const { P, H } = book, pages = $('#jbPages');
   const c = document.createElement('div'); c.className = 'jb-curl';
   const under = document.createElement('div'); under.className = 'jc-under';
-  const top = bookFace(turning, 'jc-top');
+  const top = face || bookFace(turning, 'jc-top');
   const lift = document.createElement('div'); lift.className = 'jc-lift';
   const flap = document.createElement('div'); flap.className = 'jc-flap';
   lift.appendChild(flap); c.append(under, top, lift); pages.insertBefore(c, $('.jb-no-l'));
@@ -2116,6 +2131,7 @@ function makeCurl(turning) {
 // start a turn: forward lifts the current page off the next one; back brings the previous page over from the spine
 function curlStart(dir, y) {
   const { P, H } = book, from = book.at, to = from + dir;
+  if (dir > 0 && to > book.n - 1) return entryCurl(y);
   if (to < 0 || to > book.n - 1) return null;
     book.busy = true;
   if (dir > 0) { book.at = to; showBook(); }
@@ -2126,10 +2142,29 @@ function curlStart(dir, y) {
   cu.set(dir > 0 ? [P, cu.cy] : [-P, cu.cy]);
   return cu;
 }
+// the last page of an entry turns over onto the first page of the next one: the next entry opens underneath
+// and the old last page curls away on top of it
+function entryCurl(y) {
+  const nx = nextEntry(); if (nx == null) return null;
+  const face = bookFace(book.at, 'jc-top'), back = { post: book.toc ? null : book.post, at: book.at };
+  openPost(nx);
+  const { P, H } = book;
+  book.busy = true;
+  const cu = makeCurl(0, face);
+  cu.cy = y != null && y < H * .4 ? 0 : H;
+  cu.dir = 1; cu.from = 0; cu.to = 0; cu.back = back;
+  cu.set([P, cu.cy]);
+  return cu;
+}
 async function curlEnd(cu, done) {
   const { P } = book, end = done ? (cu.dir > 0 ? [-P, cu.cy] : [P, cu.cy]) : (cu.dir > 0 ? [P, cu.cy] : [-P, cu.cy]);
   const dist = Math.hypot(end[0] - cu.F[0], end[1] - cu.F[1]);
   await cu.tween(end, Math.max(180, Math.min(520, dist * 1.1)), 0);
+  if (cu.back && !done) {
+    // let go before it turned: back to the last page of the entry you were reading
+    const b = cu.back; if (b.post == null) openWriting(); else openPost(b.post);
+    book.at = b.at; layoutBook(); return;
+  }
   if (done) book.at = cu.to; else book.at = cu.from;
   showBook(); cu.el.remove(); book.busy = false;
 }
