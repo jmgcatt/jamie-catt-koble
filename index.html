@@ -4,15 +4,15 @@
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=La+Belle+Aurore&family=Gaegu:wght@400;700&family=Zen+Maru+Gothic:wght@400;500;700&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=La+Belle+Aurore&family=Zen+Maru+Gothic:wght@400;500;700&display=swap">
 <style>
 :root{--modal-w:min(1000px,calc(100vw - 32px));--modal-h:min(90vh,1040px)}
 /* Layout: one pencil-drawn cutaway room on cream paper fills the screen; quiet chrome sits in the margins; reading happens on a paper sheet that slides in from the right. */
 :root{
   --paper:#fbf6ec; --paper-2:#f3e9d6; --ink:#4a3a2e; --ink-soft:#76614f; --link:#7a2633; --brown:#9b7352;
   --moss:#6f9a69; --persimmon:#c9663d; --amber:#f2b552; --indigo:#6f88bd;
-  --f-hand:"Gaegu","Zen Maru Gothic",ui-rounded,"Comic Sans MS",system-ui,sans-serif;
-  --f-title:"La Belle Aurore","Gaegu",cursive;
+  --f-hand:"Zen Maru Gothic",ui-rounded,"Hiragino Maru Gothic ProN",system-ui,sans-serif;
+  --f-title:"La Belle Aurore",cursive;
   --f-body:"Zen Maru Gothic",ui-rounded,"Hiragino Maru Gothic ProN",system-ui,sans-serif;
   --wobble:16px 11px 18px 10px / 11px 17px 10px 16px;
   --pencil:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24'%3E%3Cpath d='M3.2 2.4 L3.6 19 L7.6 15.2 L10.6 21.4 L13.6 20 L10.7 13.9 L16.4 13.6 Z' fill='%23fffaf0' stroke='%232b2420' stroke-width='1.7' stroke-linejoin='round' stroke-linecap='round'/%3E%3Cpath d='M5.4 7.5 L5.6 13.2 M7.2 9.8 L9.4 11.8' stroke='%232b2420' stroke-width='.9' stroke-linecap='round' opacity='.45'/%3E%3C/svg%3E") 3 2, auto;
@@ -83,7 +83,7 @@ button{font:inherit;color:inherit}
 .stub .fav .stub-q{margin-top:0}
 .fav-t a{color:inherit;text-decoration:none}
 .fav-t a:hover{color:var(--link)}
-.t-by,.stub-by{margin:2px 0 0;font-family:Gaegu,cursive;font-size:19px;color:var(--ink-soft,#76614f)}
+.t-by,.stub-by{margin:2px 0 0;font-family:var(--f-body);font-size:15px;color:var(--ink-soft,#76614f)}
 .stub-by{font-size:16px}
 .mac{position:relative;display:inline!important;margin:0!important;padding:0!important;font:inherit!important;color:inherit!important;letter-spacing:inherit}
 .mac::after{content:"";position:absolute;left:.1em;right:.1em;top:.18em;border-top:.075em solid currentColor;border-radius:1px}
@@ -95,14 +95,14 @@ button{font:inherit;color:inherit}
 .fave:nth-child(odd){transform:rotate(-.5deg)}
 .fave:nth-child(even){transform:rotate(.5deg)}
 .fave .fav-art,.fave .fav-img{width:96px}
-.fave b{display:block;font-family:var(--f-hand);font-size:23px;line-height:1.15}
+.fave b{display:block;font-family:var(--f-title);font-weight:400;font-size:26px;line-height:1.2}
 .fave b a,.dish b a{color:inherit;text-decoration:none}
 .fave span{display:block;margin-top:6px;font-size:14.5px;line-height:1.55;color:var(--ink-soft)}
 .dish-grid{list-style:none;margin:8px 0 26px;padding:0;display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:18px}
 .dish{display:grid;align-content:start;gap:6px;padding:0 0 12px;text-align:center}
 .dish svg{display:block;width:100%;height:auto;aspect-ratio:1;margin-bottom:4px}
 .dish b,.dish span{padding:0 10px}
-.dish b{font-family:var(--f-hand);font-size:22px;line-height:1.15}
+.dish b{font-family:var(--f-title);font-weight:400;font-size:25px;line-height:1.2}
 
 .dish span{font-size:13px;color:var(--ink-soft)}
 .dish .book-tools{justify-content:center}
@@ -185,7 +185,7 @@ body.playing .notes .note:nth-child(2){animation-delay:-1.8s}
 .cv-empty{margin:0;padding:12px;text-align:center;font-family:var(--f-hand);font-size:20px;line-height:1.3;color:var(--ink-soft)}
 .cv-bar{display:flex;align-items:center;justify-content:space-between;gap:8px;padding:6px 12px;border-top:1.5px dashed rgba(74,58,46,.25)}
 .cv-cap{flex:1;min-width:0;margin:0;text-align:center;font-size:13px;line-height:1.35;color:var(--ink-soft)}
-.cv-cap b{display:block;font-family:var(--f-hand);font-size:19px;color:var(--ink)}
+.cv-cap b{display:block;font-family:var(--f-title);font-weight:400;font-size:23px;color:var(--ink)}
 .cv-arrow{width:32px;height:32px;flex:none;background:none;border:1.5px solid var(--ink);border-radius:50%;font-family:var(--f-hand);font-size:20px;line-height:1}
 .cv-form{display:flex;flex-wrap:wrap;gap:6px;padding:4px 12px 8px}
 .cv-form input{flex:1 1 110px;min-width:0;font:inherit;font-size:14px;padding:5px 8px;border:1.5px solid var(--ink);border-radius:8px;background:#fff}
@@ -354,7 +354,7 @@ body.playing .disc{animation:spin 6s linear infinite}
 .sheet .playlists a:hover{background:#fdf1e2}
 .playlists .label{flex:none;width:36px;height:36px}
 .jfly{position:fixed;z-index:25;perspective:1400px;pointer-events:none}
-.jf-page{position:absolute;inset:0;background:#f8f2dc;border:2px solid var(--ink);border-radius:4px 10px 10px 4px;box-shadow:2px 2px 0 #efe7cd,4px 4px 0 #e5dbbd,6px 6px 0 #d9cca9,8px 9px 0 rgba(74,58,46,.14)}
+.jf-page{position:absolute;inset:0;background:#fffdf8;border:2px solid var(--ink);border-radius:4px 10px 10px 4px;box-shadow:2px 2px 0 #f3efe7,4px 4px 0 #e9e3d7,6px 6px 0 #ddd5c6,8px 9px 0 rgba(74,58,46,.14)}
 .jf-cover{position:absolute;inset:0;background:url("data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20width='200'%20height='200'%3E%3Cfilter%20id='l'%3E%3CfeTurbulence%20type='fractalNoise'%20baseFrequency='.7'%20numOctaves='4'%20stitchTiles='stitch'/%3E%3CfeColorMatrix%20values='0%200%200%200%20.1%200%200%200%200%20.02%200%200%200%200%20.04%200%200%200%201.4%20-.5'/%3E%3C/filter%3E%3Crect%20width='200'%20height='200'%20filter='url(%23l)'%20opacity='.45'/%3E%3Cfilter%20id='h'%3E%3CfeTurbulence%20type='fractalNoise'%20baseFrequency='1.2'%20numOctaves='2'%20stitchTiles='stitch'/%3E%3CfeColorMatrix%20values='0%200%200%200%20.95%200%200%200%200%20.8%200%200%200%200%20.8%200%200%200%201.4%20-.72'/%3E%3C/filter%3E%3Crect%20width='200'%20height='200'%20filter='url(%23h)'%20opacity='.18'/%3E%3C/svg%3E") 0 0/200px 200px,linear-gradient(115deg,rgba(255,255,255,.09),transparent 38%,rgba(0,0,0,.16) 100%),#561c25;border:2px solid #2b0c11;border-radius:4px 10px 10px 4px;transform-origin:0 50%;backface-visibility:hidden;box-shadow:inset 8px 0 0 rgba(0,0,0,.14)}
 .jf-cover::before,.jbook::before{content:"";position:absolute;inset:7px;border:1.5px dashed rgba(170,96,104,.7);border-radius:4px 9px 9px 4px;pointer-events:none}
 .jbook::before{filter:url(#pencil)}
@@ -369,7 +369,7 @@ body.playing .disc{animation:spin 6s linear infinite}
 .jams li{display:flex;align-items:center;gap:12px;padding:10px 12px;background:var(--paper);border:1.5px solid var(--ink);border-radius:var(--wobble);counter-increment:j}
 .jams li::before{content:counter(j);font-family:var(--f-hand);font-weight:700;font-size:24px;color:var(--persimmon);min-width:18px}
 .jams li > span{flex:1;min-width:0}
-.jams b{display:block;font-family:var(--f-hand);font-size:20px;line-height:1.15}
+.jams b{display:block;font-family:var(--f-title);font-weight:400;font-size:23px;line-height:1.2}
 .jams small{display:block;font-size:13px;color:var(--ink-soft)}
 .posts{list-style:none;margin:6px 0 24px;padding:0;display:grid;gap:18px}
 .sheet .posts a{display:grid;gap:10px;padding:10px;color:var(--ink);text-decoration:none;background:var(--paper);border:1.5px solid var(--ink);border-radius:var(--wobble)}
@@ -387,7 +387,7 @@ body.playing .disc{animation:spin 6s linear infinite}
 .post figure img,.post figure video{margin:0}
 .post figcaption{margin-top:8px;font-size:13.5px;line-height:1.45;color:var(--ink-soft);text-align:center}
 .post a{color:var(--link)}
-.post h3,.post h4{margin:1.4em 0 .4em;font-family:var(--f-hand);font-size:24px;line-height:1.2}
+.post h3,.post h4{margin:1.4em 0 .4em;font-family:var(--f-title);font-weight:400;font-size:28px;line-height:1.25}
 .post blockquote{position:relative;margin:1.3em .4em 1.3em 1.5em;padding:0;border:0;font-family:inherit;font-style:italic;font-size:1.07em;line-height:1.65;color:var(--ink)}
 .post blockquote::before{content:"\201C";position:absolute;left:-.62em;top:-.3em;font-family:Georgia,"Times New Roman",serif;font-style:normal;font-size:2.4em;line-height:1;color:var(--persimmon);opacity:.75}
 .post blockquote p{margin:0 0 .5em}
@@ -454,29 +454,29 @@ body.playing .turntable .arm{transform:none}
 /* the charms only hang on the front cover (the flying journal), never inside the open notebook */
 .jb-charms{position:absolute;z-index:5;pointer-events:none;overflow:visible}
 .jb-pages{position:relative;height:100%;perspective:2400px}
-.jb-page{position:absolute;top:0;bottom:0;box-sizing:border-box;background-color:#f8f2dc;border:1.5px solid transparent}
+.jb-page{position:absolute;top:0;bottom:0;box-sizing:border-box;background-color:#fffdf8;border:1.5px solid transparent}
 .jb-page::after{content:"";position:absolute;inset:-1.5px;border:1.8px solid #a88a5e;border-radius:inherit;pointer-events:none;filter:url(#pencil)}
 /* paper grain and fibers on every page */
-.jbook{--paper-tex:url("data:image/svg+xml,%3Csvg%20xmlns=%27http://www.w3.org/2000/svg%27%20width=%27150%27%20height=%27150%27%3E%3Cfilter%20id=%27a%27%3E%3CfeTurbulence%20type=%27fractalNoise%27%20baseFrequency=%27.7%27%20numOctaves=%272%27%20seed=%273%27%20stitchTiles=%27stitch%27/%3E%3CfeColorMatrix%20values=%270%200%200%200%201.000%200%200%200%200%200.992%200%200%200%200%200.965%203.2%200%200%200%20-1.75%27/%3E%3C/filter%3E%3Cfilter%20id=%27b%27%3E%3CfeTurbulence%20type=%27fractalNoise%27%20baseFrequency=%27.7%27%20numOctaves=%272%27%20seed=%2711%27%20stitchTiles=%27stitch%27/%3E%3CfeColorMatrix%20values=%270%200%200%200%200.702%200%200%200%200%200.604%200%200%200%200%200.447%203.2%200%200%200%20-1.8%27/%3E%3C/filter%3E%3Crect%20width=%27150%27%20height=%27150%27%20filter=%27url%28%23a%29%27%20opacity=%271%27/%3E%3Crect%20width=%27150%27%20height=%27150%27%20filter=%27url%28%23b%29%27%20opacity=%270.5%27/%3E%3C/svg%3E") 0 0/150px 150px}
+.jbook{--paper-tex:url("data:image/svg+xml,%3Csvg%20xmlns%3D%27http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%27%20width%3D%27220%27%20height%3D%27220%27%3E%3Cfilter%20id%3D%27g%27%3E%3CfeTurbulence%20type%3D%27fractalNoise%27%20baseFrequency%3D%27.75%27%20numOctaves%3D%272%27%20seed%3D%275%27%20stitchTiles%3D%27stitch%27%2F%3E%3CfeColorMatrix%20values%3D%270%200%200%200%20.55%200%200%200%200%20.5%200%200%200%200%20.43%203%200%200%200%20-1.7%27%2F%3E%3C%2Ffilter%3E%3Cfilter%20id%3D%27f%27%3E%3CfeTurbulence%20type%3D%27fractalNoise%27%20baseFrequency%3D%27.012%20.55%27%20numOctaves%3D%272%27%20seed%3D%278%27%20stitchTiles%3D%27stitch%27%2F%3E%3CfeColorMatrix%20values%3D%270%200%200%200%20.62%200%200%200%200%20.58%200%200%200%200%20.5%202.6%200%200%200%20-1.55%27%2F%3E%3C%2Ffilter%3E%3Cfilter%20id%3D%27m%27%3E%3CfeTurbulence%20type%3D%27fractalNoise%27%20baseFrequency%3D%27.018%27%20numOctaves%3D%273%27%20seed%3D%272%27%20stitchTiles%3D%27stitch%27%2F%3E%3CfeColorMatrix%20values%3D%270%200%200%200%20.86%200%200%200%200%20.8%200%200%200%200%20.68%201.4%200%200%200%20-.55%27%2F%3E%3C%2Ffilter%3E%3Crect%20width%3D%27220%27%20height%3D%27220%27%20filter%3D%27url%28%23m%29%27%20opacity%3D%27.35%27%2F%3E%3Crect%20width%3D%27220%27%20height%3D%27220%27%20filter%3D%27url%28%23f%29%27%20opacity%3D%27.3%27%2F%3E%3Crect%20width%3D%27220%27%20height%3D%27220%27%20filter%3D%27url%28%23g%29%27%20opacity%3D%27.38%27%2F%3E%3C%2Fsvg%3E") 0 0/220px 220px}
 .jb-l{display:none}
-.jb-r{left:0;right:0;border-radius:3px 8px 8px 3px;background:var(--paper-tex),linear-gradient(90deg,rgba(74,58,46,.13),transparent 30px),#f8f2dc;box-shadow:2px 2px 0 #f1e6cf,4px 4px 0 #e7d9bc,6px 6px 0 #dccaa8,8px 7px 0 #cdb894}
-.spread .jb-l{display:block;left:0;right:50%;border-right:0;border-radius:8px 0 0 8px;background:var(--paper-tex),linear-gradient(270deg,rgba(74,58,46,.16),transparent 40px),#f8f2dc;box-shadow:-2px 2px 0 #f1e6cf,-4px 4px 0 #e7d9bc,-6px 6px 0 #dccaa8,-8px 7px 0 #cdb894}
-.spread .jb-r{left:50%;border-left:0;border-radius:0 8px 8px 0;background:var(--paper-tex),linear-gradient(90deg,rgba(74,58,46,.16),transparent 40px),#f8f2dc}
+.jb-r{left:0;right:0;border-radius:3px 8px 8px 3px;background:var(--paper-tex),linear-gradient(90deg,rgba(74,58,46,.13),transparent 30px),#fffdf8;box-shadow:2px 2px 0 #f3efe7,4px 4px 0 #e9e3d7,6px 6px 0 #ddd5c6,8px 7px 0 #cfc6b4}
+.spread .jb-l{display:block;left:0;right:50%;border-right:0;border-radius:8px 0 0 8px;background:var(--paper-tex),linear-gradient(270deg,rgba(74,58,46,.16),transparent 40px),#fffdf8;box-shadow:-2px 2px 0 #f3efe7,-4px 4px 0 #e9e3d7,-6px 6px 0 #ddd5c6,-8px 7px 0 #cfc6b4}
+.spread .jb-r{left:50%;border-left:0;border-radius:0 8px 8px 0;background:var(--paper-tex),linear-gradient(90deg,rgba(74,58,46,.16),transparent 40px),#fffdf8}
 .jb-view{position:absolute;inset:0;overflow:clip}
 .post.jb-flow{position:absolute;margin:0;max-width:none;column-fill:auto;font-size:16.5px;line-height:1.75}
-.jb-flow .jb-date{margin:0;font-family:var(--f-hand);font-size:20px;color:var(--ink-soft)}
+.jb-flow .jb-date{margin:0 0 4px;font-family:var(--f-body);font-size:14px;letter-spacing:.04em;color:var(--ink-soft)}
 .sheet .jb-flow h2{margin:0 0 18px;font-size:46px}
-.jb-flow img,.jb-flow video{width:auto;max-width:100%;max-height:calc(var(--colh) - 30px);margin-inline:auto}
+.jb-flow img,.jb-flow video{width:100%;height:auto;max-height:calc(var(--colh) - 30px);object-fit:cover}
 .jb-flow figure,.jb-flow blockquote,.jb-flow img,.jb-flow video,.jb-flow h3,.jb-flow h4{break-inside:avoid}
 .jb-flow h3,.jb-flow h4{break-after:avoid}
 .jb-flow p{orphans:2;widows:2}
 .jb-end{margin:1.6em 0 0}
 .jb-sheet{position:absolute;top:0;bottom:0;z-index:3}
-.jb-sheet.ghost{overflow:hidden;background:var(--paper-tex),#f8f2dc}
+.jb-sheet.ghost{overflow:hidden;background:var(--paper-tex),#fffdf8}
 .jb-sheet.leaf{transform-style:preserve-3d;will-change:transform}
 .leaf.fwd{transform-origin:0 50%}
 .leaf.bwd{transform-origin:100% 50%}
-.jb-face{position:absolute;inset:0;overflow:hidden;box-sizing:border-box;background:var(--paper-tex),#f8f2dc;border:1.5px solid #c9b48f;backface-visibility:hidden;-webkit-backface-visibility:hidden}
+.jb-face{position:absolute;inset:0;overflow:hidden;box-sizing:border-box;background:var(--paper-tex),#fffdf8;border:1.5px solid #c9b48f;backface-visibility:hidden;-webkit-backface-visibility:hidden}
 .jb-face.back{transform:rotateY(180deg)}
 .jb-face::after{content:"";position:absolute;inset:0;pointer-events:none;background:linear-gradient(90deg,rgba(74,58,46,.18),transparent 34%)}
 .leaf.fwd .back::after,.leaf.bwd .front::after{background:linear-gradient(270deg,rgba(74,58,46,.18),transparent 34%)}
@@ -490,7 +490,7 @@ body.playing .turntable .arm{transform:none}
 .jb-toc li:nth-child(3n+2) button{background-image:url("data:image/svg+xml,%3Csvg%20xmlns=%27http://www.w3.org/2000/svg%27%20viewBox=%270%200%20400%208%27%20preserveAspectRatio=%27none%27%3E%3Cpath%20d=%27M1,3.4%20C50,5%20110,2.8%20170,4.2%20S270,5.4%20330,3.4%20S385,2.8%20399,4.6%27%20fill=%27none%27%20stroke=%27%2376614f%27%20stroke-width=%271.5%27%20stroke-linecap=%27round%27%20opacity=%27.55%27%20vector-effect=%27non-scaling-stroke%27/%3E%3C/svg%3E")}
 .jb-toc li:nth-child(3n) button{background-image:url("data:image/svg+xml,%3Csvg%20xmlns=%27http://www.w3.org/2000/svg%27%20viewBox=%270%200%20400%208%27%20preserveAspectRatio=%27none%27%3E%3Cpath%20d=%27M1,4.6%20C30,3%2080,3.2%20130,4.8%20S230,5.6%20280,3.6%20S360,2.6%20399,4%27%20fill=%27none%27%20stroke=%27%2376614f%27%20stroke-width=%271.5%27%20stroke-linecap=%27round%27%20opacity=%27.55%27%20vector-effect=%27non-scaling-stroke%27/%3E%3C/svg%3E")}
 .jb-toc .jt-d{flex:none;white-space:nowrap}
-.jb-toc .jt-t{font-family:var(--f-hand);font-size:23px;line-height:1.2}
+.jb-toc .jt-t{font-family:var(--f-title);font-size:27px;line-height:1.25}
 .jb-toc .jt-d{font-size:13px;color:var(--ink-soft)}
 .jb-toc button:hover .jt-t{color:var(--link)}
 /* a turning page: shading sweeps across it, and it casts a soft shadow on the page underneath */
@@ -505,17 +505,17 @@ body.playing .turntable .arm{transform:none}
 .jb-curl .jb-face.jc-top{z-index:1}
 .jb-curl .jb-face.jc-top .jb-shade{display:none}
 .jb-curl .jc-lift{z-index:2}
-.jb-curl .jc-flap{overflow:hidden;transform-origin:0 0;box-sizing:border-box;background:var(--paper-tex),#f6efd6;border:1.5px solid #c9b48f;border-radius:3px 8px 8px 3px}
+.jb-curl .jc-flap{overflow:hidden;transform-origin:0 0;box-sizing:border-box;background:var(--paper-tex),#f8f5ee;border:1.5px solid #c9b48f;border-radius:3px 8px 8px 3px}
 .jc-band{position:absolute;height:400vmax;transform-origin:0 0;pointer-events:none}
 .jb-cast{position:absolute;top:0;bottom:0;z-index:2;pointer-events:none;opacity:0}
-.jb-no{position:absolute;bottom:20px;z-index:4;font-family:var(--f-hand);font-size:18px;color:var(--ink-soft);transform:translateX(-50%);pointer-events:none}
+.jb-no{position:absolute;bottom:20px;z-index:4;font-family:var(--f-body);font-size:13px;color:var(--ink-soft);transform:translateX(-50%);pointer-events:none}
 .jb-no-l{display:none;left:25%}
 .jb-no-r{left:50%}
 .spread .jb-no-l{display:block}
 .spread .jb-no-r{left:75%}
 .shelf-list{list-style:none;margin:0;padding:0;display:grid;gap:12px}
 .book{display:grid;gap:2px;padding:10px 12px;background:var(--paper);border:1.5px solid var(--ink);border-radius:var(--wobble)}
-.book b{font-family:var(--f-hand);font-size:21px;line-height:1.15}
+.book b{font-family:var(--f-title);font-weight:400;font-size:24px;line-height:1.2}
 .book span{font-size:13.5px;color:var(--ink-soft)}
 .book .book-tools{display:flex;gap:14px;margin-top:4px}
 .empty-note{margin:0;color:var(--ink-soft)}
@@ -646,7 +646,7 @@ blockquote{margin:0 0 28px;padding:0;font-family:var(--f-hand);font-size:30px;li
   .sheet .jb-flow h2{font-size:38px}
   .post.jb-flow{font-size:16px;line-height:1.7}
   .sheet.book .sheet-bar{left:34px;bottom:calc(max(14px,env(safe-area-inset-bottom,0px)) + 8px)}
-  .jb-no-r{left:auto;right:16px;bottom:22px;transform:none;font-size:19px;color:var(--ink)}
+  .jb-no-r{left:auto;right:16px;bottom:24px;transform:none;font-size:13px;color:var(--ink-soft)}
   /* the menu on phones: one dish card on top of a little stack; swipe it away and it tucks back in at the bottom */
   .sheet.menu .dish-grid.stack{display:grid;justify-content:center;gap:0;padding:24px 0 40px}
   .sheet.menu .dish-grid.stack .dish{grid-area:1/1;width:min(250px,68vw);touch-action:pan-y;user-select:none;-webkit-user-select:none;transition:transform .5s cubic-bezier(.2,.8,.2,1),opacity .35s ease}
@@ -1151,7 +1151,7 @@ function buildWorkDesk() {
   // my Bordeaux leather journal, closed: stitched edges, a cream insert block, and charms on a taupe elastic
   const jn = E('g', { id: 'journal', class: 'hot', tabindex: 0, role: 'button', 'aria-label': 'Bordeaux leather journal on the desk. Press to read my writing.' }, world);
   const cover = 'M650,512 L704,512 L697,493 L657,493Z', block = 'M649,512H705V519H649Z', stitch = 'M653.5,509.8 L700.5,509.8 L695.3,495.4 L658.7,495.4Z';
-  piece(jn, { occ: cover + block, fill: [[block, '#f8f2dc', 1], [cover, '#561c25', .97]], line: [cover, block, { d: 'M650,514.5H704M650,516.8H704', stroke: '#c9b48f', 'stroke-width': .8 }, { d: stitch, stroke: '#a3606a', 'stroke-width': .7, 'stroke-dasharray': '1.6 1.3' }], lw: 1.6 });
+  piece(jn, { occ: cover + block, fill: [[block, '#fffdf8', 1], [cover, '#561c25', .97]], line: [cover, block, { d: 'M650,514.5H704M650,516.8H704', stroke: '#c9b48f', 'stroke-width': .8 }, { d: stitch, stroke: '#a3606a', 'stroke-width': .7, 'stroke-dasharray': '1.6 1.3' }], lw: 1.6 });
   // charms: gold J, camera, silver cherries, pearl teardrop, gold croissant
   piece(jn, { fill: [[ell(647.2, 517.5, 1.9, 1.5), '#f4efe6', 1], [ell(644.4, 522.6, 1.5) + ell(647.4, 522.6, 1.5), '#d7dbe0', 1], [ell(650.6, 526, 2, 2.6), '#cfd3d8', 1], [ell(650.6, 526.4, 1, 1.3), '#f4f1ea', 1], ['M645,529.5 q2.4,-3 4.8,0 q-1.2,-.8 -2.4,-.2 q-1.2,-.6 -2.4,.2Z', '#e2b54f', 1]],
     line: [{ d: 'M651.2,505 V531', stroke: '#a8877f', 'stroke-width': 1.4 }, { d: 'M648.6,511.6 v3.4 q0,1.4 -1.4,1.4', stroke: '#d9ab4a', 'stroke-width': 1 }, ell(647.2, 517.5, 1.9, 1.5), ell(644.4, 522.6, 1.5) + ell(647.4, 522.6, 1.5), ell(650.6, 526, 2, 2.6), 'M645,529.5 q2.4,-3 4.8,0'], lw: .8 });
@@ -1931,7 +1931,8 @@ const JCHARMS = `<svg class="jb-charms" viewBox="0 0 230 52" aria-hidden="true">
 let book = null;
 function openPost(i) {
   const p = POSTS[i];
-  const text = (p.html ? postMedia(p.html) : `<p>${esc(p.blurb)}</p>`).replace(/ loading="lazy"/g, '');
+  const text = (p.html ? postMedia(p.html) : `<p>${esc(p.blurb)}</p>`).replace(/ loading="lazy"/g, '')
+    .replace(/<video controls playsinline preload="metadata"/g, '<video autoplay muted loop playsinline preload="auto"');
   openBook(`<p class="jb-date">${esc(p.date)}</p><h2 id="sheetTitle" tabindex="-1">${esc(p.title)}</h2>${text}
       <p class="jb-end"><button class="btn-plain" type="button" data-journal>Back to the contents</button></p>`, false);
 }
@@ -1947,6 +1948,7 @@ function openBook(html, toc) {
   // pictures change how much fits on each page as they load
   $('#jbFlow').querySelectorAll('img, video').forEach(m => m.addEventListener(m.tagName === 'IMG' ? 'load' : 'loadedmetadata', layoutBook, { once: true }));
   if (document.fonts) document.fonts.ready.then(layoutBook);
+  $('#jbFlow').querySelectorAll('video').forEach(v => { v.muted = true; const go = v.play(); if (go) go.catch(() => { }); });
 }
 // the post flows through css columns, one column per page; a spread shows two pages on wide screens
 function layoutBook() {
@@ -1991,8 +1993,7 @@ async function turnPage(dir) {
   if (!book || book.busy) return;
   const { P, spread } = book, step = spread ? 2 : 1, from = book.at, to = from + dir * step;
   if (to < 0 || to > book.n - 1) return;
-  $('#jbFlow').querySelectorAll('video').forEach(v => v.pause());
-  if (reduceMotion.matches) { book.at = to; return showBook(); }
+    if (reduceMotion.matches) { book.at = to; return showBook(); }
   if (!spread && CURL_OK) return curlTurn(dir);
   book.busy = true;
   const pages = $('#jbPages');
@@ -2116,8 +2117,7 @@ function makeCurl(turning) {
 function curlStart(dir, y) {
   const { P, H } = book, from = book.at, to = from + dir;
   if (to < 0 || to > book.n - 1) return null;
-  $('#jbFlow').querySelectorAll('video').forEach(v => v.pause());
-  book.busy = true;
+    book.busy = true;
   if (dir > 0) { book.at = to; showBook(); }
   const cu = makeCurl(dir > 0 ? from : to);
   // grab near the top and the top corner lifts; anywhere else, the bottom corner
@@ -2203,8 +2203,8 @@ function shelfArt(b) {
   words.forEach(w => { const l = lines[lines.length - 1]; if (l && (l + ' ' + w).length <= 11) lines[lines.length - 1] = l + ' ' + w; else lines.push(w); });
   const ts = lines.slice(0, 5).map((l, i) => `<tspan x="66" dy="${i ? 12 : 0}">${esc(l)}</tspan>`).join('');
   return `<svg viewBox="22 16 82 128" aria-hidden="true"><use href="#fav-book-back" x="0" y="0" width="120" height="150"/><rect x="28" y="22" width="64" height="104" rx="4" fill="${color}" filter="url(#pencil)"/>
-    <text x="66" y="${62 - lines.length * 4}" text-anchor="middle" font-family="Gaegu, cursive" font-weight="700" font-size="12" fill="#fffaf0">${ts}</text>
-    ${b.author ? `<text x="66" y="114" text-anchor="middle" font-family="Gaegu, cursive" font-size="8.5" fill="#fffaf0" opacity=".85">${esc(b.author)}</text>` : ''}<use href="#fav-book-front" x="0" y="0" width="120" height="150"/></svg>`;
+    <text x="66" y="${62 - lines.length * 4}" text-anchor="middle" font-family="La Belle Aurore, cursive" font-size="12" fill="#fffaf0">${ts}</text>
+    ${b.author ? `<text x="66" y="114" text-anchor="middle" font-family="Zen Maru Gothic, sans-serif" font-size="7" fill="#fffaf0" opacity=".85">${esc(b.author)}</text>` : ''}<use href="#fav-book-front" x="0" y="0" width="120" height="150"/></svg>`;
 }
 function shelfBooks() {
   if (readState === 'loading') return '<p class="empty-note">Finding the books\u2026</p>';
@@ -2650,7 +2650,7 @@ function openRecords() {
             <g fill="none" stroke="#4a4440" stroke-width="1.3"><circle cx="150" cy="130" r="88"/><circle cx="150" cy="130" r="74"/><circle cx="150" cy="130" r="60"/></g>
             <path d="M92,82 Q110,64 132,58" fill="none" stroke="#6a625b" stroke-width="2.4" stroke-linecap="round"/>
             <circle class="tt-label" cx="150" cy="130" r="36" fill="${album.color}"/>
-            <path id="ttArc" d="M124,132 a26,26 0 0 1 52,0" fill="none"/><text font-family="Gaegu, cursive" font-weight="700" font-size="11.5" fill="#fffaf0" letter-spacing=".5"><textPath class="tt-name" href="#ttArc" startOffset="50%" text-anchor="middle">${esc(album.name)}</textPath></text><g fill="none" stroke="#fffaf0" stroke-width="2" stroke-linecap="round"><path d="M134,146 q4,-3 8,0 t8,0 t8,0 t8,0"/></g>
+            <path id="ttArc" d="M124,132 a26,26 0 0 1 52,0" fill="none"/><text font-family="Zen Maru Gothic, sans-serif" font-weight="700" font-size="10" fill="#fffaf0" letter-spacing=".3"><textPath class="tt-name" href="#ttArc" startOffset="50%" text-anchor="middle">${esc(album.name)}</textPath></text><g fill="none" stroke="#fffaf0" stroke-width="2" stroke-linecap="round"><path d="M134,146 q4,-3 8,0 t8,0 t8,0 t8,0"/></g>
             <circle cx="150" cy="130" r="4" fill="#fffaf0"/></g>
           <circle cx="306" cy="52" r="17" fill="#cfc8bb" stroke="#141110" stroke-width="2"/><circle cx="306" cy="52" r="6" fill="#8f877c"/>
           <g class="arm"><path d="M306,52 L300,178 L262,212" fill="none" stroke="#e6dfd2" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"/>
@@ -2992,7 +2992,7 @@ async function ticketImage(t, withImg = true) {
   const img = !withImg ? null : t.kind === 'favorite' ? await (t.art ? favArtImage(t) : t.image ? loadImg(t.image) : null)
     : t.kind === 'book' ? await (t.image ? loadImg(t.image) : favArtImage({ art: 'book' })) : null, ix = img ? 180 : 0;
   const W = 900, c = document.createElement('canvas'), ctx = c.getContext('2d');
-  ctx.font = '600 38px Gaegu, cursive';
+  ctx.font = '600 38px "Zen Maru Gothic", sans-serif';
   const qText = t.kind === 'quote' ? '\u201C' + t.quote + '\u201D' : t.title, qLines = wrapLines(ctx, qText, W - 220 - ix);
   ctx.font = '500 22px "Zen Maru Gothic", sans-serif';
   const dLines = t.kind !== 'quote' && t.description ? wrapLines(ctx, t.description, W - 260 - ix) : [];
@@ -3005,16 +3005,16 @@ async function ticketImage(t, withImg = true) {
   ctx.quadraticCurveTo(x0 + w, y0 + h, x0 + w - 18, y0 + h); ctx.lineTo(x0 + 18, y0 + h); ctx.quadraticCurveTo(x0, y0 + h, x0, y0 + h - 18);
   ctx.lineTo(x0, y0 + h / 2 + 22); ctx.arc(x0, y0 + h / 2, 22, Math.PI / 2, -Math.PI / 2, true); ctx.lineTo(x0, y0 + 18); ctx.quadraticCurveTo(x0, y0, x0 + 18, y0); ctx.closePath();
   ctx.fillStyle = '#fffaf0'; ctx.fill(); ctx.lineWidth = 3; ctx.strokeStyle = '#4a3a2e'; ctx.stroke();
-  ctx.fillStyle = '#c9663d'; ctx.font = '700 46px Gaegu, cursive'; ctx.fillText('No. ' + pad(t.no), x0 + 50, y0 + 80);
+  ctx.fillStyle = '#c9663d'; ctx.font = '700 46px "Zen Maru Gothic", sans-serif'; ctx.fillText('No. ' + pad(t.no), x0 + 50, y0 + 80);
   ctx.fillStyle = '#76614f'; ctx.font = '500 20px "Zen Maru Gothic", sans-serif'; ctx.textAlign = 'right'; ctx.fillText(niceDate(t.date), x0 + w - 50, y0 + 76); ctx.textAlign = 'left';
   ctx.setLineDash([10, 8]); ctx.strokeStyle = 'rgba(74,58,46,.35)'; ctx.lineWidth = 3; ctx.beginPath(); ctx.moveTo(x0 + 50, y0 + 104); ctx.lineTo(x0 + w - 50, y0 + 104); ctx.stroke(); ctx.setLineDash([]);
   if (img) {
     const tw = 150, th = Math.min(225, tw * img.naturalHeight / img.naturalWidth);
     ctx.drawImage(img, x0 + 50, y0 + 150, tw, th); ctx.lineWidth = 2.5; ctx.strokeStyle = '#4a3a2e'; ctx.strokeRect(x0 + 50, y0 + 150, tw, th);
   }
-  ctx.fillStyle = '#4a3a2e'; ctx.font = '600 38px Gaegu, cursive'; qLines.forEach((l, i) => fillMarked(ctx, l, x0 + 50 + ix, y0 + 200 + i * 46, 38));
+  ctx.fillStyle = '#4a3a2e'; ctx.font = '600 38px "Zen Maru Gothic", sans-serif'; qLines.forEach((l, i) => fillMarked(ctx, l, x0 + 50 + ix, y0 + 200 + i * 46, 38));
   let cy = y0 + 200 + qLines.length * 46 + 20;
-  if (t.kind === 'book' && t.author) { ctx.fillStyle = '#76614f'; ctx.font = '600 26px Gaegu, cursive'; ctx.fillText(t.author, x0 + 50 + ix, cy - 4); cy += 34; }
+  if (t.kind === 'book' && t.author) { ctx.fillStyle = '#76614f'; ctx.font = '600 26px "Zen Maru Gothic", sans-serif'; ctx.fillText(t.author, x0 + 50 + ix, cy - 4); cy += 34; }
   if (dLines.length) { ctx.fillStyle = '#4a3a2e'; ctx.font = '500 22px "Zen Maru Gothic", sans-serif'; dLines.forEach((l, i) => ctx.fillText(l, x0 + 50 + ix, cy + i * 30)); cy += dLines.length * 30 + 14; }
   ctx.fillStyle = '#76614f'; ctx.font = '500 22px "Zen Maru Gothic", sans-serif';
   const citeLine = t.kind === 'quote' ? ['quote', t.source, t.author].filter(Boolean).join(' \u2022 ') : t.kind === 'book' ? bookCite(t) : favCite(t);
