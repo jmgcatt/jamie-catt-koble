@@ -2524,19 +2524,32 @@ const MELODY = [62, 65, 67, 69, 72, 74, 77];
 // christmas: Fmaj9, Dm9, Gm9, C13 with a celesta line in F major
 const XMAS_CHORDS = [[41, 57, 60, 64, 67], [38, 53, 57, 60, 64], [43, 53, 58, 62, 69], [36, 52, 58, 62, 69]];
 const XMAS_MELODY = [65, 67, 69, 72, 74, 76, 77, 79];
+// the christmas album plays Jingle Bells (a traditional carol) slowly on the celesta, one bar per chord, 16 bars round
+const XMAS_BARS = [[41, 57, 60, 64, 67], [41, 57, 60, 64, 67], [41, 57, 60, 64, 67], [41, 57, 60, 64, 67], [46, 57, 62, 65, 69], [41, 57, 60, 64, 67], [43, 59, 62, 65, 69], [36, 52, 58, 62, 69],
+  [41, 57, 60, 64, 67], [41, 57, 60, 64, 67], [41, 57, 60, 64, 67], [41, 57, 60, 64, 67], [46, 57, 62, 65, 69], [41, 57, 60, 64, 67], [36, 52, 58, 62, 69], [41, 57, 60, 64, 67]];
+// each bar: [note, length in beats]; A=69, B-flat=70, C=72, F=65, G=67
+const JB = [[[69, 1], [69, 1], [69, 2]], [[69, 1], [69, 1], [69, 2]], [[69, 1], [72, 1], [65, 1.5], [67, .5]], [[69, 4]],
+  [[70, 1], [70, 1], [70, 1.5], [70, .5]], [[70, 1], [69, 1], [69, 1], [69, .5], [69, .5]], [[69, 1], [67, 1], [67, 1], [69, 1]], [[67, 2], [72, 2]]];
+const JB2 = [[[70, 1], [70, 1], [70, 1.5], [70, .5]], [[70, 1], [69, 1], [69, 1], [69, .5], [69, .5]], [[72, 1], [72, 1], [70, 1], [67, 1]], [[65, 4]]];
+const XMAS_TUNE = new Map();
+[...JB, ...JB.slice(0, 4), ...JB2].forEach((bar, b) => { let at = 0; bar.forEach(([m, beats]) => { XMAS_TUNE.set(b * 16 + Math.round(at * 4), m); at += beats; }); });
 let lastNote = 3, step = 0, nextChime = 0;
 function schedule() {
-  const xmas = sound.album === 'christmas', ctx = sound.ctx, now = ctx.currentTime, sixteenth = 60 / (xmas ? 66 : 72) / 4;
+  const xmas = sound.album === 'christmas', ctx = sound.ctx, now = ctx.currentTime, sixteenth = 60 / (xmas ? 76 : 72) / 4;
   const chords = xmas ? XMAS_CHORDS : CHORDS, melody = xmas ? XMAS_MELODY : MELODY;
   if (!nextChime) nextChime = now + 14;
   while (sound.next < now + .6) {
     const t = sound.next + (step % 2 ? sixteenth * .18 : 0), s16 = step % 16;
     if (s16 === 0 || s16 === 10) kick(t);
     if (s16 === 4 || s16 === 12) snare(t);
-    if (xmas) { if (s16 % 4 === 2) sleigh(t, .02); else if (s16 % 2 === 0) hat(t, .014); }
+    if (xmas) { if (s16 % 2 === 0) sleigh(t, s16 % 4 === 0 ? .035 : .022); }
     else if (s16 % 2 === 0) hat(t, s16 % 4 === 0 ? .03 : .018); else if (Math.random() < .25) hat(t, .01);
-    if (s16 === 0) keys(chords[Math.floor(step / 16) % 4], t, 3.4);
-    if (s16 % 4 === 2 && Math.random() < .45) {
+    if (xmas) {
+      const pos = step % 256, note = XMAS_TUNE.get(pos);
+      if (s16 === 0) keys(XMAS_BARS[pos >> 4], t, 3.2);
+      if (note) { celesta(note, t); celesta(note - 12, t + .004); }
+    } else if (s16 === 0) keys(chords[Math.floor(step / 16) % 4], t, 3.4);
+    if (!xmas && s16 % 4 === 2 && Math.random() < .45) {
       lastNote = Math.max(0, Math.min(melody.length - 1, lastNote + [-2, -1, 1, 1, 2][Math.floor(Math.random() * 5)]));
       (xmas ? celesta : koto)(melody[lastNote], t);
     }
@@ -2621,7 +2634,7 @@ function openRecords() {
             <g fill="none" stroke="#4a4440" stroke-width="1.3"><circle cx="150" cy="130" r="88"/><circle cx="150" cy="130" r="74"/><circle cx="150" cy="130" r="60"/></g>
             <path d="M92,82 Q110,64 132,58" fill="none" stroke="#6a625b" stroke-width="2.4" stroke-linecap="round"/>
             <circle class="tt-label" cx="150" cy="130" r="36" fill="${album.color}"/>
-            <path id="ttArc" d="M124,132 a26,26 0 0 1 52,0" fill="none"/><text font-family="Gaegu, cursive" font-weight="700" font-size="14" fill="#fffaf0" letter-spacing="1"><textPath href="#ttArc" startOffset="50%" text-anchor="middle">cozy beats</textPath></text><g fill="none" stroke="#fffaf0" stroke-width="2" stroke-linecap="round"><path d="M134,146 q4,-3 8,0 t8,0 t8,0 t8,0"/></g>
+            <path id="ttArc" d="M124,132 a26,26 0 0 1 52,0" fill="none"/><text font-family="Gaegu, cursive" font-weight="700" font-size="11.5" fill="#fffaf0" letter-spacing=".5"><textPath class="tt-name" href="#ttArc" startOffset="50%" text-anchor="middle">${esc(album.name)}</textPath></text><g fill="none" stroke="#fffaf0" stroke-width="2" stroke-linecap="round"><path d="M134,146 q4,-3 8,0 t8,0 t8,0 t8,0"/></g>
             <circle cx="150" cy="130" r="4" fill="#fffaf0"/></g>
           <circle cx="306" cy="52" r="17" fill="#cfc8bb" stroke="#141110" stroke-width="2"/><circle cx="306" cy="52" r="6" fill="#8f877c"/>
           <g class="arm"><path d="M306,52 L300,178 L262,212" fill="none" stroke="#e6dfd2" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"/>
@@ -2639,6 +2652,9 @@ function playAlbum(id) {
   sound.album = id;
   const a = ALBUMS.find(x => x.id === id), label = sheet.querySelector('.tt-label');
   if (label) label.setAttribute('fill', a.color);
+  const nm = sheet.querySelector('.tt-name'); if (nm) nm.textContent = a.name;
+  // start the new album at the top of its tune
+  if (sound.on) { step = 0; sound.next = Math.max(sound.next, sound.ctx.currentTime + .05); }
   sheet.querySelectorAll('.sleeve').forEach(b => b.setAttribute('aria-pressed', b.dataset.album === id));
   sound.muted = false; if (!sound.vol) sound.vol = .4;
   sound.on ? applyVolume() : startSound();
