@@ -457,7 +457,7 @@ body.playing .turntable .arm{transform:none}
 .jb-page{position:absolute;top:0;bottom:0;box-sizing:border-box;background-color:#fffdf8;border:1.5px solid transparent}
 .jb-page::after{content:"";position:absolute;inset:-1.5px;border:1.8px solid #a88a5e;border-radius:inherit;pointer-events:none;filter:url(#pencil)}
 /* paper grain and fibers on every page */
-.jbook{--paper-tex:url("data:image/svg+xml,%3Csvg%20xmlns%3D%27http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%27%20width%3D%27220%27%20height%3D%27220%27%3E%3Cfilter%20id%3D%27g%27%3E%3CfeTurbulence%20type%3D%27fractalNoise%27%20baseFrequency%3D%27.75%27%20numOctaves%3D%272%27%20seed%3D%275%27%20stitchTiles%3D%27stitch%27%2F%3E%3CfeColorMatrix%20values%3D%270%200%200%200%20.55%200%200%200%200%20.5%200%200%200%200%20.43%203%200%200%200%20-1.7%27%2F%3E%3C%2Ffilter%3E%3Cfilter%20id%3D%27f%27%3E%3CfeTurbulence%20type%3D%27fractalNoise%27%20baseFrequency%3D%27.012%20.55%27%20numOctaves%3D%272%27%20seed%3D%278%27%20stitchTiles%3D%27stitch%27%2F%3E%3CfeColorMatrix%20values%3D%270%200%200%200%20.62%200%200%200%200%20.58%200%200%200%200%20.5%202.6%200%200%200%20-1.55%27%2F%3E%3C%2Ffilter%3E%3Cfilter%20id%3D%27m%27%3E%3CfeTurbulence%20type%3D%27fractalNoise%27%20baseFrequency%3D%27.018%27%20numOctaves%3D%273%27%20seed%3D%272%27%20stitchTiles%3D%27stitch%27%2F%3E%3CfeColorMatrix%20values%3D%270%200%200%200%20.86%200%200%200%200%20.8%200%200%200%200%20.68%201.4%200%200%200%20-.55%27%2F%3E%3C%2Ffilter%3E%3Crect%20width%3D%27220%27%20height%3D%27220%27%20filter%3D%27url%28%23m%29%27%20opacity%3D%27.35%27%2F%3E%3Crect%20width%3D%27220%27%20height%3D%27220%27%20filter%3D%27url%28%23f%29%27%20opacity%3D%27.3%27%2F%3E%3Crect%20width%3D%27220%27%20height%3D%27220%27%20filter%3D%27url%28%23g%29%27%20opacity%3D%27.38%27%2F%3E%3C%2Fsvg%3E") 0 0/220px 220px}
+.jbook{--paper-tex:url("data:image/svg+xml,%3Csvg%20xmlns%3D%27http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%27%20width%3D%27160%27%20height%3D%27160%27%3E%3Cfilter%20id%3D%27g%27%3E%3CfeTurbulence%20type%3D%27fractalNoise%27%20baseFrequency%3D%27.7%27%20numOctaves%3D%272%27%20seed%3D%275%27%20stitchTiles%3D%27stitch%27%2F%3E%3CfeColorMatrix%20values%3D%270%200%200%200%20.62%200%200%200%200%20.55%200%200%200%200%20.46%203.2%200%200%200%20-1.85%27%2F%3E%3C%2Ffilter%3E%3Cfilter%20id%3D%27h%27%3E%3CfeTurbulence%20type%3D%27fractalNoise%27%20baseFrequency%3D%27.7%27%20numOctaves%3D%272%27%20seed%3D%2712%27%20stitchTiles%3D%27stitch%27%2F%3E%3CfeColorMatrix%20values%3D%270%200%200%200%20.93%200%200%200%200%20.9%200%200%200%200%20.84%203.2%200%200%200%20-1.7%27%2F%3E%3C%2Ffilter%3E%3Crect%20width%3D%27160%27%20height%3D%27160%27%20filter%3D%27url%28%23h%29%27%20opacity%3D%27.6%27%2F%3E%3Crect%20width%3D%27160%27%20height%3D%27160%27%20filter%3D%27url%28%23g%29%27%20opacity%3D%27.42%27%2F%3E%3C%2Fsvg%3E") 0 0/160px 160px}
 .jb-l{display:none}
 .jb-r{left:0;right:0;border-radius:3px 8px 8px 3px;background:var(--paper-tex),linear-gradient(90deg,rgba(74,58,46,.13),transparent 30px),#fffdf8;box-shadow:2px 2px 0 #f3efe7,4px 4px 0 #e9e3d7,6px 6px 0 #ddd5c6,8px 7px 0 #cfc6b4}
 .spread .jb-l{display:block;left:0;right:50%;border-right:0;border-radius:8px 0 0 8px;background:var(--paper-tex),linear-gradient(270deg,rgba(74,58,46,.16),transparent 40px),#fffdf8;box-shadow:-2px 2px 0 #f3efe7,-4px 4px 0 #e9e3d7,-6px 6px 0 #ddd5c6,-8px 7px 0 #cfc6b4}
@@ -1296,10 +1296,37 @@ function buildKitchen() {
   const bonsaiPot = rr(1300, 460, 30, 10, 3), canopy = fluff(1318, 436, 16, 9, 8, 3, 451) + fluff(1302, 444, 10, 6, 7, 2, 452);
   piece(tb, { occ: bonsaiPot + canopy, fill: [[bonsaiPot, '#5b6b7a', .9], [canopy, '#6f9a69', .9]], line: [bonsaiPot, canopy, { d: 'M1314,460 Q1310,452 1316,446 Q1320,442 1318,436M1312,452 Q1306,448 1302,444', stroke: '#6b4428', 'stroke-width': 2.2 }], lw: 1.5 });
 
-  // stove side: a boxy plaster hood with a walnut band, an open walnut shelf with a moon jar and bowls,
+  // stove side: open walnut shelves up the wall full of ceramics and tea, an open walnut shelf with a moon jar and bowls,
   // walnut cabinets, and a stacked-stone base under the cooktop, all under one thick stone counter
-  const hood = rect(1458, 396, 108, 40);
-  piece(k, { occ: hood + rect(1496, 201, 32, 195), fill: [[rect(1496, 201, 32, 195), '#efe6d4', .9], [hood, '#efe6d4', .95], [rect(1458, 428, 108, 8), '#6b4428', .95]], line: [hood, rect(1496, 201, 32, 195), 'M1458,428H1566'] });
+  [290, 356, 424].forEach(y => {
+    const sh = rect(1450, y, 158, 6), br = `M1462,${y + 6} v10 h4 l8,-10Z M1592,${y + 6} v10 h-4 l-8,-10Z`;
+    piece(k, { occ: sh + br, fill: [[sh, '#6b4428', .95], [br, '#5a3a26', .95]], line: [sh, br], lw: 1.6 });
+  });
+  const cer = (g, d, c, a = 1, extra = []) => piece(k, { occ: g, fill: [[g, c, a], ...extra.filter(e => e[1])], line: [g, ...extra.filter(e => !e[1]).map(e => e[0])], lw: 1.6 });
+  // top shelf: a standing plate with a blue rim, a little onggi jar, a jar of roasted barley tea, two tea tins, a trailing pothos
+  cer(ell(1472, 276, 14), 0, '#f6f3ec', 1, [[ell(1472, 276, 9.5)], [ell(1472, 276, 3, 3), '#3f6aa0']]);
+  piece(k, { line: [{ d: ell(1472, 276, 12) , stroke: '#3f6aa0', 'stroke-width': 1.3 }] });
+  cer('M1494,290 Q1490,280 1494,272 Q1498,266 1506,266 Q1514,266 1518,272 Q1522,280 1518,290Z', 0, '#7a4b2c', .95, [['M1498,266 h16 v-3 h-16Z', '#6b4428'], ['M1496,276 q10,4 20,0']]);
+  cer(rr(1528, 262, 20, 28, 4), 0, '#eef0e6', .7, [[rect(1530, 272, 16, 17), '#b98a4e'], ['M1528,268 H1548'], [rr(1526, 258, 24, 5, 2), '#c9c3b6']]);
+  cer(rr(1556, 266, 14, 24, 2), 0, '#9fb68a', .95, [[rect(1556, 272, 14, 6), '#fffaf0'], ['M1556,270 H1570']]);
+  cer(rr(1573, 270, 13, 20, 2), 0, '#7a2633', .95, [[rect(1573, 275, 13, 5), '#f3e3c2'], ['M1573,273 H1586']]);
+  cer('M1590,290 L1592,276 H1604 L1606,290Z', 0, '#e6d3ae', 1);
+  [[1594, 300, -.6], [1600, 314, .4], [1596, 328, -.3], [1604, 342, .5]].forEach(([x, y, r], i) => piece(k, { fill: [[fluff(x, y, 5, 3, 6, 1, 760 + i, r), '#6f9f4a', .95]], line: [fluff(x, y, 5, 3, 6, 1, 760 + i, r)], lw: 1.2 }));
+  piece(k, { line: [{ d: 'M1598,290 Q1590,306 1596,318 Q1604,332 1600,344', stroke: '#5f7a4a', 'stroke-width': 1.2 }] });
+  [[1594, 268, .3], [1602, 270, -.4]].forEach(([x, y, r], i) => piece(k, { fill: [[fluff(x, y, 5, 3, 6, 1, 770 + i, r), '#6f9f4a', .95]], line: [fluff(x, y, 5, 3, 6, 1, 770 + i, r)], lw: 1.2 }));
+  // middle shelf: a celadon teapot, a stack of blue-banded bowls, two cups, a tall vase with a blossom branch
+  cer('M1458,356 Q1452,346 1458,338 Q1466,330 1476,332 Q1486,334 1488,344 Q1490,352 1484,356Z', 0, '#a9c3a0', .95, [['M1488,344 Q1496,340 1498,334'], ['M1458,342 Q1450,340 1450,348 Q1452,354 1458,352'], [ell(1471, 331, 6, 2), '#93ad8a'], ['M1471,329 v-3']]);
+  [[350, 16], [343, 15], [336, 14]].forEach(([y, w], i) => cer(`M${1520 - w},${y} Q${1520 - w + 2},${y + 6} 1520,${y + 6} Q${1520 + w - 2},${y + 6} ${1520 + w},${y}Z`, 0, '#f6f3ec', 1, [[`M${1520 - w + 2},${y + 2} q${w - 2},3 ${2 * w - 4},0`]]));
+  piece(k, { line: [{ d: 'M1506,352 q14,3 28,0M1507,345 q13,3 26,0M1508,338 q12,3 24,0', stroke: '#3f6aa0', 'stroke-width': 1.2 }] });
+  [[1546, '#e6d3ae'], [1560, '#c9663d']].forEach(([x, c]) => cer(`M${x - 6},356 L${x - 7},344 H${x + 7} L${x + 6},356Z`, 0, c, .95));
+  cer('M1580,356 Q1574,346 1578,336 Q1580,330 1580,322 H1590 Q1590,330 1592,336 Q1596,346 1590,356Z', 0, '#f3ece0', 1, [['M1578,340 H1592']]);
+  piece(k, { line: [{ d: 'M1585,322 Q1584,308 1576,298 M1585,316 Q1592,306 1598,302 M1580,306 Q1574,304 1570,306', stroke: '#6b4428', 'stroke-width': 1.4 }] });
+  piece(k, { fill: [[ell(1576, 298, 2.6) + ell(1598, 302, 2.4) + ell(1570, 306, 2.2) + ell(1590, 309, 2), '#e9a9b0', 1]] });
+  // bottom shelf: jars of rice, red pepper flakes and sesame, a honey jar and a matcha tin, a wooden board leaning at the back
+  cer(rr(1566, 388, 28, 36, 6), 0, '#d8b07a', .95, [[ell(1580, 392, 3), '#6b4428'], ['M1580,395 V420']]);
+  [[1456, '#f6f3ec'], [1474, '#c0503a'], [1492, '#d9c08a']].forEach(([x, c]) => cer(rr(x, 402, 15, 22, 3), 0, '#eef0e6', .6, [[rect(x + 1.5, 409, 12, 14), c], [rr(x - 1, 398, 17, 5, 2), '#6b4428']]));
+  cer('M1514,424 Q1510,414 1514,408 H1530 Q1534,414 1530,424Z', 0, '#f2c45a', .9, [[rect(1513, 404, 18, 4), '#d9a441'], ['M1517,414 h10']]);
+  cer(rr(1540, 404, 16, 20, 2), 0, '#5f7a4a', .95, [[rect(1540, 410, 16, 6), '#9fc36b']]);
   const oshelf = rect(1350, 446, 96, 6);
   const moon = 'M1372,446 Q1356,440 1358,428 Q1360,414 1376,412 Q1392,414 1394,428 Q1396,440 1380,446Z';
   piece(k, { occ: oshelf + moon, fill: [[oshelf, '#6b4428', .95], [moon, '#f6f1e6', 1], ['M1404,446 Q1402,436 1414,434 Q1426,436 1424,446Z', '#e6dccb', 1], ['M1428,446 Q1427,440 1434,439 Q1441,440 1440,446Z', '#5a5650', 1]], line: [oshelf, moon, 'M1404,446 Q1402,436 1414,434 Q1426,436 1424,446Z', 'M1428,446 Q1427,440 1434,439 Q1441,440 1440,446Z', 'M1370,412h12'], lw: 1.6 });
