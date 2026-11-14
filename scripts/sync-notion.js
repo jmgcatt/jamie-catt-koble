@@ -3,7 +3,7 @@
 //
 //   npm run sync
 //
-// Needs NOTION_TOKEN, NOTION_QUOTES_DB, NOTION_FAVES_DB and NOTION_COOKING_DB (NOTION_BOOKS_DB is optional), either from a local
+// Needs NOTION_TOKEN, NOTION_QUOTES_DB, NOTION_FAVES_DB and NOTION_COOKING_DB (NOTION_DRINKS_DB and NOTION_BOOKS_DB are optional), either from a local
 // .env file (never committed) or from the environment, so a GitHub Action can pass them as secrets.
 // Every row in each database is published. Images are downloaded into assets/notion/
 // so the site never points at Notion's temporary file links.
@@ -68,6 +68,20 @@ const DATABASES = [
       image: files(p, 'Image')[0] || cover(p),
     }),
     keep: (r) => r.dish,
+    sort: (a, b) => (b.date || '').localeCompare(a.date || '') || b._created.localeCompare(a._created),
+  },
+  {
+    env: 'NOTION_DRINKS_DB', file: 'drinks.json', key: 'drinks', label: 'What I\u2019m Drinking (the tea bar)', optional: true,
+    // Drink (title), Date (date), Note (text), Image (files, or the page cover),
+    // Art (select: genmaicha; picks the drawing)
+    row: (p) => ({
+      drink: text(p, 'Drink'),
+      date: date(p, 'Date'),
+      note: text(p, 'Note'),
+      art: text(p, 'Art').toLowerCase(),
+      image: files(p, 'Image')[0] || cover(p),
+    }),
+    keep: (r) => r.drink,
     sort: (a, b) => (b.date || '').localeCompare(a.date || '') || b._created.localeCompare(a._created),
   },
   {

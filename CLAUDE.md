@@ -25,6 +25,7 @@ Jamie Catt-Koble's portfolio: an interactive, colored-pencil illustration of the
 | Favorites | Item, Month, Year, Link, Description, Image, Art, Color | "favorite" tickets and Monthly faves |
 | Reads | Book Title, Author, Description, Goodreads (optional) | "read" tickets; Goodreads link and cover found automatically via Open Library |
 | On The Menu | Dish, Date, Note, Image, Art | "What I'm cooking" menu cards |
+| What I'm Drinking | Drink, Date, Note, Image, Art | "What I'm drinking" tea bar cards (same cards as the menu) |
 
 Everything in a database is published (there's no "show on site" checkbox). All text in Notion is lowercase by Jamie's choice.
 

@@ -2220,6 +2220,7 @@ Object.values(WEEKLY).forEach(w => { w.items = []; w.state = staticSite ? 'ready
 // as a static site the menu comes from data/cooking.json (my "On The Menu" database in Notion), already newest first.
 // dishes I've drawn get their drawing (the Art choice in Notion, or matched by name); others use their photo, or a plate
 const DISH_ART = [[/quesadilla/i, 'quesadilla'], [/chili|chicken/i, 'chili-chicken'], [/rice/i, 'rice'], [/peach|cottage/i, 'cottage-peaches']];
+const DRINK_ART = [[/genmaicha/i, 'genmaicha']];
 const dayName = d => { const t = d ? new Date(d.length === 10 ? d + 'T12:00:00' : d) : null; return t && !isNaN(t) ? t.toLocaleDateString('en-US', { weekday: 'long' }).toLowerCase() : ''; };
 if (staticSite) {
   WEEKLY.menu.state = 'loading';
@@ -2231,6 +2232,16 @@ if (staticSite) {
     }));
     refreshWeekly();
   });
+  // the tea bar: data/drinks.json, from my "What I'm Drinking" database
+  WEEKLY.drinks.state = 'loading';
+  loadData('data/drinks.json', 'drinks').then(list => {
+    WEEKLY.drinks.state = list ? 'ready' : 'error';
+    WEEKLY.drinks.items = (list || []).filter(d => typeof d.drink === 'string' && d.drink.trim()).map(d => ({
+      name: d.drink.trim(), note: [dayName(d.date), String(d.note || '').trim()].filter(Boolean).join(' \u00b7 '),
+      art: DRINK_ART.some(([, k]) => k === d.art) ? d.art : (DRINK_ART.find(([re]) => re.test(d.drink)) || [])[1] || '', image: safeImg(d.image)
+    }));
+    refreshWeekly();
+  });
 }
 let weeklyDb = null, weeklyEdit = false, weeklyOpen = null;
 function weeklyList(k) {
@@ -2238,7 +2249,7 @@ function weeklyList(k) {
   if (w.state === 'loading') return '<p class="empty-note">Checking the kitchen\u2026</p>';
   if (w.state === 'error') return '<p class="empty-note">The kitchen notes are out of reach right now. Try again in a little while.</p>';
   if (!w.items.length) return `<p class="empty-note">${w.empty}</p>`;
-  if (k === 'menu') return `<ul class="dish-grid">${w.items.map(it => `<li class="dish">${dishArt(it)}<b>${linkOr(it.name || '', safeUrl(it.url))}</b>${it.note ? `<span>${esc(it.note)}</span>` : ''}${weeklyEdit ? `<span class="book-tools"><button class="btn-plain" type="button" data-weekly-remove="${k}/${it.id}">Remove</button></span>` : ''}</li>`).join('')}</ul>`;
+  if (k === 'menu' || k === 'drinks') return `<ul class="dish-grid">${w.items.map(it => `<li class="dish">${dishArt(it, k === 'drinks' ? 'teacup' : 'plate')}<b>${linkOr(it.name || '', safeUrl(it.url))}</b>${it.note ? `<span>${esc(it.note)}</span>` : ''}${weeklyEdit ? `<span class="book-tools"><button class="btn-plain" type="button" data-weekly-remove="${k}/${it.id}">Remove</button></span>` : ''}</li>`).join('')}</ul>`;
   return `<ul class="shelf-list">${w.items.map(it => `<li class="book"><b>${linkOr(it.name || '', safeUrl(it.url))}</b>${it.note ? `<span>${esc(it.note)}</span>` : ''}${weeklyEdit ? `<span class="book-tools"><button class="btn-plain" type="button" data-weekly-remove="${k}/${it.id}">Remove</button></span>` : ''}</li>`).join('')}</ul>`;
 }
 function openWeekly(k) {
@@ -2248,8 +2259,8 @@ function openWeekly(k) {
     <input id="wfNote" type="text" placeholder="${w.note}" aria-label="Notes">
     <input id="wfUrl" type="url" placeholder="Link (optional)" aria-label="Link"></div>
     <button class="btn-ink" type="submit">${w.button}</button><p class="cv-msg" id="wfMsg"></p></form>` : ''}`, false, null);
-  // the menu has no index card behind it: each dish is its own menu card in the middle of the screen
-  sheet.classList.toggle('menu', k === 'menu');
+  // the menu and the tea bar have no index card behind them: each dish or drink is its own card in the middle of the screen
+  sheet.classList.toggle('menu', k === 'menu' || k === 'drinks');
   stackDishes();
 }
 // phones: the dish cards sit in one stack. Swipe the top card either way and it slides off, then tucks back in
@@ -2711,7 +2722,7 @@ const FAV_DEFAULT = { book: '#c9663d', lotion: '#e9b8a8', balm: '#e3b29a', tea: 
   piece(g, { line: [star(98, 50, 8), star(22, 122, 6)], color: '#d9a441', lw: 1.8 });
 })();
 // little drawings for the week's menu
-const DISHES = ['quesadilla', 'chili-chicken', 'rice', 'cottage-peaches', 'plate'];
+const DISHES = ['quesadilla', 'chili-chicken', 'rice', 'cottage-peaches', 'plate', 'genmaicha', 'teacup'];
 (function buildDishArt() {
   const defs = $('#artDefs');
   const sym = id => E('symbol', { id: 'dish-' + id, viewBox: '0 0 120 120', overflow: 'visible' }, defs);
@@ -2742,13 +2753,27 @@ const DISHES = ['quesadilla', 'chili-chicken', 'rice', 'cottage-peaches', 'plate
   piece(g, { occ: cup + curds, fill: [[curds, '#fffdf6', 1], [cup, '#e9b8a8', .8]], line: [curds, cup, { d: ell(42, 56, 3) + ell(54, 52, 3) + ell(78, 54, 3) + ell(66, 60, 3) + ell(46, 62, 2.5), 'stroke-width': 1.1 }] });
   [['M52,44 Q62,32 74,42 Q64,40 52,44Z', 0], ['M60,52 Q74,44 86,54 Q74,50 60,52Z', 1], ['M34,50 Q44,40 56,48 Q46,46 34,50Z', 2]].forEach(([d], i) => piece(g, { occ: d, fill: [[d, '#f2a65a', 1]], line: [d], lw: 1.6 }));
   piece(g, { fill: [[ell(94, 30, 10, 9), '#f2a65a', .95], ['M94,21 q4,-6 10,-4 q-4,4 -10,4Z', '#6f9f4a', 1]], line: [ell(94, 30, 10, 9), 'M94,22 v4'], lw: 1.8 });
+  // genmaicha: a stoneware yunomi of pale yellow-green tea, with toasted brown rice and a few popped white kernels beside it
+  g = sym('genmaicha', '#e6ecd6');
+  const yunomi = 'M34,44 Q32,76 38,98 Q60,106 82,98 Q88,76 86,44Z', foot = 'M40,98 Q60,104 80,98 L79,104 Q60,110 41,104Z';
+  piece(g, { occ: yunomi + foot, fill: [[yunomi, '#efe3cc', 1], ['M33,62 Q60,70 87,62 L87,52 Q60,58 33,52Z', '#9fb68a', .55], [foot, '#b98a5e', .9], [ell(60, 44, 26, 6), '#d6d48c', 1]],
+    line: [yunomi, foot, ell(60, 44, 26, 6)] });
+  piece(g, { line: ['M52,30 q-4,-6 0,-11 q4,-5 0,-11', 'M68,30 q-4,-6 0,-11 q4,-5 0,-11'], color: '#b9b2a6', lw: 2 });
+  [[18, 96, .5], [26, 104, -.3], [16, 108, .9], [98, 100, -.6], [106, 108, .2], [96, 110, .8], [104, 94, -.1]].forEach(([x, y, a], i) =>
+    piece(g, { fill: [[fluff(x, y, 3.6, 2, 6, .4, 700 + i, a), '#b9824a', 1]], line: [fluff(x, y, 3.6, 2, 6, .4, 700 + i, a)], lw: 1.1 }));
+  [[24, 112], [102, 102], [12, 100]].forEach(([x, y], i) => piece(g, { fill: [[fluff(x, y, 3.4, 3, 7, 1, 720 + i), '#fffdf6', 1]], line: [fluff(x, y, 3.4, 3, 7, 1, 720 + i)], lw: 1.1 }));
+  // any other drink: a cup of tea on its saucer
+  g = sym('teacup', '#efe8dc');
+  const tcup = 'M32,56 Q34,88 60,90 Q86,88 88,56Z';
+  piece(g, { occ: ell(60, 92, 42, 10) + tcup, fill: [[ell(60, 92, 42, 10), '#fffdf6', 1], [tcup, '#fffdf6', 1], [ell(60, 56, 28, 6), '#c9a46a', 1]], line: [ell(60, 92, 42, 10), tcup, ell(60, 56, 28, 6), { d: 'M88,62 Q102,62 100,72 Q98,80 86,78', 'stroke-width': 2.4 }] });
+  piece(g, { line: ['M52,42 q-4,-6 0,-11 q4,-5 0,-11', 'M68,42 q-4,-6 0,-11 q4,-5 0,-11'], color: '#b9b2a6', lw: 2 });
   // anything else: an empty plate, fork and spoon, ready for whatever's cooking
   g = sym('plate', '#efe8dc');
   plate(g, 60, 62, 40, 30);
   piece(g, { line: ['M12,40 V88M8,40 V52 Q12,58 16,52 V40', 'M108,40 V88', ell(108, 46, 4, 8)], lw: 2 });
 })();
-const dishArt = it => !DISHES.includes(it.art) && it.image ? `<img class="dish-photo" src="${esc(it.image)}" alt="" loading="lazy">`
-  : `<svg viewBox="6 6 108 108" aria-hidden="true"><use href="#dish-${DISHES.includes(it.art) ? it.art : 'plate'}"/></svg>`;
+const dishArt = (it, blank = 'plate') => !DISHES.includes(it.art) && it.image ? `<img class="dish-photo" src="${esc(it.image)}" alt="" loading="lazy">`
+  : `<svg viewBox="6 6 108 108" aria-hidden="true"><use href="#dish-${DISHES.includes(it.art) ? it.art : blank}"/></svg>`;
 // a recommended book: its real cover inside the drawn book, or the plain drawn book when there's no cover
 const bookThumb = t => t.image ? `<svg class="fav-art book-art" viewBox="0 0 120 150" aria-hidden="true"><use href="#fav-book-back"/><image href="${esc(t.image)}" x="28" y="22" width="64" height="104" preserveAspectRatio="xMidYMid slice"/><use href="#fav-book-front"/></svg>`
   : favThumb({ art: 'book' });
