@@ -1101,19 +1101,18 @@ function buildWorkDesk() {
   const lid = 'M758,508 L858,508 L848,488 L768,488Z';
   piece(E('g', { class: 'lid-closed' }, g), { occ: lid, fill: [[lid, '#c9ccd0', .95], [apple(808, 498, .7) + leaf(808, 498, .7), '#9aa0a7', 1]], line: [lid, 'M760,505H856', { d: apple(808, 498, .7) + leaf(808, 498, .7), 'stroke-width': 1.2, stroke: '#7b8188' }] });
   const open = E('g', { class: 'lid-open' }, g);
-  // colored-pencil texture like the rest of the house, clipped to the lid and deck shapes so the edges stay tidy
+  // colored-pencil texture and a soft charcoal pencil edge, like the rest of the house
   const bezel = rr(765, 447, 86, 53, 4.5), screen = rect(768, 450, 80, 46), base = 'M767,500 H849 L852,511 Q852,512.4 850.6,512.4 H765.4 Q764,512.4 764,511Z';
-  E('path', { d: bezel + base, fill: '#d6d9dd' }, E('clipPath', { id: 'laptopClip' }, $('#scene defs')));
-  const body = E('g', { 'clip-path': 'url(#laptopClip)' }, open);
+  const body = E('g', {}, open);
   // keyboard: four rows of small rounded keys, a little wider toward you, a space bar, and a trackpad
   let keyRows = '';
   [[501.1, 769.4, 77.2, 14], [503.1, 768.9, 78.2, 14], [505.1, 768.4, 79.2, 13], [507.1, 767.9, 80.2, 0]].forEach(([y, x0, w, n]) => {
     if (n) { const k = w / n; for (let i = 0; i < n; i++) keyRows += rr(x0 + i * k + .35, y, k - .7, 1.45, .35); }
     else { const k = w / 12; [0, 1, 2].forEach(i => { keyRows += rr(x0 + i * k + .35, y, k - .7, 1.45, .35); }); keyRows += rr(x0 + 3 * k + .35, y, k * 6 - .7, 1.45, .35); [9, 10, 11].forEach(i => { keyRows += rr(x0 + i * k + .35, y, k - .7, 1.45, .35); }); }
   });
-  // solid underneath, so the stand and wall never show through the pencil grain
-  E('path', { d: bezel, fill: '#3d3f45' }, body); E('path', { d: base, fill: '#d6d9dd' }, body);
-  piece(body, { fill: [[bezel, '#3d3f45', .95], [screen, '#7d8b98', .85], [base, '#d6d9dd', 1], ['M764,511.2 H852 V512.6 H764Z', '#b9bdc2', 1], ['M767,500 H849 V500.6 H767Z', '#a9aeb4', 1], [keyRows, '#62666d', .95], [rr(797, 509.1, 22, 2.3, .6), '#c4c8cd', 1]] });
+  // solid underneath (a little inside the edges, so the grain still shows there) so the stand and wall never show through
+  E('path', { d: rr(766.3, 448.3, 83.4, 50.4, 3.5), fill: '#3d3f45' }, body); E('path', { d: 'M768.2,501.2 H847.8 L850.6,510.8 V511.2 H765.4 V510.8Z', fill: '#d6d9dd' }, body);
+  piece(body, { fill: [[bezel, '#3d3f45', .95], [screen, '#7d8b98', .85], [base, '#d6d9dd', 1], ['M764,511.2 H852 V512.6 H764Z', '#b9bdc2', 1], ['M767,500 H849 V500.6 H767Z', '#a9aeb4', 1], [keyRows, '#62666d', .95], [rr(797, 509.1, 22, 2.3, .6), '#c4c8cd', 1]], line: [bezel, base], color: '#34363b', lw: 1.3 });
   piece(open, { line: [{ d: 'M796,470q4,4 8,0M812,470q4,4 8,0', stroke: '#e6ebef', 'stroke-width': 1.8 }] });
   const boot = E('g', { class: 'boot' }, open);
   E('path', { d: screen, fill: '#23262b' }, boot);
