@@ -3,7 +3,7 @@
 //
 //   npm run sync
 //
-// Needs NOTION_TOKEN, NOTION_QUOTES_DB, NOTION_FAVES_DB and NOTION_COOKING_DB, either from a local
+// Needs NOTION_TOKEN, NOTION_QUOTES_DB, NOTION_FAVES_DB and NOTION_COOKING_DB (NOTION_BOOKS_DB is optional), either from a local
 // .env file (never committed) or from the environment, so a GitHub Action can pass them as secrets.
 // Every row in each database is published. Images are downloaded into assets/notion/
 // so the site never points at Notion's temporary file links.
@@ -20,6 +20,7 @@ const DATA_DIR = path.join(ROOT, 'data');
 const ASSET_DIR = path.join(ROOT, 'assets', 'notion');
 const API = process.env.NOTION_API_URL || 'https://api.notion.com/v1'; // override only for testing
 const NOTION_VERSION = '2025-09-03';
+const OPEN_LIBRARY = process.env.OPEN_LIBRARY_URL || 'https://openlibrary.org'; // override only for testing
 
 const DATABASES = [
   {
@@ -51,6 +52,8 @@ const DATABASES = [
       image: files(p, 'Image')[0] || cover(p),
     }),
     keep: (r) => r.title,
+    // a book fave with no Link gets its Goodreads page
+    enrich: async (r) => { if (r.art === 'book' && !r.url) r.url = (await findBook(r.title)).url; },
     sort: (a, b) => monthKey(b) - monthKey(a) || b._created.localeCompare(a._created),
   },
   {
@@ -66,6 +69,20 @@ const DATABASES = [
     }),
     keep: (r) => r.dish,
     sort: (a, b) => (b.date || '').localeCompare(a.date || '') || b._created.localeCompare(a._created),
+  },
+  {
+    env: 'NOTION_BOOKS_DB', file: 'books.json', key: 'books', label: 'Reads (book recommendations)', optional: true,
+    // Book Title (title), Author (text), Description (text); optional: Goodreads (url, overrides the one found automatically)
+    row: (p) => ({
+      title: text(p, 'Book Title'),
+      author: text(p, 'Author'),
+      description: text(p, 'Description'),
+      url: url(p, 'Goodreads'),
+    }),
+    keep: (r) => r.title,
+    // the Goodreads page and the real cover, found from the title and author
+    enrich: async (r) => { const b = await findBook(r.title, r.author); r.url ||= b.url; r.image = b.cover; },
+    sort: (a, b) => b._created.localeCompare(a._created),
   },
 ];
 
@@ -96,6 +113,39 @@ const date = (page, name) => prop(page, name)?.date?.start || '';
 const fileUrl = (f) => (f?.type === 'external' ? f.external.url : f?.type === 'file' ? f.file.url : '');
 const files = (page, name) => (prop(page, name)?.files || []).map(fileUrl).filter(Boolean);
 const cover = (page) => fileUrl(page.cover);
+
+// ---------- books: a Goodreads link and the cover, via Open Library ----------
+// Goodreads has no public search, but /book/isbn/<isbn> lands on the book's page, so an ISBN is enough.
+// Never fails: without a match the link is a Goodreads search and there is no cover.
+async function findBook(title, author = '') {
+  const search = `https://www.goodreads.com/search?q=${encodeURIComponent([title, author].filter(Boolean).join(' '))}`;
+  try {
+    const q = new URLSearchParams({ title, fields: 'cover_i,isbn', limit: '1' });
+    if (author) q.set('author', author);
+    const res = await fetch(`${OPEN_LIBRARY}/search.json?${q}`, { headers: { 'User-Agent': 'jamie-catt-koble website sync' }, signal: AbortSignal.timeout(15000) });
+    const doc = res.ok ? (await res.json()).docs?.[0] : null;
+    if (!doc) return { url: search, cover: '' };
+    const isbns = doc.isbn || [];
+    const isbn = isbns.find((i) => /^97[89]\d{10}$/.test(i)) || isbns.find((i) => /^\d{9}[\dX]$/i.test(i));
+    return {
+      url: isbn ? await goodreadsPage(isbn) : search,
+      // -L is the largest size Open Library serves
+      cover: doc.cover_i ? `https://covers.openlibrary.org/b/id/${doc.cover_i}-L.jpg` : '',
+    };
+  } catch (err) {
+    console.warn(`  couldn't look up "${title}" (${err.message}), linking a Goodreads search instead`);
+    return { url: search, cover: '' };
+  }
+}
+// follow the ISBN link once to get the clean /book/show/ address; if Goodreads won't say, the ISBN link still works
+async function goodreadsPage(isbn) {
+  const byIsbn = `https://www.goodreads.com/book/isbn/${isbn}`;
+  try {
+    const res = await fetch(byIsbn, { method: 'HEAD', redirect: 'manual', headers: { 'User-Agent': 'Mozilla/5.0' }, signal: AbortSignal.timeout(10000) });
+    const to = res.headers.get('location') || '';
+    return /^https:\/\/www\.goodreads\.com\/book\/show\//.test(to) ? to.split('?')[0] : byIsbn;
+  } catch { return byIsbn; }
+}
 
 // ---------- Notion API ----------
 async function notion(method, endpoint, body) {
@@ -165,6 +215,7 @@ async function loadEnv() {
 
 async function syncOne(db, keepImages) {
   const id = (process.env[db.env] || '').replace(/-/g, '').match(/[0-9a-f]{32}/i)?.[0];
+  if (!id && db.optional && !process.env[db.env]) return null;
   if (!id) throw new Error(`${db.env} is missing or isn't a Notion database id`);
   const source = await dataSourceOf(id);
   const pages = await queryAll(source.id);
@@ -172,6 +223,7 @@ async function syncOne(db, keepImages) {
   for (const page of pages) {
     const r = db.row(page);
     if (!db.keep(r)) continue;
+    if (db.enrich) await db.enrich(r);
     if (r.image) r.image = await saveImage(r.image, `${db.key}-${page.id.replace(/-/g, '')}`, keepImages);
     rows.push({ ...r, _created: page.created_time });
   }
@@ -190,6 +242,7 @@ async function main() {
   for (const db of DATABASES) {
     try {
       const rows = await syncOne(db, keepImages);
+      if (rows === null) { console.log(`${db.label}: skipped (${db.env} isn't set)`); continue; }
       await writeAtomic(path.join(DATA_DIR, db.file), JSON.stringify({ [db.key]: rows }, null, 2) + '\n');
       console.log(`${db.label}: ${rows.length} item(s) → data/${db.file}`);
     } catch (err) {

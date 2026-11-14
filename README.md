@@ -11,6 +11,7 @@ Notion is the only place this content lives. My databases on the [Jamie Catt-Kob
 | **Quotes** | tickets from the ticket machine |
 | **Favorite** | "Monthly faves" in the menu, and favorite tickets |
 | **On The Menu** | "What I'm cooking" (the pan, or the menu) |
+| **Reads** | book recommendations, as "read" tickets from the ticket machine |
 
 Every row is published, newest first. To take something off the site, delete it in Notion.
 
@@ -43,6 +44,10 @@ The exact names matter. Blank fields are simply left out on the site.
 - **Quotes:** `Quote` (title), `Author` (text), `Source` (text; a link typed into it is used too), `Author link` (URL), `Source link` (URL).
 - **Favorite:** `Item` (title), `Month` (select, like "November"), `Year` (select, like "2026"), `Link` (URL), `Description` (text), `Image` (files & media), `Art` (select: book, lotion, balm, tea, coffee, candle or scent; picks the drawing), `Color` (text, like `#e3b29a`; tints the drawing). Without an Image, the page cover is used.
 - **On The Menu:** `Dish` (title), `Date` (date; shows the weekday), `Note` (text), `Image` (files & media), `Art` (select: quesadilla, chili-chicken, rice or cottage-peaches; picks the drawing). If Art is blank, a dish whose name matches one of my drawings still gets it; otherwise its Image, then the page cover, then a plain plate.
+
+- **Reads:** `Book Title` (title), `Author` (text), `Description` (text), `Goodreads` (URL, optional). Leave Goodreads blank: the sync looks the book up on Open Library and links its Goodreads page by ISBN (or a Goodreads search if there's no match), and uses the real cover inside the drawn book. Paste a link only to override it. Book faves (Art: book) with no Link get a Goodreads link the same way.
+
+The ticket machine picks at random among quotes, favorites and reads, with no repeats until it has printed everything once.
 
 Images are downloaded at full size into `assets/notion/`, because Notion's own image links expire after about an hour.
 

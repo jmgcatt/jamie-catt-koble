@@ -56,13 +56,11 @@ button{font:inherit;color:inherit}
 .td-x{position:static}
 .td-head{margin-bottom:14px}
 .stubs{list-style:none;margin:0;padding:0;display:grid;gap:0}
-.stub{position:relative;margin-top:-6px;padding:12px 16px 12px 18px;background:#fffaf0;border:2px solid var(--ink);border-radius:var(--wobble);filter:drop-shadow(2px 3px 0 rgba(74,58,46,.12))}
+.stub{position:relative;margin-top:-6px;padding:12px 16px 12px 18px;background:#fffaf0;border-radius:var(--wobble)}
 .stub:first-child{margin-top:0}
 .stub:nth-child(odd){transform:rotate(-.7deg)}
 .stub:nth-child(even){transform:rotate(.6deg)}
-.stub::before,.stub::after{content:"";position:absolute;top:50%;width:14px;height:14px;margin-top:-7px;border:2px solid var(--ink);border-radius:50%;background:#fffdf6}
-.stub::before{left:-9px;clip-path:inset(0 0 0 50%)}
-.stub::after{right:-9px;clip-path:inset(0 50% 0 0)}
+.stub{-webkit-mask:radial-gradient(circle 8px at left center,#0000 7.5px,#000 8px) left/51% 100% no-repeat,radial-gradient(circle 8px at right center,#0000 7.5px,#000 8px) right/51% 100% no-repeat;mask:radial-gradient(circle 8px at left center,#0000 7.5px,#000 8px) left/51% 100% no-repeat,radial-gradient(circle 8px at right center,#0000 7.5px,#000 8px) right/51% 100% no-repeat}
 .stub-top{display:flex;justify-content:space-between;align-items:baseline;padding-bottom:6px;border-bottom:2px dashed rgba(74,58,46,.3)}
 .stub-top b{font-family:var(--f-hand);font-size:20px;color:var(--persimmon);font-variant-numeric:tabular-nums}
 .stub-top span{font-size:11.5px;letter-spacing:.12em;text-transform:uppercase;color:var(--ink-soft)}
@@ -74,35 +72,38 @@ button{font:inherit;color:inherit}
 .dl-btn svg{width:16px;height:16px}
 .dl-btn[aria-busy="true"]{opacity:.5;cursor:progress}
 .fav{display:flex;gap:12px;align-items:flex-start}
-.fav-img{flex:none;width:100px;max-height:150px;object-fit:cover;border:1.5px solid var(--ink);border-radius:3px;background:#f6ead0}
-.fav-art{display:block;flex:none;width:120px;height:auto;aspect-ratio:4/5;border:1.5px solid var(--ink);border-radius:var(--wobble);background:#fffdf7}
+.fav-img{flex:none;width:100px;max-height:150px;object-fit:cover;border-radius:3px}
+.fav-art{display:block;flex:none;width:120px;height:auto;aspect-ratio:4/5}
 .stub .fav-art{width:66px}
 .ticket .fav{gap:16px}
 .stub .fav{margin-top:8px}
 .stub .fav-img{width:66px;max-height:100px}
 .fav-img.drawn{filter:none;object-fit:contain;background:#fffaf0}
+.book-art image{filter:sepia(.14) saturate(.9) contrast(.96)}
 .stub .fav .stub-q{margin-top:0}
-.fav-t a{color:inherit;text-decoration:underline;text-decoration-color:rgba(201,102,61,.5);text-underline-offset:3px}
+.fav-t a{color:inherit;text-decoration:none}
 .fav-t a:hover{color:var(--persimmon)}
+.t-by,.stub-by{margin:2px 0 0;font-family:Gaegu,cursive;font-size:19px;color:var(--ink-soft,#76614f)}
+.stub-by{font-size:16px}
+.mac{position:relative;display:inline!important;margin:0!important;padding:0!important;font:inherit!important;color:inherit!important;letter-spacing:inherit}
+.mac::after{content:"";position:absolute;left:.1em;right:.1em;top:.18em;border-top:.075em solid currentColor;border-radius:1px}
 .t-desc{margin:8px 0 0;font-size:15px;line-height:1.45;color:var(--ink)}
 .stub-d{margin:2px 0 4px;font-size:12.5px;line-height:1.4;color:var(--ink)}
-.dish-photo{display:block;width:100%;aspect-ratio:1;object-fit:cover;margin-bottom:4px;border-bottom:1.5px solid var(--ink);filter:sepia(.12) saturate(.92)}
+.dish-photo{display:block;width:100%;aspect-ratio:1;object-fit:cover;margin-bottom:4px;border-radius:var(--wobble);filter:sepia(.12) saturate(.92)}
 .fave-grid{list-style:none;margin:8px 0 24px;padding:0;display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:18px}
-.fave{display:flex;gap:16px;align-items:flex-start;padding:14px;background:var(--paper);border:1.5px solid var(--ink);border-radius:var(--wobble)}
+.fave{display:flex;gap:16px;align-items:flex-start;padding:14px;border:1.5px solid var(--ink);border-radius:var(--wobble)}
 .fave:nth-child(odd){transform:rotate(-.5deg)}
 .fave:nth-child(even){transform:rotate(.5deg)}
 .fave .fav-art,.fave .fav-img{width:96px}
 .fave b{display:block;font-family:var(--f-hand);font-size:23px;line-height:1.15}
-.fave b a{color:inherit}
+.fave b a,.dish b a{color:inherit;text-decoration:none}
 .fave span{display:block;margin-top:6px;font-size:14.5px;line-height:1.55;color:var(--ink-soft)}
 .dish-grid{list-style:none;margin:8px 0 26px;padding:0;display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:18px}
-.dish{display:grid;align-content:start;gap:6px;padding:0 0 12px;overflow:hidden;text-align:center;background:var(--paper);border:1.5px solid var(--ink);border-radius:var(--wobble)}
-.dish:nth-child(odd){transform:rotate(-.6deg)}
-.dish:nth-child(even){transform:rotate(.6deg)}
-.dish svg{display:block;width:100%;height:auto;aspect-ratio:1;margin-bottom:4px;border-bottom:1.5px solid var(--ink)}
+.dish{display:grid;align-content:start;gap:6px;padding:0 0 12px;text-align:center}
+.dish svg{display:block;width:100%;height:auto;aspect-ratio:1;margin-bottom:4px}
 .dish b,.dish span{padding:0 10px}
 .dish b{font-family:var(--f-hand);font-size:22px;line-height:1.15}
-.dish b a{color:inherit}
+
 .dish span{font-size:13px;color:var(--ink-soft)}
 .dish .book-tools{justify-content:center}
 .td-empty{margin:4px 0 0;display:grid;justify-items:start;gap:12px;font-family:var(--f-hand);font-size:22px;color:var(--ink)}
@@ -168,6 +169,11 @@ body.playing .notes .note:nth-child(2){animation-delay:-1.8s}
 .screen-bar .seg button{font-size:16px;padding:3px 10px}
 .screen-bar h2{margin:0;font-family:var(--f-title);font-weight:400;font-size:26px;line-height:1.2;text-transform:lowercase;filter:url(#ink)}
 .screen .cards{flex:1;max-height:none;overflow-y:auto;grid-template-columns:repeat(3,minmax(0,1fr));padding:14px}
+.screen .cards[hidden]{display:none}
+.screen-project{flex:1;overflow-y:auto;padding:14px 22px 6px}
+.screen-project .sp-back{margin:0 0 10px;font-size:17px}
+.sp-head{display:flex;align-items:baseline;gap:12px;margin:0 0 8px}
+.sp-head h3{margin:0;font-family:var(--f-title);font-weight:400;font-size:32px;line-height:1.2;text-transform:lowercase;filter:url(#ink);outline:none}
 .canvas-view{position:absolute;z-index:6;display:flex;flex-direction:column;overflow:hidden;background:#fffdf6;animation:screenIn .5s ease}
 .cv-art{flex:1;min-height:0;display:flex;align-items:center;justify-content:center;padding:12px 12px 6px}
 .cv-open{display:flex;align-items:center;justify-content:center;width:100%;height:100%;padding:0;background:none;border:0;border-radius:8px;transition:transform .2s}
@@ -241,9 +247,9 @@ body.zoomed .hint{opacity:0;pointer-events:none}
 .tc-name{font-family:var(--f-title);font-weight:400;font-size:32px;line-height:1.1;filter:url(#ink)}
 .tc-x{position:static}
 .tc-mood{flex:1;font-size:13px;color:var(--ink-soft)}
-.tc-meters{display:grid;gap:4px;margin:4px 0 10px}
-.meter{display:grid;grid-template-columns:58px 1fr;align-items:center;gap:8px;font-family:var(--f-hand);font-size:17px}
-.meter i{display:block;height:10px;overflow:hidden;background:#fff;border:1.5px solid var(--ink);border-radius:6px}
+.tc-meters{display:grid;gap:0;margin:4px 0 10px}
+.meter{display:grid;grid-template-columns:58px 1fr;align-items:end;gap:8px;font-family:var(--f-hand);font-size:17px}
+.meter i{display:block;height:10px;margin-bottom:8px;overflow:hidden;background:#fff;border:1.5px solid var(--ink);border-radius:6px}
 .meter b{display:block;height:100%;background:#e09a8a;transition:width .5s}
 #mTummy{background:#f2c45a}
 #mSmarts{background:#8fb0d9}
@@ -296,11 +302,9 @@ body.zoomed .edge-tab,.edge-tab[hidden]{display:none}
 .chip{border:1.5px solid var(--ink);border-radius:var(--wobble);background:var(--paper);padding:6px 14px;font-family:var(--f-hand);font-size:19px;cursor:pointer}
 
 /* ticket */
-.ticket-wrap{position:fixed;inset:0;z-index:9;width:min(440px,calc(100vw - 32px));height:fit-content;margin:auto;filter:drop-shadow(3px 5px 0 rgba(74,58,46,.14));animation:pop .35s cubic-bezier(.2,.8,.2,1)}
-.ticket{position:relative;background:#fffaf0;border:2px solid var(--ink);border-radius:var(--wobble);padding:20px 28px 22px}
-.ticket::before,.ticket::after{content:"";position:absolute;top:50%;width:16px;height:16px;margin-top:-8px;border:2px solid var(--ink);border-radius:50%;background:var(--paper)}
-.ticket::before{left:-10px;clip-path:inset(0 0 0 50%)}
-.ticket::after{right:-10px;clip-path:inset(0 50% 0 0)}
+.ticket-wrap{position:fixed;inset:0;z-index:9;width:min(440px,calc(100vw - 32px));height:fit-content;margin:auto;animation:pop .35s cubic-bezier(.2,.8,.2,1)}
+.ticket{position:relative;background:#fffaf0;border-radius:var(--wobble);padding:20px 28px 22px}
+.ticket{-webkit-mask:radial-gradient(circle 10px at left center,#0000 9.5px,#000 10px) left/51% 100% no-repeat,radial-gradient(circle 10px at right center,#0000 9.5px,#000 10px) right/51% 100% no-repeat;mask:radial-gradient(circle 10px at left center,#0000 9.5px,#000 10px) left/51% 100% no-repeat,radial-gradient(circle 10px at right center,#0000 9.5px,#000 10px) right/51% 100% no-repeat}
 .t-top{display:flex;justify-content:space-between;align-items:baseline;border-bottom:2px dashed rgba(74,58,46,.3);padding-bottom:8px}
 .t-no{font-family:var(--f-hand);font-weight:700;font-size:30px;color:var(--persimmon);font-variant-numeric:tabular-nums}
 .t-date{font-size:12px;letter-spacing:.12em;text-transform:uppercase;color:var(--ink-soft)}
@@ -308,7 +312,8 @@ body.zoomed .edge-tab,.edge-tab[hidden]{display:none}
 .t-quote{margin:0;padding-right:34px;font-family:var(--f-hand);font-size:24px;line-height:1.25;color:var(--ink)}
 .t-cite{margin:10px 0 0;padding-right:44px;font-size:14.5px;line-height:1.45;color:var(--ink-soft)}
 .t-cite i{font-style:italic}
-.t-cite a,.stub-c a{color:inherit;text-decoration:underline;text-decoration-color:rgba(201,102,61,.5);text-underline-offset:3px}
+.t-cite a,.stub-c a{color:inherit;text-decoration:none}
+.t-cite a:hover,.stub-c a:hover{color:var(--persimmon)}
 .t-cite a:hover,.stub-c a:hover{color:var(--persimmon)}
 .t-doodle{display:block;width:96px;height:80px;margin:2px 0 2px}
 .t-body{margin-top:14px}
@@ -322,7 +327,9 @@ body.zoomed .edge-tab,.edge-tab[hidden]{display:none}
 .btn-ink{border:2px solid var(--ink);border-radius:var(--wobble);background:#f7d9c4;padding:6px 14px;cursor:pointer;font-family:var(--f-hand);font-size:19px;font-weight:700}
 .btn-ink:hover{background:#f3c9ac}
 .btn-plain{background:none;border:0;padding:4px 0;cursor:pointer;font-size:13.5px;color:var(--ink-soft);text-decoration:underline;text-underline-offset:3px}
-.stamp{position:absolute;right:18px;bottom:16px;width:56px;height:56px;transform:rotate(-12deg);opacity:.75}
+.t-dl{display:grid;margin:14px 0 0 auto;width:44px;height:44px;color:var(--persimmon);border-color:var(--persimmon)}
+.t-dl svg{width:24px;height:24px}
+.t-dl[aria-busy="true"]{opacity:.5}
 
 /* laptop screen */
 .cards{list-style:none;margin:0;padding:6px 6px 8px;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px;max-height:min(48vh,420px);overflow-y:auto}
@@ -330,7 +337,8 @@ body.zoomed .edge-tab,.edge-tab[hidden]{display:none}
 .tab{background:none;border:0;padding:2px 0;cursor:pointer;font-family:var(--f-hand);font-size:21px;color:var(--ink-soft)}
 .tab[aria-selected="true"]{color:var(--ink);text-decoration:underline;text-decoration-color:var(--persimmon);text-decoration-thickness:2px;text-underline-offset:5px}
 .exp{list-style:none;margin:0;padding:0;display:grid;gap:18px}
-.spin-card{display:grid;grid-template-columns:120px minmax(0,1fr);gap:18px;align-items:center;margin:16px 0 28px}
+.sheet .spin-card{display:grid;grid-template-columns:120px minmax(0,1fr);gap:18px;align-items:center;margin:16px 0 28px;padding:14px 18px;color:var(--ink);text-decoration:none;background:var(--paper);border:1.5px solid var(--ink);border-radius:var(--wobble)}
+.sheet .spin-card:hover{background:#fdf1e2}
 .disc{width:120px;height:120px}
 body.playing .disc{animation:spin 6s linear infinite}
 @keyframes spin{to{transform:rotate(360deg)}}
@@ -338,11 +346,12 @@ body.playing .disc{animation:spin 6s linear infinite}
 .spin-title{display:block;font-family:var(--f-title);font-weight:400;font-size:30px;line-height:1.2;text-transform:lowercase;filter:url(#ink)}
 .spin-blurb{display:block;margin:2px 0 12px;color:var(--ink-soft)}
 .spin-actions{display:flex;flex-wrap:wrap;align-items:center;gap:10px 16px}
+.spin-actions a{align-self:flex-start}
 .spin-card .note{margin-top:12px}
 .playlists{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
 .sheet .playlists a{display:flex;align-items:center;gap:10px;padding:8px 10px;color:var(--ink);text-decoration:none;background:var(--paper);border:1.5px solid var(--ink);border-radius:var(--wobble);font-size:14.5px;line-height:1.3}
 .sheet .playlists a:hover{background:#fdf1e2}
-.playlists .label{flex:none;width:26px;height:26px;border-radius:50%;border:6px solid #2b2622;box-shadow:0 0 0 1.5px var(--ink)}
+.playlists .label{flex:none;width:36px;height:36px}
 .jfly{position:fixed;z-index:25;perspective:1400px;pointer-events:none}
 .jf-page{position:absolute;inset:0;background:#f8f2dc;border:2px solid var(--ink);border-radius:4px 10px 10px 4px;box-shadow:2px 2px 0 #efe7cd,4px 4px 0 #e5dbbd,6px 6px 0 #d9cca9,8px 9px 0 rgba(74,58,46,.14)}
 .jf-cover{position:absolute;inset:0;background:#561c25 linear-gradient(115deg,rgba(255,255,255,.09),transparent 38%,rgba(0,0,0,.16) 100%);border:2px solid #2b0c11;border-radius:4px 10px 10px 4px;transform-origin:0 50%;backface-visibility:hidden;box-shadow:inset 8px 0 0 rgba(0,0,0,.14)}
@@ -380,6 +389,39 @@ body.playing .disc{animation:spin 6s linear infinite}
 .post blockquote p{margin:0 0 .5em}
 .post blockquote p:last-child{margin-bottom:0}
 /* a Substack post, read as a journal: plum cover, a chunky block of blank cream pages, pages that turn */
+/* the record player floats over the house like the menu cards: no paper behind it */
+.sheet.player{background:transparent}
+.sheet.player{border:0;filter:none}
+.sheet.player .sheet-body{min-height:100%;box-sizing:border-box;display:flex;flex-direction:column;align-items:center;justify-content:center;padding-top:0}
+.player-deck{display:grid;justify-items:center;gap:6px;width:100%;padding-bottom:12px}
+.turntable,.sleeve{appearance:none;background:none;border:0;padding:0;font:inherit;cursor:pointer}
+/* as big as the screen allows, leaving room for the sleeves underneath */
+.turntable{display:block;width:min(760px,100%,calc((var(--modal-h) - 300px) * 1.38));color:inherit;text-align:center}
+.turntable svg{display:block;width:100%;height:auto;filter:drop-shadow(0 14px 18px rgba(0,0,0,.35))}
+.turntable .rec{transform-box:fill-box;transform-origin:center;animation:spin 9s linear infinite;animation-play-state:paused}
+body.playing .turntable .rec{animation-play-state:running}
+.turntable .arm{transform-box:view-box;transform-origin:306px 52px;transform:rotate(-13deg);transition:transform .6s cubic-bezier(.2,.8,.2,1)}
+body.playing .turntable .arm{transform:none}
+.crate{list-style:none;display:flex;justify-content:center;gap:36px;margin:0;padding:22px 0 30px}
+.crate li{position:relative}
+.crate li:hover,.crate li:focus-within,.crate li:has([aria-pressed="true"]){z-index:2}
+.sleeve{display:block;width:160px;color:#f3ead8;text-decoration:none;transform:perspective(700px) rotateY(52deg);transform-origin:left center;transition:transform .45s cubic-bezier(.2,.8,.2,1)}
+.sleeve svg{display:block;width:160px;height:160px;filter:drop-shadow(-8px 10px 10px rgba(0,0,0,.4))}
+.sleeve[aria-pressed="true"],.sleeve:hover,.sleeve:focus-visible{transform:perspective(700px) rotateY(0) translateY(-10px) scale(1.06)}
+@media (hover:none){.sleeve{transform:none}.crate{flex-wrap:wrap;gap:16px}.sleeve,.sleeve svg{width:min(110px,27vw);height:auto}}
+@media (prefers-reduced-motion:reduce){.turntable .rec{animation:none}.sleeve{transition:none}}
+.sheet.menu{background:transparent;border:0;filter:none}
+/* the menu and the record player have no close button: a click anywhere around them closes them (Escape too) */
+.sheet.menu .sheet-bar,.sheet.player .sheet-bar{display:none}
+.sheet.menu .sheet-body{min-height:100%;box-sizing:border-box;display:flex;flex-direction:column;align-items:center;justify-content:center;padding-top:0}
+.sheet.menu h2{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+.sheet.menu #weeklyList{width:100%}
+.sheet.menu .dish-grid{display:flex;flex-wrap:wrap;justify-content:center;gap:24px;margin:0}
+.sheet.menu .dish{width:min(200px,42vw);box-sizing:border-box;padding:18px 16px 20px;gap:8px;background:#fffaf0;border-radius:var(--wobble);box-shadow:inset 0 0 0 6px #fffaf0,inset 0 0 0 7.5px rgba(201,102,61,.4)}
+.sheet.menu .dish:nth-child(odd){transform:rotate(-1.2deg)}
+.sheet.menu .dish:nth-child(3n){transform:rotate(.8deg)}
+.sheet.menu .dish b{margin:0 6px;padding-top:10px;border-top:1.5px dashed rgba(74,58,46,.28)}
+.sheet.menu .empty-note{padding:18px 24px;background:#fffaf0;border-radius:var(--wobble);text-align:center}
 .sheet.book{background:none;border:0;border-radius:10px 16px 16px 10px;overflow:hidden}
 .sheet.book .sheet-bar{position:absolute;top:4px;right:4px;z-index:6;padding:0;background:none;border:0}
 .sheet.book .sheet-x{color:#fbf1df;background:#561c25;border-radius:50%;box-shadow:0 0 0 2px #2b0c11}
@@ -511,7 +553,6 @@ blockquote{margin:0 0 28px;padding:0;font-family:var(--f-hand);font-size:30px;li
 #sndVol{transition:width .35s cubic-bezier(.2,.8,.2,1),opacity .25s ease}
 .sound:not(.open){gap:0;padding:3px}
 .sound:not(.open) #sndVol{width:0;opacity:0;margin:0;pointer-events:none}
-.t-save{display:inline-flex;align-items:center;justify-content:center;min-width:44px;min-height:44px;margin-top:14px;padding:8px 16px}
 .fs-x{display:none}
 .tap-spark{transform-box:fill-box;transform-origin:center;opacity:0;animation:sparkPulse 1.1s ease-in-out 3}
 @keyframes sparkPulse{0%,100%{opacity:0;transform:scale(.5)}50%{opacity:1;transform:scale(1.15)}}
@@ -589,7 +630,7 @@ blockquote{margin:0 0 28px;padding:0;font-family:var(--f-hand);font-size:30px;li
   .cards,.screen .cards{grid-template-columns:minmax(0,1fr)}
   .rf-grid{grid-template-columns:minmax(0,1fr)}
   .post-grid{grid-template-columns:minmax(0,1fr)}
-  .spin-card{grid-template-columns:84px minmax(0,1fr)}
+  .sheet .spin-card{grid-template-columns:84px minmax(0,1fr)}
   .playlists{grid-template-columns:minmax(0,1fr)}
   .disc{width:84px;height:84px}
   .screen-bar h2{font-size:20px}
@@ -677,17 +718,7 @@ blockquote{margin:0 0 28px;padding:0;font-family:var(--f-hand);font-size:30px;li
           <button class="t-x" id="tClose" type="button" aria-label="Close the ticket"><svg viewBox="0 0 24 24" aria-hidden="true"><g fill="none" stroke="currentColor" stroke-linecap="round"><path d="M6.4 7.2 Q11.6 11.4 17.2 17.4" stroke-width="2.3"/><path d="M17.4 6.6 Q12.4 11.8 6.8 17.2" stroke-width="2.3"/><path d="M7.6 6.4 Q12.2 10.8 16.4 16.4" stroke-width="1" opacity=".4"/></g></svg></button>
           <div class="t-top"><span class="t-no" id="tNo">No. 0001</span><span class="t-date" id="tDate"></span></div>
           <div class="t-body" id="tBody"></div>
-          <button class="btn-ink t-save" id="tSave" type="button">Save as keepsake</button>
-          <svg class="stamp" viewBox="0 0 50 50" aria-hidden="true">
-            <g filter="url(#pencil)" fill="none" stroke="#c9663d" stroke-width="2.2">
-              <circle cx="25" cy="25" r="21"/>
-              <ellipse cx="25" cy="30" rx="7" ry="5.5" fill="#c9663d"/>
-              <ellipse cx="16" cy="22" rx="2.6" ry="3.4" fill="#c9663d"/>
-              <ellipse cx="21.5" cy="16.5" rx="2.6" ry="3.4" fill="#c9663d"/>
-              <ellipse cx="28.5" cy="16.5" rx="2.6" ry="3.4" fill="#c9663d"/>
-              <ellipse cx="34" cy="22" rx="2.6" ry="3.4" fill="#c9663d"/>
-            </g>
-          </svg>
+          <button class="dl-btn t-dl" id="tSave" type="button" aria-label="Download this ticket and keep it" title="Download"><svg viewBox="0 0 20 20" aria-hidden="true"><g fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M10 3.6 V12.4 M6.4 9 L10 12.6 L13.6 9"/><path d="M4.6 15.8 Q10 16.6 15.4 15.8"/></g></svg></button>
         </div>
       </div>
 
@@ -697,6 +728,7 @@ blockquote{margin:0 0 28px;padding:0;font-family:var(--f-hand);font-size:30px;li
           <button class="t-x fs-x" id="screenX" type="button" aria-label="Close my design work"><svg viewBox="0 0 24 24" aria-hidden="true"><g fill="none" stroke="currentColor" stroke-linecap="round"><path d="M6.4 7.2 Q11.6 11.4 17.2 17.4" stroke-width="2.3"/><path d="M17.4 6.6 Q12.4 11.8 6.8 17.2" stroke-width="2.3"/><path d="M7.6 6.4 Q12.2 10.8 16.4 16.4" stroke-width="1" opacity=".4"/></g></svg></button>
         </div>
         <ul class="cards" id="cards"></ul>
+        <div class="screen-project" id="screenProject" hidden></div>
       </section>
 
       <section class="canvas-view" id="easelView" aria-label="My newest illustration work" hidden>
@@ -874,8 +906,8 @@ function buildShell() {
   for (let x = 120; x < 1090; x += 26) { const y = 40 + Math.abs(600 - x) * .327; if (y < 172) battens += `M${x},${r1(y)}V178`; }
   for (let i = 1; i < 18; i++) { const t = i / 18; screws += ell(r1(-10 + t * 610), r1(216 - t * 206 + 6), 1.2) + ell(r1(1210 - t * 610), r1(216 - t * 206 + 6), 1.2); }
   const fb = E('g', { id: 'frameBack', class: 'fixed' }, world);
-  // dark giwa roof tiles over the sage-green board-and-batten gable
-  piece(fb, { occ: band + gable + rect(60, 190, 1080, 552), fill: [[gable, '#9ea477', .75], [band, '#5f6873', .9]], line: [band, { d: battens, stroke: '#6f7550', 'stroke-width': 1.5 }, { d: screws, 'stroke-width': 1.4, stroke: '#2f353c' }] });
+  // a warm wooden roof edge over the sage-green board-and-batten gable
+  piece(fb, { occ: band + gable + rect(60, 190, 1080, 552), fill: [[gable, '#9ea477', .75], [band, '#a8743f', .92]], line: [band, { d: battens, stroke: '#6f7550', 'stroke-width': 1.5 }, { d: screws, 'stroke-width': 1.6, stroke: '#5a3a26' }] });
   // exposed timber: ridge beam, king post and struts, ink outline first, honey wood on top
   const truss = 'M24,190H1176M600,40V178M590,170L470,98M610,170L730,98';
   piece(fb, { line: [{ d: truss, 'stroke-width': 22, 'stroke-linecap': 'butt' }] });
@@ -1067,8 +1099,22 @@ function buildWorkDesk() {
   const lid = 'M758,508 L858,508 L848,488 L768,488Z';
   piece(E('g', { class: 'lid-closed' }, g), { occ: lid, fill: [[lid, '#c9ccd0', .95], [apple(808, 498, .7) + leaf(808, 498, .7), '#9aa0a7', 1]], line: [lid, 'M760,505H856', { d: apple(808, 498, .7) + leaf(808, 498, .7), 'stroke-width': 1.2, stroke: '#7b8188' }] });
   const open = E('g', { class: 'lid-open' }, g);
-  const bezel = rr(762, 444, 92, 60, 7), screen = rect(768, 450, 80, 46), base = 'M752,510 H864 L857,500 H759Z';
-  piece(open, { occ: bezel + base, fill: [[bezel, '#3d3f45', .9], [screen, '#7d8b98', .8], [base, '#c9ccd0', .95]], line: [bezel, screen, base, { d: 'M796,470q4,4 8,0M812,470q4,4 8,0', stroke: '#e6ebef', 'stroke-width': 1.8 }] });
+  // the lid and the deck are drawn clean (no pencil texture) so their edges stay crisp up close, like a real laptop
+  const bezel = rr(765, 447, 86, 53, 4.5), screen = rect(768, 450, 80, 46), base = 'M767,500 H849 L852,511 Q852,512.4 850.6,512.4 H765.4 Q764,512.4 764,511Z';
+  E('path', { d: bezel, fill: '#3d3f45' }, open);
+  E('path', { d: screen, fill: '#7d8b98' }, open);
+  E('path', { d: base, fill: '#d6d9dd' }, open);
+  E('path', { d: 'M764.3,511.2 H851.7 V511.6 Q851.7,512.4 850.6,512.4 H765.4 Q764.3,512.4 764.3,511.6Z', fill: '#b9bdc2' }, open);
+  E('path', { d: 'M767,500 H849 V500.5 H767Z', fill: '#a9aeb4' }, open);
+  // keyboard: four rows of small rounded keys, a little wider toward you, a space bar, and a trackpad
+  let keyRows = '';
+  [[501.1, 769.4, 77.2, 14], [503.1, 768.9, 78.2, 14], [505.1, 768.4, 79.2, 13], [507.1, 767.9, 80.2, 0]].forEach(([y, x0, w, n]) => {
+    if (n) { const k = w / n; for (let i = 0; i < n; i++) keyRows += rr(x0 + i * k + .35, y, k - .7, 1.45, .35); }
+    else { const k = w / 12; [0, 1, 2].forEach(i => { keyRows += rr(x0 + i * k + .35, y, k - .7, 1.45, .35); }); keyRows += rr(x0 + 3 * k + .35, y, k * 6 - .7, 1.45, .35); [9, 10, 11].forEach(i => { keyRows += rr(x0 + i * k + .35, y, k - .7, 1.45, .35); }); }
+  });
+  E('path', { d: keyRows, fill: '#62666d' }, open);
+  E('path', { d: rr(797, 509.1, 22, 2.3, .6), fill: '#c8ccd1', stroke: '#b4b9bf', 'stroke-width': .3 }, open);
+  piece(open, { line: [{ d: 'M796,470q4,4 8,0M812,470q4,4 8,0', stroke: '#e6ebef', 'stroke-width': 1.8 }] });
   const boot = E('g', { class: 'boot' }, open);
   E('path', { d: screen, fill: '#23262b' }, boot);
   E('path', { d: apple(808, 468, .8) + leaf(808, 468, .8), fill: '#f3f1ea' }, boot);
@@ -1673,7 +1719,7 @@ const sheet = $('#sheet'), scrim = $('#scrim'), app = $('#app'), body = $('#shee
 let lastFocus = null;
 const say = t => { live.textContent = ''; setTimeout(() => live.textContent = t, 30); };
 function openSheet(html, showBack, seg, barTitle) {
-  sheet.classList.remove('book'); book = null;
+  sheet.classList.remove('book', 'player', 'menu'); book = null;
   $('#barTitle').innerHTML = barTitle || ''; $('#barTitle').hidden = !barTitle;
   if (!sheet.classList.contains('open')) lastFocus = document.activeElement;
   body.innerHTML = html; sheet.scrollTop = 0;
@@ -1686,16 +1732,38 @@ function openSheet(html, showBack, seg, barTitle) {
 function closeSheet() {
   readingOpen = false; recordsOpen = false; weeklyOpen = null;
   sheet.classList.remove('open'); scrim.classList.remove('open'); app.inert = false;
-  sheet.classList.remove('book'); book = null;
+  sheet.classList.remove('book', 'player', 'menu'); book = null;
   if (lastFocus && lastFocus.isConnected) lastFocus.focus({ preventScroll: true });
   if (SHEET_ZOOMS.includes(zoomed)) closeZoom();
 }
 let sheetProject = -1;
-function openProject(i) {
-  sheetProject = i;
+// design projects open on the laptop screen; illustration work opens on paper
+async function openProject(i) {
   const p = projects[i];
+  if (p.cat === 'Design') {
+    if (sheet.classList.contains('open')) closeSheet();
+    if (laptopState === 'closed') { if (zoomed && zoomed !== 'laptop') await zoomOut(); await openLaptop(); }
+    if (laptopState !== 'open') return;
+    showOnScreen(i); return;
+  }
+  sheetProject = i;
   openSheet(`<p class="body-p">${esc(p.text)}</p>
     ${shots(p)}`, false, null, `<h2 id="sheetTitle" tabindex="-1">${esc(p.title)}</h2><span class="bt-year">${p.year}</span>`);
+}
+function showOnScreen(i) {
+  const p = projects[i], pane = $('#screenProject');
+  pane.innerHTML = `<button class="link sp-back" type="button">All work</button>
+    <div class="sp-head"><h3>${esc(p.title)}</h3><span class="bt-year">${p.year}</span></div>
+    <p class="body-p">${esc(p.text)}</p>${shots(p)}`;
+  $('#cards').hidden = true; $('#screenSeg').hidden = true; pane.hidden = false; pane.scrollTop = 0;
+  pane.querySelector('.sp-back').onclick = showCards;
+  pane.querySelector('h3').setAttribute('tabindex', '-1'); pane.querySelector('h3').focus({ preventScroll: true });
+  say(`${p.title}, on the laptop screen.`);
+}
+function showCards() {
+  const pane = $('#screenProject'); if (pane.hidden) return;
+  pane.hidden = true; pane.innerHTML = ''; $('#cards').hidden = false; $('#screenSeg').hidden = false;
+  const c = $('#cards .card'); if (c) c.focus({ preventScroll: true });
 }
 function workList(cat) {
   return `<ul class="work-list">${projects.map((p, i) => p.cat !== cat ? '' : `<li><button type="button" data-open="${i}">${thumb(p.id)}<span><b>${esc(p.title)}</b><span>${p.year}</span></span></button></li>`).join('')}</ul>`;
@@ -1996,7 +2064,10 @@ function openWeekly(k) {
     <input id="wfNote" type="text" placeholder="${w.note}" aria-label="Notes">
     <input id="wfUrl" type="url" placeholder="Link (optional)" aria-label="Link"></div>
     <button class="btn-ink" type="submit">${w.button}</button><p class="cv-msg" id="wfMsg"></p></form>` : ''}`, false, null);
+  // the menu has no index card behind it: each dish is its own menu card in the middle of the screen
+  sheet.classList.toggle('menu', k === 'menu');
 }
+sheet.addEventListener('click', e => { if ((sheet.classList.contains('menu') || sheet.classList.contains('player')) && (e.target === sheet || e.target === body || e.target.id === 'weeklyList' || e.target.classList.contains('dish-grid') || e.target.classList.contains('player-deck') || e.target.classList.contains('crate'))) closeSheet(); });
 function refreshWeekly() { const el = $('#weeklyList'); if (weeklyOpen && el && sheet.classList.contains('open')) el.innerHTML = weeklyList(weeklyOpen); }
 async function initWeekly() {
   if (staticSite || !window.claude || !window.claude.use) { if (!staticSite) Object.values(WEEKLY).forEach(w => { w.state = 'error'; }); return; }
@@ -2027,16 +2098,15 @@ body.addEventListener('click', async e => {
 initWeekly();
 
 /* ---------- record player: a soft generated sound ---------- */
-// Spotify can't play inside the page, so the record player makes its own lo-fi: soft drums, warm keys, a koto line, chimes and vinyl crackle
-const MY_PLAYLISTS = [
-  ['Monday Jam', '1hiEySmQwfAs6MGFqc4jbV', '#c9663d'], ['Espresso Jams', '4bV1AOUynp0h0nFGbd3gRZ', '#8a5532'], ['Current Reads', '5kbwzD5lLFoUGYviHROTQy', '#6f9a69'],
-  ['Home Work', '11c6RHyIKWHGqP2HWDcdvu', '#2f5a7a'], ['Summer', '1YJDeHrVvrjiWOtcd0YWRi', '#f2c45a'], ['K-Drama', '4wNkfCmi9IqgXOEykHAtOh', '#e09a8a'],
-  ['Jamie & Ryan\u2019s Wedding (Ceremony)', '4n1k9ItzzqBEdoBBrXHy6p', '#a98cc4'], ['Jamie & Ryan\u2019s Wedding (Cocktail Hour)', '43WIpXsESppEfdrHxYgqLz', '#5f9ea0'],
-  ['Jamie & Ryan\u2019s Wedding (First Dance)', '0repulDtdwGSZkvxccozSm', '#c0503a'], ['Jamie & Ryan\u2019s Wedding (Dance)', '13tvVgq6MahnC3J6pwaVGV', '#d9a441']
+// the record player makes its own lo-fi, in the page: two albums, each with its own sleeve drawing (see SLEEVE_ART)
+// coffee: 72 bpm, soft drums, warm keys, a koto line, chimes and vinyl crackle
+// christmas: 66 bpm, warm F-major jazz chords, a celesta line, sleigh-bell shakers and the odd church bell
+const ALBUMS = [
+  { id: 'christmas', name: 'cozy christmas', color: '#3f6a4c', art: 'christmas' },
+  { id: 'coffee', name: 'morning coffee', color: '#c9894f', art: 'espresso' }
 ];
-const PLAYLIST = { name: 'Japanese Garden', blurb: 'Find your peaceful place with sounds inspired by Japan.', url: 'https://open.spotify.com/playlist/37i9dQZF1DX0x3hhpH7R9I' };
-const sound = { ctx: null, master: null, on: false, vol: .4, muted: false, timer: null, next: 0 };
-try { const v = JSON.parse(localStorage.getItem('teo-sound') || 'null'); if (v) { sound.vol = +v.vol; sound.muted = !!v.muted; } } catch (e) { }
+const sound = { ctx: null, master: null, on: false, vol: .4, muted: false, timer: null, next: 0, album: 'coffee' };
+try { const v = JSON.parse(localStorage.getItem('teo-sound') || 'null'); if (v) { sound.vol = +v.vol; sound.muted = !!v.muted; if (ALBUMS.some(a => a.id === v.album)) sound.album = v.album; } } catch (e) { }
 const SCALE = [62, 63, 67, 69, 70, 74, 75, 79]; // D, E-flat, G, A, B-flat: the 'in' scale
 const hz = m => 440 * Math.pow(2, (m - 69) / 12);
 function noiseBuffer(ctx, secs) {
@@ -2128,26 +2198,50 @@ function chime(t) {
   const ctx = sound.ctx, m = [86, 89, 91, 94][Math.floor(Math.random() * 4)];
   [1, 2.76].forEach((r, i) => { const o = ctx.createOscillator(), g = ctx.createGain(); o.frequency.value = hz(m) * r; env(g, t, i ? .006 : .014, .004, 3.2); o.connect(g); g.connect(sound.master); o.start(t); o.stop(t + 3.4); });
 }
+// celesta: a bell-bright music-box note
+function celesta(m, t) {
+  const ctx = sound.ctx;
+  [[1, .05, 1.8], [4, .012, .5], [2.01, .02, 1]].forEach(([r, peak, dec]) => { const o = ctx.createOscillator(), g = ctx.createGain(); o.frequency.value = hz(m) * r; env(g, t, peak, .003, dec); o.connect(g); g.connect(sound.notes); o.start(t); o.stop(t + dec + .1); });
+}
+// sleigh bells: a soft little jingle of high, shimmering noise
+function sleigh(t, v) {
+  const ctx = sound.ctx;
+  for (let i = 0; i < 3; i++) {
+    const s0 = t + i * .022, n = ctx.createBufferSource(), f = ctx.createBiquadFilter(), g = ctx.createGain();
+    n.buffer = sound.noise; f.type = 'bandpass'; f.frequency.value = 7800 + Math.random() * 1600; f.Q.value = 9; env(g, s0, v, .002, .07);
+    n.connect(f); f.connect(g); g.connect(sound.drums); n.start(s0, Math.random()); n.stop(s0 + .1);
+  }
+}
+// a far-off church bell
+function bell(t) {
+  const ctx = sound.ctx, m = [57, 60, 65][Math.floor(Math.random() * 3)];
+  [[1, .02], [2.4, .008], [3.0, .006], [4.2, .004]].forEach(([r, peak]) => { const o = ctx.createOscillator(), g = ctx.createGain(); o.frequency.value = hz(m) * r; env(g, t, peak, .005, 4.5); o.connect(g); g.connect(sound.master); o.start(t); o.stop(t + 4.6); });
+}
 // 72 bpm, swung sixteenths; a four-bar loop of jazzy chords with a koto line on top
 const CHORDS = [[50, 60, 64, 65, 69], [43, 59, 62, 65, 69], [48, 59, 62, 64, 67], [45, 55, 60, 64, 67]];
 const MELODY = [62, 65, 67, 69, 72, 74, 77];
+// christmas: Fmaj9, Dm9, Gm9, C13 with a celesta line in F major
+const XMAS_CHORDS = [[41, 57, 60, 64, 67], [38, 53, 57, 60, 64], [43, 53, 58, 62, 69], [36, 52, 58, 62, 69]];
+const XMAS_MELODY = [65, 67, 69, 72, 74, 76, 77, 79];
 let lastNote = 3, step = 0, nextChime = 0;
 function schedule() {
-  const ctx = sound.ctx, now = ctx.currentTime, sixteenth = 60 / 72 / 4;
+  const xmas = sound.album === 'christmas', ctx = sound.ctx, now = ctx.currentTime, sixteenth = 60 / (xmas ? 66 : 72) / 4;
+  const chords = xmas ? XMAS_CHORDS : CHORDS, melody = xmas ? XMAS_MELODY : MELODY;
   if (!nextChime) nextChime = now + 14;
   while (sound.next < now + .6) {
     const t = sound.next + (step % 2 ? sixteenth * .18 : 0), s16 = step % 16;
     if (s16 === 0 || s16 === 10) kick(t);
     if (s16 === 4 || s16 === 12) snare(t);
-    if (s16 % 2 === 0) hat(t, s16 % 4 === 0 ? .03 : .018); else if (Math.random() < .25) hat(t, .01);
-    if (s16 === 0) keys(CHORDS[Math.floor(step / 16) % 4], t, 3.2);
+    if (xmas) { if (s16 % 4 === 2) sleigh(t, .02); else if (s16 % 2 === 0) hat(t, .014); }
+    else if (s16 % 2 === 0) hat(t, s16 % 4 === 0 ? .03 : .018); else if (Math.random() < .25) hat(t, .01);
+    if (s16 === 0) keys(chords[Math.floor(step / 16) % 4], t, 3.4);
     if (s16 % 4 === 2 && Math.random() < .45) {
-      lastNote = Math.max(0, Math.min(MELODY.length - 1, lastNote + [-2, -1, 1, 1, 2][Math.floor(Math.random() * 5)]));
-      koto(MELODY[lastNote], t);
+      lastNote = Math.max(0, Math.min(melody.length - 1, lastNote + [-2, -1, 1, 1, 2][Math.floor(Math.random() * 5)]));
+      (xmas ? celesta : koto)(melody[lastNote], t);
     }
     sound.next += sixteenth; step++;
   }
-  if (now > nextChime) { chime(now + .1); nextChime = now + 20 + Math.random() * 16; }
+  if (now > nextChime) { (xmas ? bell : chime)(now + .1); nextChime = now + 20 + Math.random() * 16; }
 }
 function startSound() {
   if (sound.on) return;
@@ -2163,7 +2257,7 @@ function stopSound() {
 }
 function applyVolume() {
   if (sound.master) sound.master.gain.setTargetAtTime(sound.muted ? 0 : sound.vol, sound.ctx.currentTime, .15);
-  try { localStorage.setItem('teo-sound', JSON.stringify({ vol: sound.vol, muted: sound.muted })); } catch (e) { }
+  try { localStorage.setItem('teo-sound', JSON.stringify({ vol: sound.vol, muted: sound.muted, album: sound.album })); } catch (e) { }
   renderSound();
 }
 function renderSound() {
@@ -2172,7 +2266,7 @@ function renderSound() {
   $('#sndBtn').setAttribute('aria-pressed', playing);
   $('#sndBtn').setAttribute('aria-label', playing ? 'Mute music' : 'Play music');
   $('#sndVol').value = sound.vol;
-  const b = $('#recPlay'); if (b) b.textContent = playing ? 'Pause the record' : 'Play the record';
+  const tt = $('.turntable'); if (tt) { tt.setAttribute('aria-pressed', playing); tt.setAttribute('aria-label', `${playing ? 'Pause' : 'Play'} ${ALBUMS.find(a => a.id === sound.album).name}`); }
 }
 // the sound control shows just the speaker until you tap it, then slides open the volume
 const soundEl = $('.sound'); let soundTimer = null;
@@ -2183,7 +2277,8 @@ function openSound(on) {
 $('#sndBtn').onclick = () => {
   if (!soundEl.classList.contains('open')) { openSound(true); return; }
   openSound(true);
-  if (!sound.on) { sound.muted = false; startSound(); } else { sound.muted = !sound.muted; applyVolume(); }
+  // unmuting after the slider went all the way down brings the volume back up, so the button never 'plays' silence
+  if (sound.muted || !sound.on) { sound.muted = false; if (!sound.vol) sound.vol = .4; sound.on ? applyVolume() : startSound(); } else { sound.muted = true; applyVolume(); }
 };
 $('#sndVol').addEventListener('input', () => openSound(true));
 document.addEventListener('pointerdown', e => { if (!e.target.closest('.sound')) openSound(false); });
@@ -2201,21 +2296,62 @@ function jamLists() {
   if (!jams.length) return `<p class="empty-note">${jamEdit ? 'Add the songs on repeat this week.' : 'New favorites are on their way.'}</p>`;
   return `<ol class="jams">${jams.slice(0, 5).map(j => `<li><span><b>${esc(j.song || 'Untitled')}</b>${j.artist ? `<small>${esc(j.artist)}</small>` : ''}</span>${j.url ? `<a href="${esc(j.url)}" target="_blank" rel="noopener">Listen</a>` : ''}${jamEdit ? `<button class="btn-plain" type="button" data-jam-remove="${j.id}">Remove</button>` : ''}</li>`).join('')}</ol>`;
 }
+// a pencil-drawn record: black vinyl, two grooves, and a colored center label
+const disc = (color, cls) => `<svg class="${cls}" viewBox="0 0 120 120" aria-hidden="true"><g filter="url(#pencil)"><circle cx="60" cy="60" r="54" fill="#2b2622"/><circle cx="60" cy="60" r="40" fill="none" stroke="#4a4440" stroke-width="1.2"/><circle cx="60" cy="60" r="30" fill="none" stroke="#4a4440" stroke-width="1.2"/><circle cx="60" cy="60" r="17" fill="${color}"/><circle cx="60" cy="60" r="3" fill="#fffaf0"/></g></svg>`;
+// pencil drawings for the record sleeves, in a 120x120 box over the sleeve color
+const SLEEVE_ART = {
+  christmas: '<path d="M60,22 L84,58 H72 L92,86 H28 L48,58 H36Z" fill="#2f5a3a"/><rect x="54" y="86" width="12" height="12" fill="#6b4128"/><path d="M60,14 l3,6 l6,1 l-5,4 l1,6 l-5,-3 l-5,3 l1,-6 l-5,-4 l6,-1Z" fill="#f6d27a"/><circle cx="52" cy="66" r="3.5" fill="#d9534f"/><circle cx="70" cy="76" r="3.5" fill="#f6d27a"/><circle cx="62" cy="48" r="3" fill="#d9534f"/><path d="M0,104 Q30,96 60,102 T120,100 V120 H0Z" fill="#fffaf0"/><g fill="#fffaf0"><circle cx="18" cy="24" r="2.2"/><circle cx="100" cy="30" r="2.2"/><circle cx="26" cy="62" r="1.8"/><circle cx="96" cy="70" r="2"/><circle cx="108" cy="50" r="1.6"/><circle cx="12" cy="86" r="1.8"/></g>',
+  espresso: '<ellipse cx="60" cy="92" rx="38" ry="9" fill="#efe2c6"/><path d="M36,58 H84 L80,84 Q60,94 40,84Z" fill="#fffaf0"/><ellipse cx="60" cy="58" rx="24" ry="5" fill="#6b4128"/><path d="M84,64 Q98,64 96,74 Q94,82 82,80" fill="none" stroke="#fffaf0" stroke-width="4"/><g fill="none" stroke="#efe2c6" stroke-width="3" stroke-linecap="round"><path d="M52,46 q-5,-7 0,-13 q5,-6 0,-13M66,46 q-5,-7 0,-13 q5,-6 0,-13"/></g>'
+};
+const sleeve = a => `<li><button class="sleeve" type="button" data-album="${a.id}" aria-pressed="${a.id === sound.album}" aria-label="${esc(a.name)}">
+  <svg viewBox="0 0 120 120" aria-hidden="true"><rect x="1" y="1" width="118" height="118" rx="3" fill="${a.color}"/><g filter="url(#pencil)"><rect width="120" height="120" rx="3" fill="${a.color}"/>${SLEEVE_ART[a.art] || ''}<rect x="1" y="1" width="118" height="118" rx="3" fill="none" stroke="#2b2622" stroke-width="2"/></g></svg></button></li>`;
+// the record player: an illustrated turntable you can play and pause, and the two albums to put on it
 function openRecords() {
   recordsOpen = true;
-  const playing = sound.on && !sound.muted;
-  openSheet(`<h2 id="sheetTitle" tabindex="-1">Currently playing</h2>
-    <div class="spin-card">
-      <svg class="disc" viewBox="0 0 120 120" aria-hidden="true"><g filter="url(#pencil)"><circle cx="60" cy="60" r="54" fill="#2b2622"/><circle cx="60" cy="60" r="40" fill="none" stroke="#4a4440" stroke-width="1.2"/><circle cx="60" cy="60" r="30" fill="none" stroke="#4a4440" stroke-width="1.2"/><circle cx="60" cy="60" r="17" fill="#c9663d"/><circle cx="60" cy="60" r="3" fill="#fffaf0"/></g></svg>
-      <div><p class="kick">On the turntable</p><b class="spin-title">${PLAYLIST.name}</b><span class="spin-blurb">${PLAYLIST.blurb}</span>
-        <div class="spin-actions"><button class="btn-ink" id="recPlay" type="button">${playing ? 'Pause the record' : 'Play the record'}</button><a href="${PLAYLIST.url}" target="_blank" rel="noopener">Listen on Spotify</a></div>
-        <p class="note">The record player plays a soft lo-fi loop made in the page. The playlist itself opens in Spotify.</p></div>
-    </div>
-    <section><h3>My playlists</h3><ul class="playlists">${MY_PLAYLISTS.map(([n, id, c]) => `<li><a href="https://open.spotify.com/playlist/${id}" target="_blank" rel="noopener"><span class="label" style="background:${c}"></span><span>${esc(n)}</span></a></li>`).join('')}</ul>
-    <p class="note"><a href="https://open.spotify.com/user/jmgcatt" target="_blank" rel="noopener">More on my Spotify</a></p></section>
-    <section><h3>Latest jams</h3><div id="jamLists">${jamLists()}</div>
-    ${jamEdit ? `<form class="read-form" id="jamForm"><div class="rf-grid"><input id="jfSong" type="text" placeholder="Song" aria-label="Song" required><input id="jfArtist" type="text" placeholder="Artist" aria-label="Artist"><input id="jfUrl" type="url" placeholder="Spotify link (optional)" aria-label="Spotify link"></div><button class="btn-ink" type="submit">Add to latest jams</button><p class="cv-msg" id="jfMsg"></p></form>` : ''}</section>`, false, null);
+  const album = ALBUMS.find(a => a.id === sound.album);
+  openSheet(`<h2 id="sheetTitle" class="sr-only" tabindex="-1">Record player</h2>
+    <div class="player-deck">
+      <button class="turntable" type="button" aria-pressed="false">
+        <svg viewBox="0 0 360 260" aria-hidden="true"><rect x="12" y="12" width="336" height="236" rx="17" fill="#3d3631"/><g filter="url(#pencil)">
+          <rect x="10" y="10" width="340" height="240" rx="18" fill="#3d3631" stroke="#141110" stroke-width="2.5"/>
+          <rect x="18" y="18" width="324" height="224" rx="13" fill="none" stroke="#5a514a" stroke-width="1.5"/>
+          <circle cx="150" cy="130" r="108" fill="#1f1b18"/>
+          <g class="rec"><circle cx="150" cy="130" r="100" fill="#2b2622"/>
+            <g fill="none" stroke="#4a4440" stroke-width="1.3"><circle cx="150" cy="130" r="88"/><circle cx="150" cy="130" r="74"/><circle cx="150" cy="130" r="60"/></g>
+            <path d="M92,82 Q110,64 132,58" fill="none" stroke="#6a625b" stroke-width="2.4" stroke-linecap="round"/>
+            <circle class="tt-label" cx="150" cy="130" r="36" fill="${album.color}"/>
+            <path id="ttArc" d="M124,132 a26,26 0 0 1 52,0" fill="none"/><text font-family="Gaegu, cursive" font-weight="700" font-size="14" fill="#fffaf0" letter-spacing="1"><textPath href="#ttArc" startOffset="50%" text-anchor="middle">cozy beats</textPath></text><g fill="none" stroke="#fffaf0" stroke-width="2" stroke-linecap="round"><path d="M134,146 q4,-3 8,0 t8,0 t8,0 t8,0"/></g>
+            <circle cx="150" cy="130" r="4" fill="#fffaf0"/></g>
+          <circle cx="306" cy="52" r="17" fill="#cfc8bb" stroke="#141110" stroke-width="2"/><circle cx="306" cy="52" r="6" fill="#8f877c"/>
+          <g class="arm"><path d="M306,52 L300,178 L262,212" fill="none" stroke="#e6dfd2" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"/>
+          <rect x="246" y="204" width="26" height="14" rx="3" transform="rotate(-40 259 211)" fill="#cfc8bb" stroke="#141110" stroke-width="1.6"/></g>
+          <circle cx="322" cy="222" r="9" fill="#8f877c" stroke="#141110" stroke-width="1.6"/>
+          <rect x="30" y="226" width="22" height="8" rx="3" fill="#c9663d"/><rect x="58" y="226" width="22" height="8" rx="3" fill="#5a514a"/>
+        </g></svg>
+      </button>
+      <ul class="crate">${ALBUMS.map(sleeve).join('')}</ul>
+    </div>`, false, null);
+  sheet.classList.add('player'); renderSound();
 }
+// put an album on: the label takes its color and the music changes
+function playAlbum(id) {
+  sound.album = id;
+  const a = ALBUMS.find(x => x.id === id), label = sheet.querySelector('.tt-label');
+  if (label) label.setAttribute('fill', a.color);
+  sheet.querySelectorAll('.sleeve').forEach(b => b.setAttribute('aria-pressed', b.dataset.album === id));
+  sound.muted = false; if (!sound.vol) sound.vol = .4;
+  sound.on ? applyVolume() : startSound();
+  say(`Now playing ${a.name}.`);
+}
+function togglePlay() {
+  if (sound.on && !sound.muted) { sound.muted = true; applyVolume(); }
+  else { sound.muted = false; if (!sound.vol) sound.vol = .4; sound.on ? applyVolume() : startSound(); }
+}
+sheet.addEventListener('click', e => {
+  if (!sheet.classList.contains('player')) return;
+  const sl = e.target.closest('.sleeve'); if (sl) return playAlbum(sl.dataset.album);
+  if (e.target.closest('.turntable')) togglePlay();
+});
 function refreshJams() { const el = $('#jamLists'); if (recordsOpen && el && sheet.classList.contains('open')) el.innerHTML = jamLists(); }
 async function initJams() {
   if (staticSite || !window.claude || !window.claude.use) { if (!staticSite) jamState = 'error'; return; }
@@ -2257,22 +2393,23 @@ const placeTicket = () => { };
 addEventListener('resize', () => { if (!$('#ticket').hidden) placeTicket(); if (zoomed) { setVB(zoomView(zAdj(ZOOMS[zoomed]))); placeOverlay(zAdj(ZOOMS[zoomed])); } });
 
 /* ---------- ticket machine: keepsake tickets with a quote ---------- */
-// quotes come from data/quotes.json and monthly favorites from data/faves.json, synced from Notion.
-// the machine only prints what is in those files
+// quotes, monthly favorites and book recommendations come from data/quotes.json, data/faves.json and
+// data/books.json, synced from Notion; the machine picks at random among all of them and only prints what is there
 let pool = [], FAVES = null;
-const quotesReady = Promise.all([loadData('data/quotes.json', 'quotes'), loadData('data/faves.json', 'faves')]).then(([qs, favs]) => {
-  qs = qs || []; favs = favs || [];
+const quotesReady = Promise.all([loadData('data/quotes.json', 'quotes'), loadData('data/faves.json', 'faves'), loadData('data/books.json', 'books')]).then(([qs, favs, books]) => {
+  qs = qs || []; favs = favs || []; books = books || [];
   pool = [
       ...qs.filter(q => q && typeof q.quote === 'string' && q.quote.trim()).map(q => ({ kind: 'quote', quote: q.quote.trim(), author: (q.author || '').trim(), source: (q.source || '').trim(), author_url: safeUrl(q.author_url), source_url: safeUrl(q.source_url) })),
-      ...favs.filter(f => f && typeof f.title === 'string' && f.title.trim()).map(f => ({ kind: 'favorite', title: f.title.trim(), url: safeUrl(f.url), art: FAV_ART.includes(String(f.art || '').toLowerCase()) ? String(f.art).toLowerCase() : '', color: /^#[0-9a-f]{3,8}$/i.test(f.color || '') ? f.color : '', image: safeImg(f.image), description: String(f.description || '').trim(), month: String(f.month || '').trim(), year: String(f.year || '').trim() }))
+      ...favs.filter(f => f && typeof f.title === 'string' && f.title.trim()).map(f => ({ kind: 'favorite', title: f.title.trim(), url: safeUrl(f.url), art: FAV_ART.includes(String(f.art || '').toLowerCase()) ? String(f.art).toLowerCase() : '', color: /^#[0-9a-f]{3,8}$/i.test(f.color || '') ? f.color : '', image: safeImg(f.image), description: String(f.description || '').trim(), month: String(f.month || '').trim(), year: String(f.year || '').trim() })),
+      ...books.filter(b => b && typeof b.title === 'string' && b.title.trim()).map(b => ({ kind: 'book', title: b.title.trim(), author: String(b.author || '').trim(), url: safeUrl(b.url), image: safeImg(b.image), description: String(b.description || '').trim() }))
   ];
   FAVES = pool.filter(t => t.kind === 'favorite'); refreshFaves();
-  if (!pool.length) console.warn('[tickets] data/quotes.json and data/faves.json have nothing to print yet.');
+  if (!pool.length) console.warn('[tickets] data/quotes.json, data/faves.json and data/books.json have nothing to print yet.');
 });
 const store = (k, v) => { try { if (v === undefined) return JSON.parse(localStorage.getItem(k) || 'null'); localStorage.setItem(k, JSON.stringify(v)); } catch (e) { return null; } };
 // tickets from earlier versions held made-up placeholders, so start everyone with an empty ephemera
 try { localStorage.removeItem('teo-tickets'); localStorage.removeItem('teo-quotes-seen'); } catch (e) { }
-let saved = (store('teo-ephemera') || []).filter(t => t && (t.kind === 'quote' || t.kind === 'favorite'));
+let saved = (store('teo-ephemera') || []).filter(t => t && (t.kind === 'quote' || t.kind === 'favorite' || t.kind === 'book'));
 const keyOf = t => t.kind + ':' + (t.quote || t.title);
 // a random pick, no repeats until everything has been printed once
 function drawTicket() {
@@ -2286,18 +2423,27 @@ function drawTicket() {
 // only plain web links are allowed on tickets; images may also be a file next to the page
 const safeUrl = u => typeof u === 'string' && /^https?:\/\//i.test(u.trim()) ? u.trim() : '';
 const safeImg = u => typeof u === 'string' && (/^https?:\/\//i.test(u.trim()) || /^[\w\-./]+\.(png|jpe?g|webp|gif|avif|svg)$/i.test(u.trim())) && !u.includes('..') ? u.trim() : '';
-const linkOr = (text, url) => url ? `<a href="${esc(url)}" target="_blank" rel="noopener">${esc(text)}</a>` : esc(text);
+// the handwriting fonts have no macron vowels (like the \u0113 in A\u0113sop), so draw the plain letter with a bar over it
+const MACRON = { '\u0101': 'a', '\u0113': 'e', '\u012b': 'i', '\u014d': 'o', '\u016b': 'u' };
+const marks = html => html.replace(/[\u0101\u0113\u012b\u014d\u016b]/g, c => `<span class="mac">${MACRON[c]}</span>`);
+const linkOr = (text, url) => url ? `<a href="${esc(url)}" target="_blank" rel="noopener">${marks(esc(text))}</a>` : marks(esc(text));
 // favorites get a small drawing in the same pencil style as the work thumbnails, tinted with the item's color
 const FAV_DEFAULT = { book: '#c9663d', lotion: '#e9b8a8', balm: '#e3b29a', tea: '#86b57a', coffee: '#b07a4a', candle: '#5f9ea0', scent: '#a98cc4' }, FAV_ART = Object.keys(FAV_DEFAULT);
 (function buildFavArt() {
   const defs = $('#artDefs'), V = { style: 'fill:var(--fav)' };
-  const sym = (id, wash) => { const g = E('symbol', { id: 'fav-' + id, viewBox: '0 0 120 150' }, defs); piece(g, { fill: [[rect(0, 0, 120, 150), wash, .5]] }); return g; };
+  const sym = id => E('symbol', { id: 'fav-' + id, viewBox: '0 0 120 150' }, defs);
   const steam = (g, x, y) => piece(g, { line: [`M${x - 8},${y} q-4,-7 0,-13 q4,-6 0,-13M${x + 6},${y - 2} q-4,-7 0,-13 q4,-6 0,-13`], color: '#b9b2a6', lw: 2 });
   let g = sym('book', '#f3e6d0');
   const cover = rr(28, 22, 64, 104, 4), edge = 'M92,28 Q98,30 98,36 V118 Q98,124 92,126Z';
   piece(g, { occ: cover + edge, fill: [[cover, FAV_DEFAULT.book, .9, V], [rect(28, 22, 11, 104), INK, .22], [edge, '#fffdf6', 1]], line: [cover, edge, 'M39,22V126', 'M94,40V112', { d: 'M50,46H80M50,56H74', stroke: '#fffaf0', 'stroke-width': 3 }] });
   piece(g, { fill: [['M70,124 v16 l5,-5 l5,5 v-16Z', '#d9a441', 1]], line: ['M70,124 v16 l5,-5 l5,5 v-16'], lw: 1.8 });
   piece(g, { line: [star(64, 90, 9)], color: '#fffaf0', lw: 2 });
+  // book recommendations: the real cover sits between these two layers (see bookThumb)
+  g = sym('book-back', '#f3e6d0');
+  piece(g, { occ: cover + edge, fill: [[cover, '#e6d3ae', 1], [edge, '#fffdf6', 1]], line: [edge, 'M94,40V112'] });
+  piece(g, { fill: [['M70,124 v16 l5,-5 l5,5 v-16Z', '#c9663d', 1]], line: ['M70,124 v16 l5,-5 l5,5 v-16'], lw: 1.8 });
+  g = E('symbol', { id: 'fav-book-front', viewBox: '0 0 120 150' }, defs);
+  piece(g, { fill: [[rect(28, 22, 11, 104), INK, .25], [rect(39, 22, 2, 104), '#fffaf0', .35], [cover, '#fff3dc', .12]], line: [cover, 'M39,22V126'] });
   g = sym('lotion', '#e8eef0');
   const bottle = rr(38, 54, 44, 80, 10), pump = rect(53, 38, 14, 16), label = rr(45, 78, 30, 34, 4);
   piece(g, { occ: bottle + pump, fill: [[bottle, FAV_DEFAULT.lotion, .9, V], [pump, '#f6f3ec', 1], [label, '#fffdf6', 1]], line: [bottle, pump, { d: 'M60,38 V28 H84 V34', 'stroke-width': 4 }, label, 'M51,88H69M51,96H65'] });
@@ -2332,7 +2478,7 @@ const FAV_DEFAULT = { book: '#c9663d', lotion: '#e9b8a8', balm: '#e3b29a', tea: 
 const DISHES = ['quesadilla', 'chili-chicken', 'rice', 'cottage-peaches', 'plate'];
 (function buildDishArt() {
   const defs = $('#artDefs');
-  const sym = (id, wash) => { const g = E('symbol', { id: 'dish-' + id, viewBox: '0 0 120 120', overflow: 'visible' }, defs); piece(g, { fill: [[rect(-20, -20, 160, 160), wash, .5]] }); return g; };
+  const sym = id => E('symbol', { id: 'dish-' + id, viewBox: '0 0 120 120', overflow: 'visible' }, defs);
   const plate = (g, cx, cy, rx, ry) => piece(g, { occ: ell(cx, cy, rx, ry), fill: [[ell(cx, cy, rx, ry), '#fffdf6', 1], [ell(cx, cy, rx * .72, ry * .7), '#f3ede2', 1]], line: [ell(cx, cy, rx, ry), ell(cx, cy, rx * .72, ry * .7)] });
   // quesadilla: golden wedges with grill marks and melted cheese, salsa and sour cream
   let g = sym('quesadilla', '#f6e6c8');
@@ -2367,6 +2513,9 @@ const DISHES = ['quesadilla', 'chili-chicken', 'rice', 'cottage-peaches', 'plate
 })();
 const dishArt = it => !DISHES.includes(it.art) && it.image ? `<img class="dish-photo" src="${esc(it.image)}" alt="" loading="lazy">`
   : `<svg viewBox="6 6 108 108" aria-hidden="true"><use href="#dish-${DISHES.includes(it.art) ? it.art : 'plate'}"/></svg>`;
+// a recommended book: its real cover inside the drawn book, or the plain drawn book when there's no cover
+const bookThumb = t => t.image ? `<svg class="fav-art book-art" viewBox="0 0 120 150" aria-hidden="true"><use href="#fav-book-back"/><image href="${esc(t.image)}" x="28" y="22" width="64" height="104" preserveAspectRatio="xMidYMid slice"/><use href="#fav-book-front"/></svg>`
+  : favThumb({ art: 'book' });
 const favThumb = t => t.art ? `<svg class="fav-art" viewBox="0 0 120 150" style="--fav:${t.color || FAV_DEFAULT[t.art]}" aria-hidden="true"><use href="#fav-${t.art}"/></svg>`
   : t.image ? `<img class="fav-img" src="${esc(t.image)}" alt="">` : '';
 // the same drawing as a picture, for downloads
@@ -2376,7 +2525,7 @@ function favArtImage(t) {
   return loadImg('data:image/svg+xml;charset=utf-8,' + encodeURIComponent(`<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 150" width="600" height="750">${inner}</svg>`));
 }
 /* ---------- monthly faves: grouped by month, newest first ---------- */
-const FAVE_STAR = '<svg class="fav-art" viewBox="0 0 120 150" aria-hidden="true"><rect x="0" y="0" width="120" height="150" fill="#f6ead0"/><path d="M60,44 Q63,72 88,75 Q63,78 60,106 Q57,78 32,75 Q57,72 60,44Z" fill="#f2c45a" stroke="#4a3a2e" stroke-width="2.4" stroke-linejoin="round"/></svg>';
+const FAVE_STAR = '<svg class="fav-art" viewBox="0 0 120 150" aria-hidden="true"><path d="M60,44 Q63,72 88,75 Q63,78 60,106 Q57,78 32,75 Q57,72 60,44Z" fill="#f2c45a" stroke="#4a3a2e" stroke-width="2.4" stroke-linejoin="round"/></svg>';
 function favesList() {
   if (FAVES === null) return '<p class="empty-note">Gathering this month\u2019s favorites\u2026</p>';
   if (!FAVES.length) return '<p class="empty-note">No favorites to share just yet. Check back next month.</p>';
@@ -2386,10 +2535,13 @@ function favesList() {
 }
 function openFaves() { openSheet(`<h2 id="sheetTitle" tabindex="-1">monthly faves</h2><div id="favesList">${favesList()}</div>`, false, null); }
 function refreshFaves() { const el = $('#favesList'); if (el) el.innerHTML = favesList(); }
-const favCite = t => ['favorites', [t.month.toLowerCase(), t.year].filter(Boolean).join(', ')].filter(Boolean).join(' \u2022 ');
-const quoteCite = t => ['quotes', t.source ? linkOr(t.source, t.source_url) : '', t.author ? linkOr(t.author, t.author_url) : ''].filter(Boolean).join(' \u2022 ');
+const favCite = t => ['favorite', [t.month.toLowerCase(), t.year].filter(Boolean).join(', ')].filter(Boolean).join(' \u2022 ');
+const bookCite = () => 'read';
+const bookBy = (t, cls) => t.author ? `<p class="${cls}">${esc(t.author)}</p>` : '';
+const quoteCite = t => ['quote', t.source ? linkOr(t.source, t.source_url) : '', t.author ? linkOr(t.author, t.author_url) : ''].filter(Boolean).join(' \u2022 ');
 function ticketBody(t) {
   if (t.kind === 'favorite') return `<div class="fav">${favThumb(t)}<div><p class="t-quote fav-t">${linkOr(t.title, t.url)}</p>${t.description ? `<p class="t-desc">${esc(t.description)}</p>` : ''}<p class="t-cite">${favCite(t)}</p></div></div>`;
+  if (t.kind === 'book') return `<div class="fav">${bookThumb(t)}<div><p class="t-quote fav-t">${linkOr(t.title, t.url)}</p>${bookBy(t, 't-by')}${t.description ? `<p class="t-desc">${esc(t.description)}</p>` : ''}<p class="t-cite">${bookCite(t)}</p></div></div>`;
   return `<p class="t-quote">\u201C${esc(t.quote)}\u201D</p><p class="t-cite">${quoteCite(t)}</p>`;
 }
 const pad = n => String(n).padStart(4, '0');
@@ -2445,13 +2597,13 @@ async function closeTicket(refocus = true, keep = false) {
   if (refocus) machine.focus({ preventScroll: true });
 }
 $('#tClose').onclick = () => closeTicket();
-$('#tSave').onclick = () => closeTicket(true, true);
+$('#tSave').onclick = async () => { if (!current) return; await downloadTicket(current, $('#tSave')); closeTicket(true, true); };
 document.addEventListener('click', e => { if (current && !ticketEl.hidden && !e.target.closest('#ticket, #ticketMachine')) closeTicket(false); });
 // ephemera: every ticket taken, newest first
 const DL_ICON = '<svg viewBox="0 0 20 20" aria-hidden="true"><g fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M10 3.6 V12.4 M6.4 9 L10 12.6 L13.6 9"/><path d="M4.6 15.8 Q10 16.6 15.4 15.8"/></g></svg>';
 function renderDrawer() {
   $('#stubs').innerHTML = saved.length ? saved.slice().reverse().map(t => `<li class="stub"><div class="stub-top"><b>No. ${pad(t.no)}</b><span class="stub-meta"><span>${niceDate(t.date)}</span><button class="dl-btn" type="button" data-dl="${t.no}" aria-label="Download ticket No. ${pad(t.no)} as an image" title="Download as an image">${DL_ICON}</button></span></div>
-    ${t.kind === 'favorite' ? `<div class="fav">${favThumb(t)}<div><p class="stub-q fav-t">${linkOr(t.title, t.url)}</p>${t.description ? `<p class="stub-d">${esc(t.description)}</p>` : ''}<p class="stub-c">${favCite(t)}</p></div></div>`
+    ${t.kind === 'favorite' || t.kind === 'book' ? `<div class="fav">${t.kind === 'book' ? bookThumb(t) : favThumb(t)}<div><p class="stub-q fav-t">${linkOr(t.title, t.url)}</p>${t.kind === 'book' ? bookBy(t, 'stub-by') : ''}${t.description ? `<p class="stub-d">${esc(t.description)}</p>` : ''}<p class="stub-c">${t.kind === 'book' ? bookCite(t) : favCite(t)}</p></div></div>`
       : `<p class="stub-q">\u201C${esc(t.quote)}\u201D</p><p class="stub-c">${quoteCite(t)}</p>`}</li>`).join('')
     : '<li class="td-empty">No keepsakes yet.<button class="btn-ink" type="button" id="tdVisit">Visit the ticket machine</button></li>';
   const v = $('#tdVisit'); if (v) v.onclick = visitMachine;
@@ -2477,15 +2629,26 @@ $('#tDrawer').addEventListener('keydown', e => {
 });
 // download a ticket as a picture
 function wrapLines(ctx, text, max) { const words = text.split(/\s+/), lines = []; let line = ''; words.forEach(w => { const t = line ? line + ' ' + w : w; if (ctx.measureText(t).width > max && line) { lines.push(line); line = w; } else line = t; }); if (line) lines.push(line); return lines; }
+// fillText, drawing macron vowels as the plain letter plus a bar (see marks)
+function fillMarked(ctx, text, x, y, size) {
+  const plain = text.replace(/[\u0101\u0113\u012b\u014d\u016b]/g, c => MACRON[c]);
+  ctx.fillText(plain, x, y);
+  [...text].forEach((c, i) => {
+    if (!MACRON[c]) return;
+    const x1 = x + ctx.measureText(plain.slice(0, i)).width, w = ctx.measureText(plain[i]).width;
+    ctx.fillRect(x1 + w * .12, y - size * .62, w * .76, size * .07);
+  });
+}
 const loadImg = src => new Promise(r => { const i = new Image(); i.crossOrigin = 'anonymous'; i.onload = () => r(i); i.onerror = () => r(null); i.src = src; });
 async function ticketImage(t, withImg = true) {
   try { await document.fonts.ready; } catch (e) { }
-  const img = t.kind === 'favorite' && withImg ? await (t.art ? favArtImage(t) : t.image ? loadImg(t.image) : null) : null, ix = img ? 180 : 0;
+  const img = !withImg ? null : t.kind === 'favorite' ? await (t.art ? favArtImage(t) : t.image ? loadImg(t.image) : null)
+    : t.kind === 'book' ? await (t.image ? loadImg(t.image) : favArtImage({ art: 'book' })) : null, ix = img ? 180 : 0;
   const W = 900, c = document.createElement('canvas'), ctx = c.getContext('2d');
   ctx.font = '600 38px Gaegu, cursive';
   const qText = t.kind === 'quote' ? '\u201C' + t.quote + '\u201D' : t.title, qLines = wrapLines(ctx, qText, W - 220 - ix);
   ctx.font = '500 22px "Zen Maru Gothic", sans-serif';
-  const dLines = t.kind === 'favorite' && t.description ? wrapLines(ctx, t.description, W - 260 - ix) : [];
+  const dLines = t.kind !== 'quote' && t.description ? wrapLines(ctx, t.description, W - 260 - ix) : [];
   const H = Math.max(img ? 520 : 420, 250 + qLines.length * 46 + dLines.length * 30 + (dLines.length ? 14 : 0) + 90);
   c.width = W * 3; c.height = H * 3; ctx.scale(3, 3);
   ctx.fillStyle = '#fbf6ec'; ctx.fillRect(0, 0, W, H);
@@ -2502,44 +2665,99 @@ async function ticketImage(t, withImg = true) {
     const tw = 150, th = Math.min(225, tw * img.naturalHeight / img.naturalWidth);
     ctx.drawImage(img, x0 + 50, y0 + 150, tw, th); ctx.lineWidth = 2.5; ctx.strokeStyle = '#4a3a2e'; ctx.strokeRect(x0 + 50, y0 + 150, tw, th);
   }
-  ctx.fillStyle = '#4a3a2e'; ctx.font = '600 38px Gaegu, cursive'; qLines.forEach((l, i) => ctx.fillText(l, x0 + 50 + ix, y0 + 200 + i * 46));
+  ctx.fillStyle = '#4a3a2e'; ctx.font = '600 38px Gaegu, cursive'; qLines.forEach((l, i) => fillMarked(ctx, l, x0 + 50 + ix, y0 + 200 + i * 46, 38));
   let cy = y0 + 200 + qLines.length * 46 + 20;
+  if (t.kind === 'book' && t.author) { ctx.fillStyle = '#76614f'; ctx.font = '600 26px Gaegu, cursive'; ctx.fillText(t.author, x0 + 50 + ix, cy - 4); cy += 34; }
   if (dLines.length) { ctx.fillStyle = '#4a3a2e'; ctx.font = '500 22px "Zen Maru Gothic", sans-serif'; dLines.forEach((l, i) => ctx.fillText(l, x0 + 50 + ix, cy + i * 30)); cy += dLines.length * 30 + 14; }
   ctx.fillStyle = '#76614f'; ctx.font = '500 22px "Zen Maru Gothic", sans-serif';
-  const citeLine = t.kind === 'quote' ? ['quotes', t.source, t.author].filter(Boolean).join(' \u2022 ') : favCite(t);
+  const citeLine = t.kind === 'quote' ? ['quote', t.source, t.author].filter(Boolean).join(' \u2022 ') : t.kind === 'book' ? bookCite(t) : favCite(t);
   wrapLines(ctx, citeLine, W - 260 - ix).forEach((l, i) => ctx.fillText(l, x0 + 50 + ix, cy + i * 30));
-  // paw stamp
-  const sx = x0 + w - 100, sy = y0 + h - 90; ctx.save(); ctx.translate(sx, sy); ctx.rotate(-.2); ctx.globalAlpha = .75; ctx.strokeStyle = ctx.fillStyle = '#c9663d'; ctx.lineWidth = 3;
-  ctx.beginPath(); ctx.arc(0, 0, 44, 0, Math.PI * 2); ctx.stroke();
-  [[0, 10, 14, 11], [-18, -6, 5, 7], [-7, -18, 5, 7], [7, -18, 5, 7], [18, -6, 5, 7]].forEach(([x, y, rx, ry]) => { ctx.beginPath(); ctx.ellipse(x, y, rx, ry, 0, 0, Math.PI * 2); ctx.fill(); });
-  ctx.restore();
   // a picture from another site can block saving, so fall back to the ticket without it
   return new Promise(r => { try { c.toBlob(r, 'image/png'); } catch (e) { r(withImg && img ? ticketImage(t, false) : null); } });
 }
 let downloads;
-$('#stubs').addEventListener('click', async e => {
-  const b = e.target.closest('[data-dl]'); if (!b) return;
-  const t = saved.find(x => x.no === +b.dataset.dl); if (!t) return;
-  if (b.getAttribute('aria-busy') === 'true') return;
-  const label = b.getAttribute('aria-label'), done = msg => { b.title = msg; b.setAttribute('aria-label', msg); };
+// save a ticket as a picture on the visitor's device; the button shows how it went
+async function downloadTicket(t, b) {
+  if (b.getAttribute('aria-busy') === 'true') return false;
+  const label = b.getAttribute('aria-label'), title = b.title, done = msg => { b.title = msg; b.setAttribute('aria-label', msg); };
   b.setAttribute('aria-busy', 'true'); done('Making the picture\u2026');
+  let ok = false;
   try {
     const blob = await ticketImage(t), filename = `teo-house-ticket-${pad(t.no)}.png`;
     if (downloads === undefined) downloads = window.claude && window.claude.use ? await window.claude.use('downloads').catch(() => null) : null;
-    if (downloads) { await downloads.save({ filename, data: blob }); done('Saved'); }
-    else if (staticSite) { const a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = filename; a.click(); setTimeout(() => URL.revokeObjectURL(a.href), 4000); done('Saved'); }
-    else done('Downloads are not available here');
+    if (downloads) { await downloads.save({ filename, data: blob }); ok = true; }
+    else if (staticSite) { const a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = filename; a.click(); setTimeout(() => URL.revokeObjectURL(a.href), 4000); ok = true; }
+    done(ok ? 'Saved' : 'Downloads are not available here');
   } catch (err) { done(err && (err.code === 'cancelled' || err.code === 'declined') ? label : 'That did not save. Try again'); }
-  b.removeAttribute('aria-busy'); setTimeout(() => { b.title = 'Download as an image'; b.setAttribute('aria-label', label); }, 2600);
+  b.removeAttribute('aria-busy'); setTimeout(() => { b.title = title; b.setAttribute('aria-label', label); }, 2600);
+  return ok;
+}
+$('#stubs').addEventListener('click', e => {
+  const b = e.target.closest('[data-dl]'); if (!b) return;
+  const t = saved.find(x => x.no === +b.dataset.dl); if (t) downloadTicket(t, b);
 });
 renderStubCount();
+
+/* ---------- writing on the lines ---------- */
+// the sheets, the ephemera drawer and Teo's card are ruled paper. Every block of text gets a line height of one
+// rule (two for big titles) and is nudged down so its first baseline sits just on a rule, like handwriting.
+// Pictures and cards in between can be any height; the text after them still lands on the lines.
+const RULED = [
+  { scroller: () => sheet, root: () => body, rule: 32, skip: () => ['book', 'player', 'menu'].some(c => sheet.classList.contains(c)) },
+  { scroller: () => $('#tDrawer'), root: () => $('#stubs'), rule: 32 },
+  { scroller: () => $('#teoCard'), root: () => $('#teoCard'), rule: 28 },
+];
+const INLINE = new Set(['inline', 'contents']);
+function snapToRules(r) {
+  const sc = r.scroller(), root = r.root();
+  if (!sc || !root || sc.hidden || (r.skip && r.skip()) || !sc.getClientRects().length) return;
+  // the blocks that hold text: the nearest non-inline box around each piece of text
+  const blocks = new Set(), walk = document.createTreeWalker(root, NodeFilter.SHOW_TEXT);
+  // text on a card or ticket with its own paper (no lines showing through) is left alone
+  const onCard = el => { for (let e = el; e && e !== root; e = e.parentElement) { const cs = getComputedStyle(e); if (cs.backgroundImage !== 'none' || !/rgba\(.*,\s*0\)|transparent/.test(cs.backgroundColor)) return true; } return false; };
+  for (let n = walk.nextNode(); n; n = walk.nextNode()) {
+    if (!n.nodeValue.trim()) continue;
+    let el = n.parentElement;
+    if (el.closest('svg, button, input, select, textarea, label, .ticket-fly')) continue;
+    while (el !== root && INLINE.has(getComputedStyle(el).display)) el = el.parentElement;
+    // a bordered block is a button or chip drawn on the page, not writing on it
+    if (el !== root && !onCard(el) && !(parseFloat(getComputedStyle(el).borderTopWidth) > 0)) blocks.add(el);
+  }
+  // sheets scale in as they open, so measure in the paper's own, unscaled pixels
+  const at = y => { const b = sc.getBoundingClientRect(), k = b.height / sc.offsetHeight || 1; return (y - b.top) / k - sc.clientTop + sc.scrollTop; };
+  blocks.forEach(el => {
+    if (!('p0' in el.dataset)) el.dataset.p0 = parseFloat(getComputedStyle(el).paddingTop) || 0;
+    const fs = parseFloat(getComputedStyle(el).fontSize) || 16;
+    el.style.lineHeight = r.rule * Math.max(1, Math.round(fs * 1.25 / r.rule)) + 'px';
+    el.style.paddingTop = el.dataset.p0 + 'px'; el.style.translate = '';
+    const probe = document.createElement('span');
+    probe.style.cssText = 'display:inline-block;width:0;height:0;vertical-align:baseline';
+    el.insertBefore(probe, el.firstChild);
+    const base = at(probe.getBoundingClientRect().bottom); probe.remove();
+    // rules are drawn at rule-1..rule; the baseline sits 2px above, so descenders dip over the line.
+    // move down to the next rule (padding, which never collapses away), or up a little when only just below one
+    let nudge = (((r.rule - 3 - base) % r.rule) + r.rule) % r.rule;
+    if (nudge > r.rule - 12) nudge -= r.rule;
+    if (nudge > 0) el.style.paddingTop = (+el.dataset.p0 + nudge) + 'px';
+    else if (nudge < 0) el.style.translate = `0 ${nudge}px`;
+  });
+}
+let snapQueued = false;
+const snapAll = () => { if (snapQueued) return; snapQueued = true; requestAnimationFrame(() => { snapQueued = false; snapObs.disconnect(); RULED.forEach(snapToRules); watchRuled(); }); };
+const snapObs = new MutationObserver(snapAll);
+function watchRuled() { RULED.forEach(r => { const root = r.root(), sc = r.scroller(); if (root) snapObs.observe(root, { childList: true, subtree: true, characterData: true }); if (sc) snapObs.observe(sc, { attributes: true, attributeFilter: ['hidden', 'class'] }); }); }
+watchRuled();
+addEventListener('resize', snapAll);
+// pictures change the layout as they arrive
+RULED.forEach(r => { const sc = r.scroller(); if (sc) sc.addEventListener('load', snapAll, true); });
+if (document.fonts) document.fonts.ready.then(snapAll);
 
 /* ---------- zooming in: laptop and easel ---------- */
 const laptop = $('#laptop'), screenEl = $('#screen'), easelEl = $('#easel');
 const VB0 = [-24, 0, 1248, 764];
 let texBase = VB0[2]; // the view width at which the pencil texture looks right
 const ZOOMS = {
-  laptop: { cx: 590, cy: 474, w: 92, h: 66, box: [550, 450, 630, 496], view: () => screenEl },
+  laptop: { cx: 590, cy: 478, w: 92, h: 64, fill: .97, box: [550, 450, 630, 496], view: () => screenEl },
   easel: { cx: 398, cy: 494, w: 92, h: 100, box: [360, 452, 436, 536], view: () => $('#easelView') },
   machine: { cx: 940, cy: 420, w: 260, h: 250, box: [920, 326, 984, 456], view: () => machineView },
   pan: { cx: 1513, cy: 490, w: 170, h: 90, box: [1471, 470, 1565, 510], view: () => machineView }
@@ -2584,7 +2802,7 @@ function animVB(to, ms) {
 }
 // frame an object so the whole of it is in view
 function zoomView(z) {
-  const r = stage.getBoundingClientRect(), A = r.width / r.height, fill = mobile.matches ? .94 : .72;
+  const r = stage.getBoundingClientRect(), A = r.width / r.height, fill = z.fill || (mobile.matches ? .94 : .72);
   const w = Math.max(z.w / fill, z.h / fill * A), h = w / A;
   return [z.cx - w / 2, z.cy - h / 2, w, h];
 }
@@ -2622,6 +2840,7 @@ async function openLaptop() {
 async function closeLaptop() {
   if (laptopState !== 'open') return;
   laptopState = 'closing'; await zoomOut();
+  $('#screenProject').hidden = true; $('#screenProject').innerHTML = ''; $('#cards').hidden = false; $('#screenSeg').hidden = false;
   laptop.classList.remove('ready', 'booting'); await pause(200);
   laptop.classList.remove('opened'); await pause(450);
   laptop.setAttribute('aria-expanded', 'false'); laptopState = 'closed';
@@ -3194,6 +3413,7 @@ document.addEventListener('keydown', e => {
   else if (!$('#ticket').hidden) closeTicket();
   else if (!card.hidden) { closeTeoCard(); teo.focus({ preventScroll: true }); }
   else if (!bubbles.hidden) { closeBubbles(); teo.focus({ preventScroll: true }); }
+  else if (zoomed === 'laptop' && !$('#screenProject').hidden) showCards();
   else if (zoomed) closeZoom();
 });
 buildStops();
