@@ -178,6 +178,11 @@ body.playing .notes .note:nth-child(2){animation-delay:-1.8s}
 .sp-head h3{margin:0;font-family:var(--f-title);font-weight:400;font-size:30px;line-height:1.2;text-transform:lowercase;filter:url(#ink);outline:none}
 .canvas-view{position:absolute;z-index:6;display:flex;flex-direction:column;overflow:hidden;background:#fffdf6;animation:screenIn .5s ease}
 .cv-art{flex:1;min-height:0;display:flex;align-items:center;justify-content:center;padding:12px 12px 6px}
+.cv-art.has-detail{display:block;overflow-y:auto;overscroll-behavior:contain;padding:0}
+.cv-scroll{height:100%}
+.cv-hero{height:84%;box-sizing:border-box;display:flex;align-items:center;justify-content:center;padding:12px 12px 4px}
+.cv-hero svg{display:block;width:100%;height:auto;max-height:100%}
+.cv-detail{padding:6px 18px 18px}
 .cv-open{display:flex;align-items:center;justify-content:center;width:100%;height:100%;padding:0;background:none;border:0;border-radius:8px;transition:transform .2s}
 .cv-open:hover{transform:scale(1.02)}
 .cv-open svg,.cv-open img{display:block;max-width:100%;max-height:100%;width:100%;height:auto;object-fit:contain}
@@ -466,9 +471,10 @@ body.playing .turntable .arm{transform:none}
 .spread .jb-r{left:50%;border-left:0;border-radius:0 8px 8px 0;background:var(--paper-tex),linear-gradient(90deg,rgba(74,58,46,.16),transparent 40px),#fffdf8}
 .jb-view{position:absolute;inset:0;overflow:clip}
 .post.jb-flow{position:absolute;margin:0;max-width:none;column-fill:auto;font-size:16px;line-height:1.75}
-.jb-flow .jb-date{margin:0 0 4px;font-family:var(--f-body);font-size:13px;letter-spacing:.04em;color:var(--ink-soft)}
-.sheet .jb-flow h2{margin:0 0 18px;font-size:46px}
+.jb-flow .jb-date{margin:0 0 22px;text-align:center;font-family:var(--f-body);font-size:13px;letter-spacing:.04em;color:var(--ink-soft)}
+.sheet .jb-flow h2{margin:0 0 6px;font-size:46px;text-align:center}
 .jb-flow img,.jb-flow video{width:100%;height:auto;max-height:calc(var(--colh) - 30px);object-fit:cover}
+.jb-flow img,.jb-flow video{border:0;border-radius:4px}
 .jb-flow figure,.jb-flow blockquote,.jb-flow img,.jb-flow video,.jb-flow h3,.jb-flow h4{break-inside:avoid}
 .jb-flow h3,.jb-flow h4{break-after:avoid}
 .jb-flow p{orphans:2;widows:2}
@@ -667,9 +673,7 @@ blockquote{margin:0 0 28px;padding:0;font-family:var(--f-title);font-size:28px;l
   .sheet.menu .dish-grid.stack .dish[data-p="far"]{z-index:1;opacity:0;transform:translate(0,18px) rotate(1deg)}
   .sheet.menu .dish-grid.stack .dish.held{transition:none}
   .sheet-body{padding-left:max(40px,env(safe-area-inset-left,0px));padding-right:max(18px,env(safe-area-inset-right,0px));padding-bottom:calc(28px + env(safe-area-inset-bottom,0px))}
-  .canvas-view{position:fixed!important;inset:0!important;width:auto!important;height:auto!important;z-index:18;border-radius:0;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
-  .canvas-view .fs-x{display:grid;position:absolute;top:calc(8px + env(safe-area-inset-top,0px));right:8px;z-index:2}
-  .cv-art{padding:52px 16px 16px}
+  .canvas-view{z-index:18}
   .tdrawer{border:0!important;top:auto;bottom:0;left:0;right:0;width:100%;height:auto;box-sizing:border-box;padding-left:max(42px,env(safe-area-inset-left,0px));padding-right:max(18px,env(safe-area-inset-right,0px));max-height:85vh;max-height:85dvh;transform:none;border-bottom:0;border-radius:18px 18px 0 0;padding-bottom:calc(26px + env(safe-area-inset-bottom,0px));animation:sheetUp .35s cubic-bezier(.2,.8,.2,1)}
   .ticket-wrap{max-height:calc(100vh - 32px);max-height:calc(100dvh - 32px);overflow-y:auto}
   .menu-list{position:fixed;top:auto;left:0;right:0;bottom:0;width:auto;height:80vh;height:80dvh;z-index:22;box-sizing:border-box;align-content:start;overflow-y:auto;
@@ -1871,6 +1875,14 @@ async function openProject(i) {
     if (laptopState !== 'open') return;
     showOnScreen(i); return;
   }
+  const ei = easelItems.findIndex(it => it.projectId === p.id);
+  if (ei >= 0) {
+    if (sheet.classList.contains('open')) closeSheet();
+    if (zoomed === 'laptop') await closeLaptop(); else if (zoomed && zoomed !== 'easel') await zoomOut();
+    easelIdx = ei; renderEasel();
+    if (zoomed !== 'easel') { if (phone.matches) { const st = STOPS.findIndex(x => x.name.includes('easel')); if (st >= 0 && st !== stopIdx) await moveTo(st, 400); } else if (placeIdx !== 0) await moveTo(0); await openEasel(); }
+    return;
+  }
   sheetProject = i;
   openSheet(`<p class="body-p">${esc(p.text)}</p>
     ${shots(p)}`, false, null, `<h2 id="sheetTitle" tabindex="-1">${esc(p.title)}</h2><span class="bt-year">${p.year}</span>`);
@@ -1999,7 +2011,7 @@ function openPost(i) {
   const p = POSTS[i];
   const text = (p.html ? postMedia(p.html) : `<p>${esc(p.blurb)}</p>`).replace(/ loading="lazy"/g, '')
     .replace(/<video controls playsinline preload="metadata"/g, '<video autoplay muted loop playsinline preload="auto"');
-  openBook(`<p class="jb-date">${esc(p.date)}</p><h2 id="sheetTitle" tabindex="-1">${esc(p.title)}</h2>${text}
+  openBook(`<h2 id="sheetTitle" tabindex="-1">${esc(p.title)}</h2><p class="jb-date">${esc(p.date)}${p.tag ? ' \u2022 ' + esc(p.tag) : ''}</p>${text}
       <p class="jb-end"></p>`, false);
   book.post = i;
 }
@@ -3203,7 +3215,7 @@ const VB0 = [-24, 0, 1248, 764];
 let texBase = VB0[2]; // the view width at which the pencil texture looks right
 const ZOOMS = {
   laptop: { cx: 590, cy: 478, w: 92, h: 64, fill: .97, box: [550, 450, 630, 496], view: () => screenEl, phone: { cy: 474, w: 84, h: 60, fill: 1 } },
-  easel: { cx: 398, cy: 494, w: 92, h: 100, box: [360, 452, 436, 536], view: () => $('#easelView') },
+  easel: { cx: 398, cy: 494, w: 92, h: 100, box: [360, 452, 436, 536], view: () => $('#easelView'), phone: { w: 82, h: 96, fill: 1 } },
   machine: { cx: 940, cy: 420, w: 260, h: 250, box: [920, 326, 984, 456], view: () => machineView },
   pan: { cx: 1513, cy: 490, w: 170, h: 90, box: [1471, 470, 1565, 510], view: () => machineView }
 };
@@ -3362,10 +3374,11 @@ function renderEasel() {
   }
   const pi = projects.findIndex(p => p.id === it.projectId);
   art.innerHTML = pi >= 0
-    ? `<button class="cv-open" type="button" data-open="${pi}" aria-label="Open ${esc(projects[pi].title)}">${thumb(projects[pi].id)}</button>`
+    ? `<div class="cv-scroll" tabindex="0" aria-label="${esc(projects[pi].title)}"><div class="cv-hero">${thumb(projects[pi].id)}</div><div class="cv-detail"><p class="body-p">${esc(projects[pi].text)}</p>${shots(projects[pi])}</div></div>`
     : `<button class="cv-open" type="button" data-painting="${easelIdx}" aria-label="Look at ${esc(it.title || 'this painting')}"><img src="${it.url}" alt=""></button>`;
   const meta = [it.year, easelItems.length > 1 ? `${easelIdx + 1} of ${easelItems.length}` : ''].filter(Boolean).join(' \u00B7 ');
   cap.innerHTML = `<b>${esc(it.title || 'Untitled')}</b>${esc(meta)}`;
+  art.classList.toggle('has-detail', pi >= 0); art.scrollTop = 0;
 }
 async function initEasel() {
   if (staticSite || !window.claude || !window.claude.use) { if (!staticSite) easelState = 'error'; renderEasel(); return; }
