@@ -698,14 +698,14 @@ blockquote{margin:0 0 28px;padding:0;font-family:var(--f-title);font-size:28px;l
   .navbar button,.navbar input,.navbar .sound{pointer-events:auto}
   /* no outlines on the white controls; a soft shadow keeps them readable over the drawing */
   .menu-btn,.stub-btn,.navbar .sound,.zoom-x{border-color:transparent!important}
-  .menu-btn svg,.stub-btn svg,.navbar .sound svg,.zoom-x svg,.top .mark h1{filter:drop-shadow(0 1px 2px rgba(34,24,18,.45))}
+  .menu-btn svg,.stub-btn svg,.navbar .snd-btn svg{width:31px;height:31px}
+  .zoom-x svg{width:27px;height:27px}
   .navbar .nav-name{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
   .navbar .dots i{border-color:#fffaf0}
   .navbar .dots i.on{background:#fffaf0}
   .menu-btn,.stub-btn,.navbar .sound{background:none;border-color:#fffaf0;color:#fffaf0}
   .navbar .snd-btn{color:#fffaf0}
   .stub-btn .stub-fill{fill:none}
-  .top .mark h1,.navbar .nav-name{text-shadow:0 1px 6px rgba(34,24,18,.35)}
   .edge-tab{display:none!important}
   /* zoomed in on anything: the menu button turns into a close button in the same spot */
   .menu-btn{transition:opacity .25s ease,transform .3s ease}
@@ -3866,8 +3866,8 @@ function sparkleInView() {
 // on phones the sound and ephemera controls live in the bottom bar
 function placeControls() {
   const snd = soundEl, right = $('.top-right');
-  // phones: the sound sits in the bottom bar; the ticket stays up top, just left of the menu
-  if (phone.matches && smallScreen.matches) { $('#navLeft').appendChild(snd); if (stubBtn.parentNode !== right) right.insertBefore(stubBtn, right.firstChild); }
+  // phones: the sound sits at the bottom right; the ticket stays up top, just left of the menu
+  if (phone.matches && smallScreen.matches) { $('#navRight').appendChild(snd); if (stubBtn.parentNode !== right) right.insertBefore(stubBtn, right.firstChild); }
   else if (snd.parentNode !== right) { right.insertBefore(stubBtn, right.firstChild); right.insertBefore(snd, stubBtn); }
 }
 function setMode() {
