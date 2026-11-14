@@ -685,10 +685,15 @@ blockquote{margin:0 0 28px;padding:0;font-family:var(--f-hand);font-size:30px;li
   /* the house fills the whole screen; the bar floats over it, with a soft dark fade at the top and bottom so the white controls read */
   .scroller{bottom:0}
   .scroller::before,.scroller::after{content:"";position:absolute;left:0;right:0;z-index:3;pointer-events:none}
-  .scroller::before{top:0;height:calc(130px + env(safe-area-inset-top,0px));background:linear-gradient(rgba(34,24,18,.62),rgba(34,24,18,.28) 50%,rgba(34,24,18,0))}
-  .scroller::after{bottom:0;height:calc(150px + env(safe-area-inset-bottom,0px));background:linear-gradient(rgba(34,24,18,0),rgba(34,24,18,.32) 45%,rgba(34,24,18,.66))}
+  .scroller::before{top:0;height:calc(62px + env(safe-area-inset-top,0px));background:linear-gradient(rgba(34,24,18,.3),rgba(34,24,18,.25) 20%,rgba(34,24,18,.17) 40%,rgba(34,24,18,.1) 60%,rgba(34,24,18,.04) 80%,rgba(34,24,18,0))}
+  .scroller::after{bottom:0;height:calc(58px + env(safe-area-inset-bottom,0px));background:linear-gradient(0deg,rgba(34,24,18,.3),rgba(34,24,18,.25) 20%,rgba(34,24,18,.17) 40%,rgba(34,24,18,.1) 60%,rgba(34,24,18,.04) 80%,rgba(34,24,18,0))}
   .navbar{position:fixed;inset:auto 0 0;z-index:6;display:grid;gap:6px;padding:8px max(12px,env(safe-area-inset-right,0px)) calc(8px + env(safe-area-inset-bottom,0px)) max(12px,env(safe-area-inset-left,0px));background:none;border:0;color:#fffaf0}
   .top,.top .mark h1,.top .mark p{color:#fffaf0}
+  .navbar{pointer-events:none}
+  .navbar button,.navbar input,.navbar .sound{pointer-events:auto}
+  /* no outlines on the white controls; a soft shadow keeps them readable over the drawing */
+  .menu-btn,.stub-btn,.navbar .sound,.zoom-x{border-color:transparent!important}
+  .menu-btn svg,.stub-btn svg,.navbar .sound svg,.zoom-x svg,.top .mark h1{filter:drop-shadow(0 1px 2px rgba(34,24,18,.45))}
   .navbar .nav-name{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
   .navbar .dots i{border-color:#fffaf0}
   .navbar .dots i.on{background:#fffaf0}
@@ -3226,7 +3231,7 @@ function scaleTexture(k) {
   if (Math.abs(k - textureK) < .01) return; textureK = k;
   TEXTURE.forEach(([n, attr, base]) => n.setAttribute(attr, base.map(x => attr === 'scale' ? x / k : x * k).join(' ')));
 }
-const setVB = v => { vb = v; svg.setAttribute('viewBox', v.map(n => Math.round(n * 100) / 100).join(' ')); scaleTexture(texBase / v[2]); };
+const setVB = v => { if (pan) collapsePan(); vb = v; svg.setAttribute('viewBox', v.map(n => Math.round(n * 100) / 100).join(' ')); scaleTexture(texBase / v[2]); };
 const pause = ms => new Promise(r => setTimeout(r, reduceMotion.matches ? 0 : ms));
 let vbGen = 0;
 function animVB(to, ms) {
@@ -3239,6 +3244,38 @@ function animVB(to, ms) {
       const t = Math.min(1, (now - t0) / ms), e = t < .5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2;
       setVB(from.map((f, i) => f + (to[i] - f) * e));
       t < 1 ? requestAnimationFrame(step) : done();
+    };
+    requestAnimationFrame(step);
+  });
+}
+// phones: sliding sideways between spots is done on the graphics card. The scene is drawn once, wide enough to cover
+// where it is and where it's going, and that finished picture glides across; one more redraw when it lands.
+// (Redrawing all the pencil texture every frame is what made sliding stutter.)
+let pan = null;
+function expandPan(x0, uw) {
+  const r = stage.getBoundingClientRect(), k = Math.max(r.width / vb[2], r.height / vb[3]);
+  svg.setAttribute('viewBox', `${x0} ${vb[1]} ${uw} ${vb[3]}`);
+  Object.assign(svg.style, { width: uw * k + 'px', marginLeft: (x0 - vb[0]) * k + 'px', willChange: 'transform', transform: 'translate3d(0,0,0)' });
+  pan = { x0, uw, k, base: vb[0], px: 0 };
+}
+function setPanPx(px) { if (!pan) return; pan.px = px; svg.style.transform = `translate3d(${Math.round(px * 2) / 2}px,0,0)`; }
+function collapsePan() {
+  if (!pan) return; const p = pan; pan = null;
+  Object.assign(svg.style, { width: '', marginLeft: '', willChange: '', transform: '' });
+  setVB([p.base - p.px / p.k, vb[1], vb[2], vb[3]]);
+}
+function panTo(toX, ms) {
+  const w = vb[2];
+  if (!pan || toX < pan.x0 - .5 || toX + w > pan.x0 + pan.uw + .5) { collapsePan(); expandPan(Math.min(vb[0], toX), Math.abs(vb[0] - toX) + w); }
+  const gen = ++vbGen, from = pan.px, to = (pan.base - toX) * pan.k;
+  return new Promise(done => {
+    if (reduceMotion.matches) { setPanPx(to); collapsePan(); return done(); }
+    const t0 = performance.now();
+    const step = now => {
+      if (gen !== vbGen) return done();
+      const t = Math.min(1, (now - t0) / ms), e = t < .5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2;
+      setPanPx(from + (to - from) * e);
+      if (t < 1) requestAnimationFrame(step); else { collapsePan(); done(); }
     };
     requestAnimationFrame(step);
   });
@@ -3259,6 +3296,7 @@ function placeOverlay(z) {
   Object.assign(z.view().style, { left: a.x - s.left + 'px', top: a.y - s.top + 'px', width: b.x - a.x + 'px', height: b.y - a.y + 'px' });
 }
 async function zoomIn(name) {
+  collapsePan();
   const z = zAdj(ZOOMS[name]);
   if (!$('#ticket').hidden && name !== 'machine') closeTicket(false);
   document.body.classList.add('zoomed');
@@ -3709,7 +3747,10 @@ async function moveTo(i, ms) {
   if (!$('#ticket').hidden) closeTicket(false);
   updateNav();
   if (was === 2) teoIn();
-  moving = true; const dur = ms || (phone.matches ? 650 : 1500); await Promise.all([animVB(homeVB(), dur), animSlide(homeSlide(), dur)]); moving = false;
+  moving = true; const dur = ms || (phone.matches ? 650 : 1500), tv = homeVB(), ts = homeSlide();
+  if (phone.matches && Math.abs(ts - slide) < .5 && Math.abs(tv[2] - vb[2]) < .5 && Math.abs(tv[1] - vb[1]) < .5) await panTo(tv[0], dur);
+  else { collapsePan(); await Promise.all([animVB(tv, dur), animSlide(ts, dur)]); }
+  moving = false;
   sparkleInView();
   if (placeIdx !== was) say(placeIdx === 2 ? 'You stepped outside. Teo is right behind you.' : placeIdx === 1 ? 'In the kitchen.' : 'Back in the living room.');
   else if (phone.matches) say(STOPS[stopIdx].name);
@@ -3719,13 +3760,13 @@ const stepBy = d => placeIdx === 2 ? (d < 0 ? goInside() : null) : moveTo((phone
 async function goOutside() {
   if (placeIdx === 2 || moving || zoomed || zooming) return;
   if (!$('#ticket').hidden) closeTicket(false);
-  placeIdx = 2; updateNav(); teoOut();
+  placeIdx = 2; updateNav(); teoOut(); collapsePan();
   moving = true; await Promise.all([animVB(homeVB(), 1500), animSlide(0, 1500)]); moving = false;
   sparkleInView(); say('You stepped outside. Teo is right behind you.');
 }
 async function goInside() {
   if (placeIdx !== 2 || moving || zoomed || zooming) return;
-  placeIdx = 0; stopIdx = Math.max(0, STOPS.findIndex(st => st.name.includes('entrance'))); updateNav(); teoIn();
+  placeIdx = 0; stopIdx = Math.max(0, STOPS.findIndex(st => st.name.includes('entrance'))); updateNav(); teoIn(); collapsePan();
   moving = true; await Promise.all([animVB(homeVB(), 1500), animSlide(0, 1500)]); moving = false;
   sparkleInView(); say('Back inside the house.');
 }
@@ -3751,6 +3792,7 @@ function dragFrame() {
   const r = stage.getBoundingClientRect(), k = phone.matches ? d.vb[2] / r.width : Math.max(d.vb[2] / r.width, d.vb[3] / r.height);
   const px = k / (devicePixelRatio || 1), snap = v => Math.round(v / px) * px;
   if (!phone.matches && placeIdx < 2) setSlide(Math.max(0, Math.min(SLIDE_MAX, snap(d.slide - d.dx * k))));
+  else if (phone.matches && pan) setPanPx(Math.max(-r.width, Math.min(r.width, d.dx)) + d.px0);
   else setVB([snap(d.vb[0] - d.dx * k), d.vb[1], d.vb[2], d.vb[3]]);
 }
 stage.addEventListener('pointermove', e => {
@@ -3759,7 +3801,10 @@ stage.addEventListener('pointermove', e => {
   if (!drag.on) {
     if (Math.abs(dx) < 10 || Math.abs(dx) < Math.abs(dy)) return;
     // start from where the camera is now (it may still be settling) and from where the finger is now
-    drag.on = true; vbGen++; slideGen++; drag.vb = vb.slice(); drag.slide = slide; drag.x = e.clientX;
+    drag.on = true; vbGen++; slideGen++;
+    // phones: draw a strip one spot wider on each side, then the finger just slides that picture
+    if (phone.matches) { if (!pan) expandPan(vb[0] - vb[2], vb[2] * 3); drag.px0 = pan.px; }
+    drag.vb = vb.slice(); drag.slide = slide; drag.x = e.clientX;
     try { stage.setPointerCapture(e.pointerId); } catch (err) { }
   }
   drag.dx = e.clientX - drag.x;
@@ -3771,7 +3816,9 @@ function endDrag(e) {
   dragged = true; setTimeout(() => { dragged = false; }, 60);
   // a cancelled touch (the browser took over) just settles back
   const dir = e.type !== 'pointercancel' && Math.abs(e.clientX - d.x0) > 50 ? (e.clientX < d.x0 ? 1 : -1) : 0, cur = phone.matches ? stopIdx : placeIdx, max = placeIdx === 2 ? 2 : phone.matches ? STOPS.length - 1 : PLACES.length - 1;
-  if (dir && cur + dir >= 0 && cur + dir <= max) stepBy(dir); else { animVB(homeVB(), 300); animSlide(homeSlide(), 300); }
+  if (dir && cur + dir >= 0 && cur + dir <= max) stepBy(dir);
+  else if (pan) panTo(homeVB()[0], 300);
+  else { animVB(homeVB(), 300); animSlide(homeSlide(), 300); }
 }
 stage.addEventListener('pointerup', endDrag); stage.addEventListener('pointercancel', endDrag);
 stage.addEventListener('click', e => { if (dragged) { e.stopPropagation(); e.preventDefault(); dragged = false; } }, true);
