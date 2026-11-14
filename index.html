@@ -9,7 +9,7 @@
 :root{--modal-w:min(1000px,calc(100vw - 32px));--modal-h:min(90vh,1040px)}
 /* Layout: one pencil-drawn cutaway room on cream paper fills the screen; quiet chrome sits in the margins; reading happens on a paper sheet that slides in from the right. */
 :root{
-  --paper:#fbf6ec; --paper-2:#f3e9d6; --ink:#4a3a2e; --ink-soft:#76614f; --brown:#9b7352;
+  --paper:#fbf6ec; --paper-2:#f3e9d6; --ink:#4a3a2e; --ink-soft:#76614f; --link:#7a2633; --brown:#9b7352;
   --moss:#6f9a69; --persimmon:#c9663d; --amber:#f2b552; --indigo:#6f88bd;
   --f-hand:"Gaegu","Zen Maru Gothic",ui-rounded,"Comic Sans MS",system-ui,sans-serif;
   --f-title:"La Belle Aurore","Gaegu",cursive;
@@ -82,7 +82,7 @@ button{font:inherit;color:inherit}
 .book-art image{filter:sepia(.14) saturate(.9) contrast(.96)}
 .stub .fav .stub-q{margin-top:0}
 .fav-t a{color:inherit;text-decoration:none}
-.fav-t a:hover{color:var(--persimmon)}
+.fav-t a:hover{color:var(--link)}
 .t-by,.stub-by{margin:2px 0 0;font-family:Gaegu,cursive;font-size:19px;color:var(--ink-soft,#76614f)}
 .stub-by{font-size:16px}
 .mac{position:relative;display:inline!important;margin:0!important;padding:0!important;font:inherit!important;color:inherit!important;letter-spacing:inherit}
@@ -117,7 +117,7 @@ button{font:inherit;color:inherit}
 .menu-list .link{color:var(--ink)}
 .link{background:none;border:0;padding:2px 0;cursor:pointer;font-family:var(--f-hand);font-size:21px;color:var(--ink-soft);
   text-decoration:underline;text-decoration-thickness:1.5px;text-underline-offset:5px;text-decoration-color:rgba(74,58,46,.3)}
-.link:hover{color:var(--ink);text-decoration-color:var(--persimmon)}
+.link:hover{color:var(--ink);text-decoration-color:var(--link)}
 :focus-visible{outline:2.5px solid var(--persimmon);outline-offset:3px}
 #scene :focus-visible{outline:none}
 .hot:focus-visible{filter:drop-shadow(0 0 1.5px #c9663d) drop-shadow(0 0 3px #c9663d)}
@@ -315,8 +315,7 @@ body.zoomed .edge-tab,.edge-tab[hidden]{display:none}
 .t-cite{margin:10px 0 0;padding-right:44px;font-size:14.5px;line-height:1.45;color:var(--ink-soft)}
 .t-cite i{font-style:italic}
 .t-cite a,.stub-c a{color:inherit;text-decoration:none}
-.t-cite a:hover,.stub-c a:hover{color:var(--persimmon)}
-.t-cite a:hover,.stub-c a:hover{color:var(--persimmon)}
+.t-cite a:hover,.stub-c a:hover{color:var(--link)}
 .t-doodle{display:block;width:96px;height:80px;margin:2px 0 2px}
 .t-body{margin-top:14px}
 .t-body .t-kick:first-child{margin-top:0}
@@ -356,13 +355,14 @@ body.playing .disc{animation:spin 6s linear infinite}
 .playlists .label{flex:none;width:36px;height:36px}
 .jfly{position:fixed;z-index:25;perspective:1400px;pointer-events:none}
 .jf-page{position:absolute;inset:0;background:#f8f2dc;border:2px solid var(--ink);border-radius:4px 10px 10px 4px;box-shadow:2px 2px 0 #efe7cd,4px 4px 0 #e5dbbd,6px 6px 0 #d9cca9,8px 9px 0 rgba(74,58,46,.14)}
-.jf-cover{position:absolute;inset:0;background:#561c25 linear-gradient(115deg,rgba(255,255,255,.09),transparent 38%,rgba(0,0,0,.16) 100%);border:2px solid #2b0c11;border-radius:4px 10px 10px 4px;transform-origin:0 50%;backface-visibility:hidden;box-shadow:inset 8px 0 0 rgba(0,0,0,.14)}
+.jf-cover{position:absolute;inset:0;background:url("data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20width='200'%20height='200'%3E%3Cfilter%20id='l'%3E%3CfeTurbulence%20type='fractalNoise'%20baseFrequency='.7'%20numOctaves='4'%20stitchTiles='stitch'/%3E%3CfeColorMatrix%20values='0%200%200%200%20.1%200%200%200%200%20.02%200%200%200%200%20.04%200%200%200%201.4%20-.5'/%3E%3C/filter%3E%3Crect%20width='200'%20height='200'%20filter='url(%23l)'%20opacity='.45'/%3E%3Cfilter%20id='h'%3E%3CfeTurbulence%20type='fractalNoise'%20baseFrequency='1.2'%20numOctaves='2'%20stitchTiles='stitch'/%3E%3CfeColorMatrix%20values='0%200%200%200%20.95%200%200%200%200%20.8%200%200%200%200%20.8%200%200%200%201.4%20-.72'/%3E%3C/filter%3E%3Crect%20width='200'%20height='200'%20filter='url(%23h)'%20opacity='.18'/%3E%3C/svg%3E") 0 0/200px 200px,linear-gradient(115deg,rgba(255,255,255,.09),transparent 38%,rgba(0,0,0,.16) 100%),#561c25;border:2px solid #2b0c11;border-radius:4px 10px 10px 4px;transform-origin:0 50%;backface-visibility:hidden;box-shadow:inset 8px 0 0 rgba(0,0,0,.14)}
 .jf-cover::before,.jbook::before{content:"";position:absolute;inset:7px;border:1.5px dashed rgba(170,96,104,.7);border-radius:4px 9px 9px 4px;pointer-events:none}
-.jf-cover em{position:absolute;right:16%;bottom:9%;font:600 22px/1 Georgia,"Times New Roman",serif;font-style:normal;letter-spacing:.06em;color:#47151d;text-shadow:0 1px 0 rgba(255,255,255,.12),0 -1px 0 rgba(0,0,0,.35)}
-.jf-cover .jb-pendant{position:absolute;left:-2%;top:44%;width:44%;height:auto;overflow:visible}
-.jf-cover i{position:absolute;left:0;right:0;top:calc(44% + 12px);height:3px;background:#3a1a17}
-.jfly .jb-charms{left:-14px;top:10%;width:34px;height:178px;z-index:2}
-.jf-cover b{display:none}
+.jf-cover em{position:absolute;right:16%;bottom:9%;font:600 calc(var(--jw,240px) * .09)/1 Georgia,"Times New Roman",serif;font-style:normal;letter-spacing:.06em;color:#47151d;text-shadow:0 1px 0 rgba(255,255,255,.12),0 -1px 0 rgba(0,0,0,.35)}
+/* the elastic closure: a soft, rounded taupe band across the middle that wraps past both edges */
+.jf-cover b{display:block;position:absolute;left:-1.5%;right:-1.5%;top:calc(50% - var(--jw,240px) * .011);height:calc(var(--jw,240px) * .022);border-radius:3px;
+  background:linear-gradient(#c2a49c,#a8877f 45%,#8a6c64);box-shadow:0 1px 0 rgba(0,0,0,.35),0 2px 4px rgba(0,0,0,.25);filter:url(#pencil)}
+/* small charms clustered at the middle of the band, their rings looped over it */
+.jfly .jb-charms{left:22%;width:56%;height:auto;top:calc(50% - var(--jw,240px) * .56 * .039);z-index:2}
 .jams{list-style:none;margin:0;padding:0;display:grid;gap:10px;counter-reset:j}
 .jams li{display:flex;align-items:center;gap:12px;padding:10px 12px;background:var(--paper);border:1.5px solid var(--ink);border-radius:var(--wobble);counter-increment:j}
 .jams li::before{content:counter(j);font-family:var(--f-hand);font-weight:700;font-size:24px;color:var(--persimmon);min-width:18px}
@@ -384,7 +384,7 @@ body.playing .disc{animation:spin 6s linear infinite}
 .post img,.post video{display:block;width:100%;height:auto;margin:1.2em 0;border:2px solid var(--ink);border-radius:var(--wobble);background:#f3ede2}
 .post figure img,.post figure video{margin:0}
 .post figcaption{margin-top:8px;font-size:13.5px;line-height:1.45;color:var(--ink-soft);text-align:center}
-.post a{color:var(--persimmon)}
+.post a{color:var(--link)}
 .post h3,.post h4{margin:1.4em 0 .4em;font-family:var(--f-hand);font-size:24px;line-height:1.2}
 .post blockquote{position:relative;margin:1.3em .4em 1.3em 1.5em;padding:0;border:0;font-family:inherit;font-style:italic;font-size:1.07em;line-height:1.65;color:var(--ink)}
 .post blockquote::before{content:"\201C";position:absolute;left:-.62em;top:-.3em;font-family:Georgia,"Times New Roman",serif;font-style:normal;font-size:2.4em;line-height:1;color:var(--persimmon);opacity:.75}
@@ -424,22 +424,26 @@ body.playing .turntable .arm{transform:none}
 .sheet.menu .dish:nth-child(3n){transform:rotate(.8deg)}
 .sheet.menu .dish b{margin:0 6px;padding-top:10px;border-top:1.5px dashed rgba(74,58,46,.28)}
 .sheet.menu .empty-note{padding:18px 24px;background:#fffaf0;border-radius:var(--wobble);text-align:center}
-.sheet.book{background:none;border:0;border-radius:10px 16px 16px 10px;overflow:hidden}
-.sheet.book .sheet-bar{position:absolute;top:4px;right:4px;z-index:6;padding:0;background:none;border:0}
-.sheet.book .sheet-x{color:#fbf1df;background:#561c25;border-radius:50%;box-shadow:0 0 0 2px #2b0c11}
-.sheet.book .sheet-body{position:absolute;inset:0;padding:0}
+.sheet.book{background:none;border:0;filter:none;overflow:hidden}
+.sheet.book .sheet-bar{position:absolute;left:50%;bottom:6px;top:auto;z-index:6;padding:0;background:none;border:0;transform:translateX(-50%)}
+.sheet.book .sheet-x{width:44px;height:44px;color:#1f1a17;background:none}
+.sheet.book .sheet-x svg{width:28px;height:28px;filter:url(#ink)}
+.sheet.book .sheet-x:hover{color:#1f1a17;background:none;transform:rotate(8deg)}
+.sheet.book .sheet-body{position:absolute;inset:0 0 54px;padding:0}
 .jbook{position:absolute;inset:0;box-sizing:border-box;padding:20px 26px 24px 34px;border:2px solid #2b0c11;border-radius:10px 16px 16px 10px;
-  background:#561c25 linear-gradient(115deg,rgba(255,255,255,.09),transparent 38%,rgba(0,0,0,.16) 100%);box-shadow:inset 12px 0 0 rgba(0,0,0,.18),inset 0 0 0 1px rgba(255,255,255,.05)}
+  background:url("data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20width='200'%20height='200'%3E%3Cfilter%20id='l'%3E%3CfeTurbulence%20type='fractalNoise'%20baseFrequency='.7'%20numOctaves='4'%20stitchTiles='stitch'/%3E%3CfeColorMatrix%20values='0%200%200%200%20.1%200%200%200%200%20.02%200%200%200%200%20.04%200%200%200%201.4%20-.5'/%3E%3C/filter%3E%3Crect%20width='200'%20height='200'%20filter='url(%23l)'%20opacity='.45'/%3E%3Cfilter%20id='h'%3E%3CfeTurbulence%20type='fractalNoise'%20baseFrequency='1.2'%20numOctaves='2'%20stitchTiles='stitch'/%3E%3CfeColorMatrix%20values='0%200%200%200%20.95%200%200%200%200%20.8%200%200%200%200%20.8%200%200%200%201.4%20-.72'/%3E%3C/filter%3E%3Crect%20width='200'%20height='200'%20filter='url(%23h)'%20opacity='.18'/%3E%3C/svg%3E") 0 0/200px 200px,linear-gradient(115deg,rgba(255,255,255,.09),transparent 38%,rgba(0,0,0,.16) 100%),#561c25;box-shadow:inset 12px 0 0 rgba(0,0,0,.18),inset 0 0 0 1px rgba(255,255,255,.05)}
 .jbook.spread{padding:18px 26px 24px}
 .jbook.spread{box-shadow:inset 0 0 0 1px rgba(255,255,255,.05)}
-.jb-pendant{position:absolute;right:-16px;top:42%;width:60px;height:74px;z-index:5;pointer-events:none;overflow:visible}
-.jb-charms{position:absolute;left:-6px;top:8%;width:58px;height:303px;z-index:5;pointer-events:none;overflow:visible}
+/* the charms only hang on the front cover (the flying journal), never inside the open notebook */
+.jb-charms{position:absolute;z-index:5;pointer-events:none;overflow:visible}
 .jb-pages{position:relative;height:100%;perspective:2400px}
-.jb-page{position:absolute;top:0;bottom:0;box-sizing:border-box;background:#f8f2dc;border:1.5px solid #c9b48f}
+.jb-page{position:absolute;top:0;bottom:0;box-sizing:border-box;background-color:#f8f2dc;border:1.5px solid #c9b48f}
+/* paper grain and fibers on every page */
+.jbook{--paper-tex:url("data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20width='180'%20height='180'%3E%3Cfilter%20id='p'%3E%3CfeTurbulence%20type='fractalNoise'%20baseFrequency='1.25'%20numOctaves='2'%20stitchTiles='stitch'/%3E%3CfeColorMatrix%20values='0%200%200%200%20.45%200%200%200%200%20.35%200%200%200%200%20.25%200%200%200%202.2%20-1.25'/%3E%3C/filter%3E%3Crect%20width='180'%20height='180'%20filter='url(%23p)'%20opacity='.22'/%3E%3Cfilter%20id='m'%3E%3CfeTurbulence%20type='fractalNoise'%20baseFrequency='.03'%20numOctaves='2'%20seed='7'%20stitchTiles='stitch'/%3E%3CfeColorMatrix%20values='0%200%200%200%20.55%200%200%200%200%20.45%200%200%200%200%20.3%200%200%200%20.5%20-.15'/%3E%3C/filter%3E%3Crect%20width='180'%20height='180'%20filter='url(%23m)'%20opacity='.06'/%3E%3C/svg%3E") 0 0/180px 180px}
 .jb-l{display:none}
-.jb-r{left:0;right:0;border-radius:3px 8px 8px 3px;background-image:linear-gradient(90deg,rgba(74,58,46,.13),transparent 30px);box-shadow:2px 2px 0 #f1e6cf,4px 4px 0 #e7d9bc,6px 6px 0 #dccaa8,8px 7px 0 #cdb894}
-.spread .jb-l{display:block;left:0;right:50%;border-radius:8px 2px 2px 8px;background-image:linear-gradient(270deg,rgba(74,58,46,.16),transparent 40px);box-shadow:-2px 2px 0 #f1e6cf,-4px 4px 0 #e7d9bc,-6px 6px 0 #dccaa8,-8px 7px 0 #cdb894}
-.spread .jb-r{left:50%;border-radius:2px 8px 8px 2px;background-image:linear-gradient(90deg,rgba(74,58,46,.16),transparent 40px)}
+.jb-r{left:0;right:0;border-radius:3px 8px 8px 3px;background:var(--paper-tex),linear-gradient(90deg,rgba(74,58,46,.13),transparent 30px),#f8f2dc;box-shadow:2px 2px 0 #f1e6cf,4px 4px 0 #e7d9bc,6px 6px 0 #dccaa8,8px 7px 0 #cdb894}
+.spread .jb-l{display:block;left:0;right:50%;border-right:0;border-radius:8px 0 0 8px;background:var(--paper-tex),linear-gradient(270deg,rgba(74,58,46,.16),transparent 40px),#f8f2dc;box-shadow:-2px 2px 0 #f1e6cf,-4px 4px 0 #e7d9bc,-6px 6px 0 #dccaa8,-8px 7px 0 #cdb894}
+.spread .jb-r{left:50%;border-left:0;border-radius:0 8px 8px 0;background:var(--paper-tex),linear-gradient(90deg,rgba(74,58,46,.16),transparent 40px),#f8f2dc}
 .jb-view{position:absolute;inset:0;overflow:clip}
 .post.jb-flow{position:absolute;margin:0;max-width:none;column-fill:auto;font-size:16.5px;line-height:1.75}
 .jb-flow .jb-date{margin:0;font-family:var(--f-hand);font-size:20px;color:var(--ink-soft)}
@@ -450,23 +454,29 @@ body.playing .turntable .arm{transform:none}
 .jb-flow p{orphans:2;widows:2}
 .jb-end{margin:1.6em 0 0}
 .jb-sheet{position:absolute;top:0;bottom:0;z-index:3}
-.jb-sheet.ghost{overflow:hidden;background:#f8f2dc}
+.jb-sheet.ghost{overflow:hidden;background:var(--paper-tex),#f8f2dc}
 .jb-sheet.leaf{transform-style:preserve-3d;will-change:transform}
 .leaf.fwd{transform-origin:0 50%}
 .leaf.bwd{transform-origin:100% 50%}
-.jb-face{position:absolute;inset:0;overflow:hidden;box-sizing:border-box;background:#f8f2dc;border:1.5px solid #c9b48f;backface-visibility:hidden;-webkit-backface-visibility:hidden}
+.jb-face{position:absolute;inset:0;overflow:hidden;box-sizing:border-box;background:var(--paper-tex),#f8f2dc;border:1.5px solid #c9b48f;backface-visibility:hidden;-webkit-backface-visibility:hidden}
 .jb-face.back{transform:rotateY(180deg)}
 .jb-face::after{content:"";position:absolute;inset:0;pointer-events:none;background:linear-gradient(90deg,rgba(74,58,46,.18),transparent 34%)}
 .leaf.fwd .back::after,.leaf.bwd .front::after{background:linear-gradient(270deg,rgba(74,58,46,.18),transparent 34%)}
 .ghost .jb-face{border:0}
 .ghost .jb-face::after{display:none}
-.jb-turn{position:absolute;bottom:10px;z-index:4;width:48px;height:44px;padding:0;border:0;background:none;color:var(--ink);cursor:pointer;transition:transform .2s,opacity .2s}
-.jb-turn svg{width:40px;height:26px}
-.jb-prev{left:12px}
-.jb-prev svg{transform:scaleX(-1)}
-.jb-next{right:12px}
-.jb-turn:hover:not([disabled]){transform:translateY(-2px)}
-.jb-turn[disabled]{opacity:.18;cursor:default}
+.jb-pages.can-fwd .jb-view{cursor:e-resize}
+.jb-pages.can-back:not(.can-fwd) .jb-view{cursor:w-resize}
+.jb-toc{list-style:none;margin:0;padding:0;counter-reset:t}
+.jb-toc li{counter-increment:t;break-inside:avoid}
+.jb-toc button{display:grid;grid-template-columns:auto 1fr;gap:2px 12px;width:100%;padding:8px 0;text-align:left;background:none;border:0;border-bottom:1.5px dashed rgba(74,58,46,.25);color:var(--ink);cursor:pointer}
+.jb-toc button::before{content:counter(t) ".";grid-row:span 2;font-family:var(--f-hand);font-size:24px;color:var(--link)}
+.jb-toc .jt-t{font-family:var(--f-hand);font-size:23px;line-height:1.2}
+.jb-toc .jt-d{font-size:13px;color:var(--ink-soft)}
+.jb-toc button:hover .jt-t{color:var(--link)}
+/* a turning page: shading sweeps across it, and it casts a soft shadow on the page underneath */
+.jb-face .jb-shade{position:absolute;inset:0;pointer-events:none;opacity:0;background:linear-gradient(90deg,rgba(43,30,22,.28),rgba(43,30,22,.06) 40%,rgba(255,250,235,.18) 70%,rgba(43,30,22,.1))}
+.jb-face.back .jb-shade{transform:scaleX(-1)}
+.jb-cast{position:absolute;top:0;bottom:0;z-index:2;pointer-events:none;opacity:0}
 .jb-no{position:absolute;bottom:20px;z-index:4;font-family:var(--f-hand);font-size:18px;color:var(--ink-soft);transform:translateX(-50%);pointer-events:none}
 .jb-no-l{display:none;left:25%}
 .jb-no-r{left:50%}
@@ -486,7 +496,7 @@ body.playing .turntable .arm{transform:none}
 .body-p{margin:0 0 20px}
 .about-tag{margin:8px 0 18px;font-family:var(--f-hand);font-size:21px;color:var(--ink-soft)}
 .year{margin:4px 0 14px;font-family:var(--f-hand);font-size:20px;color:var(--ink-soft)}
-.sheet a{color:var(--persimmon);text-underline-offset:3px}
+.sheet a{color:var(--link);text-underline-offset:3px}
 .card{display:flex;flex-direction:column;gap:4px;width:100%;text-align:left;background:var(--paper);border:1.5px solid var(--ink);border-radius:var(--wobble);padding:8px 8px 10px;cursor:pointer;transition:transform .2s}
 .cards li:nth-child(3n+1) .card{transform:rotate(-1deg)}
 .cards li:nth-child(3n) .card{transform:rotate(1deg)}
@@ -604,8 +614,6 @@ blockquote{margin:0 0 28px;padding:0;font-family:var(--f-hand);font-size:30px;li
   .fave-grid{grid-template-columns:1fr}
   .fave .fav-art,.fave .fav-img{width:78px}
   .jbook{padding:max(12px,env(safe-area-inset-top,0px)) 16px max(14px,env(safe-area-inset-bottom,0px)) 24px;border-radius:0;border:0}
-  .jb-pendant{width:48px;height:59px;right:-14px}
-  .jb-charms{width:42px;height:220px;left:-7px}
   .sheet .jb-flow h2{font-size:38px}
   .post.jb-flow{font-size:16px;line-height:1.7}
   .sheet-body{padding-left:max(40px,env(safe-area-inset-left,0px));padding-right:max(18px,env(safe-area-inset-right,0px));padding-bottom:calc(28px + env(safe-area-inset-bottom,0px))}
@@ -1082,11 +1090,10 @@ function buildWorkDesk() {
   piece(E('g', { class: 'c-smoke' }, cd), { line: ['M632,489 q-4,-5 0,-10 q4,-5 0,-10 q-3,-4 0,-8'], color: '#9a9389', lw: 1.4 });
   E('rect', { x: 618, y: 470, width: 28, height: 50, fill: 'transparent' }, cd);
 
-  // my Bordeaux leather journal, closed: stitched edges, a cream insert block, the brown cord with the jasper teardrop, and charms on a taupe elastic
+  // my Bordeaux leather journal, closed: stitched edges, a cream insert block, and charms on a taupe elastic
   const jn = E('g', { id: 'journal', class: 'hot', tabindex: 0, role: 'button', 'aria-label': 'Bordeaux leather journal on the desk. Press to read my writing.' }, world);
   const cover = 'M650,512 L704,512 L697,493 L657,493Z', block = 'M649,512H705V519H649Z', stitch = 'M653.5,509.8 L700.5,509.8 L695.3,495.4 L658.7,495.4Z';
-  const jasper = 'M666,503.5 c2.6,1.6 3.4,4 3.4,5.4 a3.4,3.4 0 0 1 -6.8,0 c0,-1.4 .8,-3.8 3.4,-5.4Z';
-  piece(jn, { occ: cover + block, fill: [[block, '#f8f2dc', 1], [cover, '#561c25', .97], [jasper, '#efe6d6', 1]], line: [cover, block, { d: 'M650,514.5H704M650,516.8H704', stroke: '#c9b48f', 'stroke-width': .8 }, { d: stitch, stroke: '#a3606a', 'stroke-width': .7, 'stroke-dasharray': '1.6 1.3' }, { d: 'M653,502.5 Q677,504 701,502.5', stroke: '#3a1a17', 'stroke-width': 1.3 }, { d: jasper, stroke: '#c9a24a', 'stroke-width': 1 }, { d: 'M664.8,507 h.1M667.4,505.6h.1M667.8,509.2h.1M665.6,510.2h.1', stroke: '#2b2622', 'stroke-width': 1.3, 'stroke-linecap': 'round' }], lw: 1.6 });
+  piece(jn, { occ: cover + block, fill: [[block, '#f8f2dc', 1], [cover, '#561c25', .97]], line: [cover, block, { d: 'M650,514.5H704M650,516.8H704', stroke: '#c9b48f', 'stroke-width': .8 }, { d: stitch, stroke: '#a3606a', 'stroke-width': .7, 'stroke-dasharray': '1.6 1.3' }], lw: 1.6 });
   // charms: gold J, camera, silver cherries, pearl teardrop, gold croissant
   piece(jn, { fill: [[ell(647.2, 517.5, 1.9, 1.5), '#f4efe6', 1], [ell(644.4, 522.6, 1.5) + ell(647.4, 522.6, 1.5), '#d7dbe0', 1], [ell(650.6, 526, 2, 2.6), '#cfd3d8', 1], [ell(650.6, 526.4, 1, 1.3), '#f4f1ea', 1], ['M645,529.5 q2.4,-3 4.8,0 q-1.2,-.8 -2.4,-.2 q-1.2,-.6 -2.4,.2Z', '#e2b54f', 1]],
     line: [{ d: 'M651.2,505 V531', stroke: '#a8877f', 'stroke-width': 1.4 }, { d: 'M648.6,511.6 v3.4 q0,1.4 -1.4,1.4', stroke: '#d9ab4a', 'stroke-width': 1 }, ell(647.2, 517.5, 1.9, 1.5), ell(644.4, 522.6, 1.5) + ell(647.4, 522.6, 1.5), ell(650.6, 526, 2, 2.6), 'M645,529.5 q2.4,-3 4.8,0'], lw: .8 });
@@ -1720,7 +1727,7 @@ const sheet = $('#sheet'), scrim = $('#scrim'), app = $('#app'), body = $('#shee
 let lastFocus = null;
 const say = t => { live.textContent = ''; setTimeout(() => live.textContent = t, 30); };
 function openSheet(html, showBack, seg, barTitle) {
-  sheet.classList.remove('book', 'player', 'menu'); book = null;
+  clearTimeout(sheetLookTimer); sheet.classList.remove('book', 'player', 'menu'); book = null;
   $('#barTitle').innerHTML = barTitle || ''; $('#barTitle').hidden = !barTitle;
   if (!sheet.classList.contains('open')) lastFocus = document.activeElement;
   body.innerHTML = html; sheet.scrollTop = 0;
@@ -1730,10 +1737,12 @@ function openSheet(html, showBack, seg, barTitle) {
   sheet.classList.add('open'); scrim.classList.add('open'); app.inert = true;
   requestAnimationFrame(() => $('#sheetTitle').focus({ preventScroll: true }));
 }
+let sheetLookTimer = null;
 function closeSheet() {
   readingOpen = false; recordsOpen = false; weeklyOpen = null;
-  sheet.classList.remove('open'); scrim.classList.remove('open'); app.inert = false;
-  sheet.classList.remove('book', 'player', 'menu'); book = null;
+  sheet.classList.remove('open'); scrim.classList.remove('open'); app.inert = false; book = null;
+  // the special looks stay on until the fade-out has finished, so the plain lined card never flashes through
+  clearTimeout(sheetLookTimer); sheetLookTimer = setTimeout(() => { if (!sheet.classList.contains('open')) sheet.classList.remove('book', 'player', 'menu'); }, 450);
   if (lastFocus && lastFocus.isConnected) lastFocus.focus({ preventScroll: true });
   if (SHEET_ZOOMS.includes(zoomed)) closeZoom();
 }
@@ -1840,44 +1849,42 @@ const POST_MEDIA = {"trick-1.jpg": "00a95660d8c393401430f2865e613e8f", "trick-2.
 const postMedia = h => h.replace(/\{\{m:([\w.-]+)\}\}/g, (x, n) => staticSite ? 'media/posts/' + n : '/_blob/' + (POST_MEDIA[n] || ''));
 // posts without a drawing of their own get the notebook
 const postThumb = p => thumb(document.getElementById('art-post-' + p.key) ? 'post-' + p.key : 'post-default');
-function postGrid() {
-  if (postsState === 'loading') return '<p class="empty-note">Opening the journal\u2026</p>';
-  if (postsState === 'error' || !POSTS.length) return '<p class="empty-note">The journal is out of reach right now. Read it on <a href="https://jamiecatt.substack.com" target="_blank" rel="noopener">my Substack</a>.</p>';
-  return `<ul class="post-grid">${POSTS.map((p, i) => `<li><button class="card" type="button" data-post="${i}">${postThumb(p)}<span class="c-t">${esc(p.title)}</span><span class="c-m">${esc(p.date)}</span></button></li>`).join('')}</ul>`;
+// the journal opens on a contents page in the notebook itself; each post opens in the same notebook
+function postToc() {
+  if (postsState === 'loading') return '<p>Opening the journal\u2026</p>';
+  if (postsState === 'error' || !POSTS.length) return '<p>The journal is out of reach right now. Read it on <a href="https://jamiecatt.substack.com" target="_blank" rel="noopener">my Substack</a>.</p>';
+  return `<ol class="jb-toc">${POSTS.map((p, i) => `<li><button type="button" data-post="${i}"><span class="jt-t">${esc(p.title)}</span><span class="jt-d">${esc(p.date)}</span></button></li>`).join('')}</ol>`;
 }
 function openWriting() {
-  openSheet(`<h2 id="sheetTitle" tabindex="-1">From my journal</h2><div id="postGrid">${postGrid()}</div>`, false, null);
+  openBook(`<h2 id="sheetTitle" class="sr-only" tabindex="-1">My journal</h2>${postToc()}`, true);
 }
-function refreshWriting() { const el = $('#postGrid'); if (el) el.innerHTML = postGrid(); }
+function refreshWriting() { if (book && book.toc) openWriting(); }
 // a post opens as the journal: blank cream pages in a plum cover, turned like a real one instead of scrolled
-// my charms, exactly: a gold J, a gold-and-pearl camera, silver cherries, a silver teardrop with a pearl and a gold croissant, on a taupe elastic
-const jHang = y => `<circle cx="9" cy="${y}" r="4.6" fill="none" stroke="#b9bdc2" stroke-width="1.8"/><path d="M13,${y + 1} Q18,${y + 2} 22,${y + 5}" fill="none" stroke="#b9bdc2" stroke-width="1.4"/>`;
-const JCHARMS = `<svg class="jb-charms" viewBox="0 0 44 230" aria-hidden="true"><rect x="6" y="-4" width="6" height="238" rx="2" fill="#a8877f" stroke="#6e5550" stroke-width=".8"/><path d="M9,0 V230" stroke="#c2a49c" stroke-width=".8" opacity=".7"/>
-  <g stroke-linecap="round" stroke-linejoin="round">
-  ${jHang(14)}<circle cx="9" cy="14" r="4.6" fill="none" stroke="#d9ab4a" stroke-width="2"/><path d="M30,17 V31 Q30,38 24,38 Q19,38 18,34" fill="none" stroke="#8a6420" stroke-width="5"/><path d="M30,17 V31 Q30,38 24,38 Q19,38 18,34" fill="none" stroke="#e2b54f" stroke-width="3.2"/>
-  ${jHang(58)}<rect x="21" y="62" width="17" height="13" rx="2.5" fill="#f4efe6" stroke="#b8902f" stroke-width="1.6"/><rect x="24" y="60" width="5" height="3" rx="1" fill="#e2b54f" stroke="#8a6420" stroke-width=".8"/><circle cx="29.5" cy="68.5" r="3.6" fill="#e2b54f" stroke="#8a6420" stroke-width="1.1"/><circle cx="29.5" cy="68.5" r="1.4" fill="#fffaf0"/>
-  ${jHang(100)}<path d="M26,104 Q24,110 21,114 M26,104 Q29,110 33,114" fill="none" stroke="#7d838a" stroke-width="1.6"/><path d="M26,104 Q31,101 34,104 Q30,106 26,104Z" fill="#c9cdd2" stroke="#6f757c" stroke-width=".9"/><circle cx="21" cy="118" r="4.6" fill="#d7dbe0" stroke="#6f757c" stroke-width="1.3"/><circle cx="33" cy="118" r="4.6" fill="#d7dbe0" stroke="#6f757c" stroke-width="1.3"/><circle cx="19.6" cy="116.4" r="1.3" fill="#fff"/><circle cx="31.6" cy="116.4" r="1.3" fill="#fff"/>
-  ${jHang(142)}<path d="M29,145 C37,153 39,160 39,165 A10,10 0 0 1 19,165 C19,160 21,153 29,145Z" fill="#cfd3d8" stroke="#6f757c" stroke-width="1.4"/><path d="M29,150 C34,155 35,160 35,164 A6,6 0 0 1 23,164 C23,160 24,155 29,150Z" fill="none" stroke="#9aa0a6" stroke-width=".9" stroke-dasharray="2 1.6"/><ellipse cx="29" cy="163" rx="4" ry="5" fill="#f4f1ea" stroke="#a9adb2" stroke-width=".9"/><circle cx="27.6" cy="161.4" r="1.2" fill="#fff"/>
-  ${jHang(188)}<path d="M18,203 Q19,193 29,192 Q39,193 40,203 Q37,200 35,202 Q33,197 29,197 Q25,197 23,202 Q21,200 18,203Z" fill="#e2b54f" stroke="#8a6420" stroke-width="1.2"/><path d="M24,196 L25,201 M29,194 V199 M34,196 L33,201" stroke="#a57a26" stroke-width="1"/>
+// my charms, exactly: a gold J, a gold-and-pearl camera, silver cherries, a silver teardrop with a pearl and a gold croissant,
+// hanging in a row from the taupe elastic that holds the notebook shut (.jf-cover b)
+const JCHARMS = `<svg class="jb-charms" viewBox="0 0 230 52" aria-hidden="true">
+  <g stroke-linecap="round" stroke-linejoin="round" filter="url(#pencil)">
+  <circle cx="30" cy="13" r="4.4" fill="none" stroke="#d9ab4a" stroke-width="1.8"/><path d="M30,17.4 V20" stroke="#d9ab4a" stroke-width="1.4"/><g transform="translate(1,3)"><path d="M30,17 V31 Q30,38 24,38 Q19,38 18,34" fill="none" stroke="#8a6420" stroke-width="5"/><path d="M30,17 V31 Q30,38 24,38 Q19,38 18,34" fill="none" stroke="#e2b54f" stroke-width="3.2"/></g>
+  <circle cx="72" cy="13" r="4.4" fill="none" stroke="#d9ab4a" stroke-width="1.8"/><path d="M72,17.4 V20" stroke="#d9ab4a" stroke-width="1.4"/><g transform="translate(43,-40)"><rect x="21" y="62" width="17" height="13" rx="2.5" fill="#f4efe6" stroke="#b8902f" stroke-width="1.6"/><rect x="24" y="60" width="5" height="3" rx="1" fill="#e2b54f" stroke="#8a6420" stroke-width=".8"/><circle cx="29.5" cy="68.5" r="3.6" fill="#e2b54f" stroke="#8a6420" stroke-width="1.1"/><circle cx="29.5" cy="68.5" r="1.4" fill="#fffaf0"/></g>
+  <circle cx="115" cy="13" r="4.4" fill="none" stroke="#b9bdc2" stroke-width="1.8"/><path d="M115,17.4 V20" stroke="#b9bdc2" stroke-width="1.4"/><g transform="translate(86,-81)"><path d="M26,104 Q24,110 21,114 M26,104 Q29,110 33,114" fill="none" stroke="#7d838a" stroke-width="1.6"/><path d="M26,104 Q31,101 34,104 Q30,106 26,104Z" fill="#c9cdd2" stroke="#6f757c" stroke-width=".9"/><circle cx="21" cy="118" r="4.6" fill="#d7dbe0" stroke="#6f757c" stroke-width="1.3"/><circle cx="33" cy="118" r="4.6" fill="#d7dbe0" stroke="#6f757c" stroke-width="1.3"/><circle cx="19.6" cy="116.4" r="1.3" fill="#fff"/><circle cx="31.6" cy="116.4" r="1.3" fill="#fff"/></g>
+  <circle cx="158" cy="13" r="4.4" fill="none" stroke="#b9bdc2" stroke-width="1.8"/><path d="M158,17.4 V20" stroke="#b9bdc2" stroke-width="1.4"/><g transform="translate(129,-125)"><path d="M29,145 C37,153 39,160 39,165 A10,10 0 0 1 19,165 C19,160 21,153 29,145Z" fill="#cfd3d8" stroke="#6f757c" stroke-width="1.4"/><ellipse cx="29" cy="163" rx="4" ry="5" fill="#f4f1ea" stroke="#a9adb2" stroke-width=".9"/><circle cx="27.6" cy="161.4" r="1.2" fill="#fff"/></g>
+  <circle cx="200" cy="13" r="4.4" fill="none" stroke="#d9ab4a" stroke-width="1.8"/><path d="M200,17.4 V20" stroke="#d9ab4a" stroke-width="1.4"/><g transform="translate(171,-172)"><path d="M18,203 Q19,193 29,192 Q39,193 40,203 Q37,200 35,202 Q33,197 29,197 Q25,197 23,202 Q21,200 18,203Z" fill="#e2b54f" stroke="#8a6420" stroke-width="1.2"/><path d="M24,196 L25,201 M29,194 V199 M34,196 L33,201" stroke="#a57a26" stroke-width="1"/></g>
   </g></svg>`;
-// the closure: a thin brown cord with a dalmatian-jasper teardrop in a gold bezel
-const JPENDANT = `<svg class="jb-pendant" viewBox="0 0 60 74" aria-hidden="true"><path d="M-4,10 Q30,14 64,10" fill="none" stroke="#3a1a17" stroke-width="2.6" stroke-linecap="round"/>
-  <rect x="27" y="9" width="6" height="11" rx="2" fill="#d9ab4a" stroke="#8a6420" stroke-width="1"/><path d="M30,19 C41,26 45,38 45,47 A15,15 0 0 1 15,47 C15,38 19,26 30,19Z" fill="#efe6d6" stroke="#c9a24a" stroke-width="2.6"/>
-  <g fill="#2b2622"><ellipse cx="24" cy="36" rx="2.2" ry="1.6"/><ellipse cx="34" cy="31" rx="1.4" ry="1.1"/><ellipse cx="37" cy="45" rx="2.6" ry="1.9"/><ellipse cx="26" cy="49" rx="1.6" ry="1.3"/><ellipse cx="31" cy="40" rx="1" ry=".9"/><ellipse cx="21" cy="44" rx="1.1" ry=".9"/><ellipse cx="33" cy="54" rx="1.8" ry="1.3"/></g>
-  <path d="M22,30 Q25,26 28,25" fill="none" stroke="#fff" stroke-width="1.4" opacity=".6"/></svg>`;
-const JARROW = '<svg viewBox="0 0 40 26" aria-hidden="true"><g fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="M3,14 Q18,11 35,13" stroke-width="2.4"/><path d="M26,5 Q31,10 36,13 Q30,17 25,22" stroke-width="2.4"/><path d="M5,16 Q19,14 33,15" stroke-width="1" opacity=".4"/></g></svg>';
 let book = null;
 function openPost(i) {
   const p = POSTS[i];
   const text = (p.html ? postMedia(p.html) : `<p>${esc(p.blurb)}</p>`).replace(/ loading="lazy"/g, '');
-  openSheet(`<div class="jbook" id="jbook">${JCHARMS}${JPENDANT}<div class="jb-pages" id="jbPages">
+  openBook(`<p class="jb-date">${esc(p.date)}</p><h2 id="sheetTitle" tabindex="-1">${esc(p.title)}</h2>${text}
+      <p class="jb-end"><button class="btn-plain" type="button" data-journal>Back to the contents</button></p>`, false);
+}
+// the notebook: pages turn by clicking the right or left page (or swiping, or the arrow keys)
+function openBook(html, toc) {
+  openSheet(`<div class="jbook" id="jbook"><div class="jb-pages" id="jbPages" aria-label="Click the right page to turn forward, the left page to turn back">
     <div class="jb-page jb-l"></div><div class="jb-page jb-r"></div>
-    <div class="jb-view"><article class="post jb-flow" id="jbFlow"><p class="jb-date">${esc(p.date)}</p><h2 id="sheetTitle" tabindex="-1">${esc(p.title)}</h2>${text}
-      <p class="jb-end"><button class="btn-plain" type="button" data-journal>Back to the journal</button></p></article></div>
-    <button class="jb-turn jb-prev" type="button" data-turn="-1" aria-label="Previous page">${JARROW}</button><button class="jb-turn jb-next" type="button" data-turn="1" aria-label="Next page">${JARROW}</button>
+    <div class="jb-view"><article class="post jb-flow" id="jbFlow">${html}${toc ? '<p class="jb-end"></p>' : ''}</article></div>
     <span class="jb-no jb-no-l" aria-hidden="true"></span><span class="jb-no jb-no-r" aria-live="polite"></span></div></div>`, false, null);
   sheet.classList.add('book');
-  book = { at: 0, busy: false };
+  book = { at: 0, busy: false, toc };
   layoutBook();
   // pictures change how much fits on each page as they load
   $('#jbFlow').querySelectorAll('img, video').forEach(m => m.addEventListener(m.tagName === 'IMG' ? 'load' : 'loadedmetadata', layoutBook, { once: true }));
@@ -1905,8 +1912,8 @@ function showBook() {
   flow.style.transform = `translateX(${-at * P}px)`;
   $('.jb-no-l').textContent = at + 1;
   $('.jb-no-r').textContent = spread ? (at + 2 <= n ? at + 2 : '') : `${at + 1} / ${n}`;
-  $('.jb-prev').disabled = at === 0;
-  $('.jb-next').disabled = at + (spread ? 2 : 1) > n - 1;
+  const pages = $('#jbPages');
+  pages.classList.toggle('can-back', at > 0); pages.classList.toggle('can-fwd', at + (spread ? 2 : 1) <= n - 1);
 }
 // a page (a copy of the post shifted to show page k) for the turning leaf
 function bookFace(k, cls) {
@@ -1919,6 +1926,7 @@ function bookFace(k, cls) {
     c.style.transform = 'none'; c.style.left = book.pad - k * book.P + 'px';
     f.appendChild(c);
   }
+  f.appendChild(Object.assign(document.createElement('i'), { className: 'jb-shade' }));
   return f;
 }
 async function turnPage(dir) {
@@ -1929,30 +1937,51 @@ async function turnPage(dir) {
   if (reduceMotion.matches) { book.at = to; return showBook(); }
   book.busy = true;
   const pages = $('#jbPages');
-  const layer = (x, cls, faces) => { const d = document.createElement('div'); d.className = 'jb-sheet ' + cls; d.style.left = x + 'px'; d.style.width = P + 'px'; d.append(...faces); pages.insertBefore(d, $('.jb-turn')); return d; };
-  const ease = 'cubic-bezier(.45,.05,.3,1)', T = 760;
+  const layer = (x, cls, faces) => { const d = document.createElement('div'); d.className = 'jb-sheet ' + cls; d.style.left = x + 'px'; d.style.width = P + 'px'; d.append(...faces); pages.insertBefore(d, $('.jb-no-l')); return d; };
+  // like a real page: it lifts slowly off the paper, bends a little as it swings over the spine, and settles flat;
+  // shading sweeps across it and it casts a soft shadow on the page underneath
+  const ease = 'cubic-bezier(.4,.08,.25,1)', T = 1000;
+  const shade = (leaf, frames) => leaf.querySelectorAll('.jb-shade').forEach(n => n.animate(frames, { duration: T, easing: ease }));
   try {
     if (spread) {
       // the old page on the far side stays put until the turning leaf covers it
       const ghost = layer(dir > 0 ? 0 : P, 'ghost', [bookFace(dir > 0 ? from : from + 1)]);
       const leaf = layer(dir > 0 ? P : 0, 'leaf ' + (dir > 0 ? 'fwd' : 'bwd'), dir > 0 ? [bookFace(from + 1, 'front'), bookFace(from + 2, 'back')] : [bookFace(from, 'front'), bookFace(from - 1, 'back')]);
+      const cast = Object.assign(document.createElement('div'), { className: 'jb-cast' });
+      Object.assign(cast.style, { left: (dir > 0 ? P : 0) + 'px', width: P + 'px', background: `linear-gradient(${dir > 0 ? 90 : 270}deg, rgba(43,30,22,.32), transparent 70%)` });
+      $('#jbPages').insertBefore(cast, leaf);
       book.at = to; showBook();
-      const a = leaf.animate([{ transform: 'rotateY(0deg)' }, { transform: `rotateY(${dir > 0 ? -180 : 180}deg)` }], { duration: T, easing: ease });
-      setTimeout(() => ghost.remove(), T / 2); await a.finished; leaf.remove(); ghost.remove();
+      const sgn = dir > 0 ? -1 : 1;
+      const a = leaf.animate([
+        { transform: 'rotateY(0deg) skewY(0deg)' },
+        { transform: `rotateY(${sgn * 35}deg) skewY(${-sgn * 1.4}deg) translateZ(6px)`, offset: .25 },
+        { transform: `rotateY(${sgn * 90}deg) skewY(${-sgn * 2.2}deg) translateZ(14px)`, offset: .55 },
+        { transform: `rotateY(${sgn * 155}deg) skewY(${-sgn * .8}deg) translateZ(4px)`, offset: .85 },
+        { transform: `rotateY(${sgn * 180}deg) skewY(0deg)` }], { duration: T, easing: ease });
+      shade(leaf, [{ opacity: 0 }, { opacity: .55, offset: .45 }, { opacity: .35, offset: .7 }, { opacity: 0 }]);
+      cast.animate([{ opacity: 0 }, { opacity: .9, offset: .4 }, { opacity: 0, offset: .6 }, { opacity: 0 }], { duration: T, easing: ease });
+      setTimeout(() => ghost.remove(), T * .55); await a.finished; leaf.remove(); ghost.remove(); cast.remove();
     } else if (dir > 0) {
       // one page at a time: the page lifts away from the spine and the next one is underneath
       const leaf = layer(0, 'leaf fwd', [bookFace(from, 'front'), bookFace(-1, 'back')]);
       book.at = to; showBook();
-      await leaf.animate([{ transform: 'rotateY(0deg)', opacity: 1 }, { transform: 'rotateY(-70deg)', opacity: 1, offset: .65 }, { transform: 'rotateY(-100deg)', opacity: 0 }], { duration: T * .8, easing: ease }).finished;
+      shade(leaf, [{ opacity: 0 }, { opacity: .5, offset: .6 }, { opacity: .5 }]);
+      await leaf.animate([{ transform: 'rotateY(0deg) skewY(0deg)', opacity: 1 }, { transform: 'rotateY(-40deg) skewY(1.2deg) translateZ(6px)', opacity: 1, offset: .35 }, { transform: 'rotateY(-75deg) skewY(2deg) translateZ(10px)', opacity: 1, offset: .7 }, { transform: 'rotateY(-100deg)', opacity: 0 }], { duration: T * .85, easing: ease }).finished;
       leaf.remove();
     } else {
       const leaf = layer(0, 'leaf fwd', [bookFace(to, 'front'), bookFace(-1, 'back')]);
-      await leaf.animate([{ transform: 'rotateY(-100deg)', opacity: 0 }, { transform: 'rotateY(-70deg)', opacity: 1, offset: .35 }, { transform: 'rotateY(0deg)', opacity: 1 }], { duration: T * .8, easing: ease }).finished;
+      shade(leaf, [{ opacity: .5 }, { opacity: .5, offset: .4 }, { opacity: 0 }]);
+      await leaf.animate([{ transform: 'rotateY(-100deg)', opacity: 0 }, { transform: 'rotateY(-75deg) skewY(2deg) translateZ(10px)', opacity: 1, offset: .3 }, { transform: 'rotateY(-40deg) skewY(1.2deg) translateZ(6px)', opacity: 1, offset: .65 }, { transform: 'rotateY(0deg) skewY(0deg)', opacity: 1 }], { duration: T * .85, easing: ease }).finished;
       book.at = to; showBook(); leaf.remove();
     }
   } finally { book.busy = false; }
 }
-sheet.addEventListener('click', e => { const t = e.target.closest('[data-turn]'); if (t) turnPage(+t.dataset.turn); });
+// a click on a page turns it: the right half goes forward, the left half goes back
+sheet.addEventListener('click', e => {
+  if (!book || !sheet.classList.contains('book') || e.target.closest('a, button, video, input')) return;
+  const pages = $('#jbPages'); if (!pages || !pages.contains(e.target)) return;
+  const r = pages.getBoundingClientRect(); turnPage(e.clientX > r.left + r.width / 2 ? 1 : -1);
+});
 sheet.addEventListener('keydown', e => {
   if (!sheet.classList.contains('book') || (e.key !== 'ArrowLeft' && e.key !== 'ArrowRight') || e.target.closest('video, input, textarea')) return;
   e.preventDefault(); turnPage(e.key === 'ArrowRight' ? 1 : -1);
@@ -2819,7 +2848,7 @@ async function zoomIn(name) {
   const z = zAdj(ZOOMS[name]);
   if (!$('#ticket').hidden && name !== 'machine') closeTicket(false);
   document.body.classList.add('zoomed');
-  zooming = true; await animVB(zoomView(z), 1100); await pause(1000); zooming = false;
+  zooming = true; await animVB(zoomView(z), 1100); await pause(300); zooming = false;
   zoomed = name; placeOverlay(z); z.view().hidden = false;
 }
 async function zoomOut() {
@@ -3380,19 +3409,26 @@ async function bounceBall() {
     teoSay('Teo brings the ball right back. Again?'); bump('love', 5); hearts(2);
   } finally { TEO.busy = false; }
 }
-// the journal: it lifts off the desk to the middle of the screen, opens, then the writing appears
+// the journal: it lifts off the desk and grows to the size of one page of the open notebook, slides right so its spine
+// sits where the notebook's spine will be, then the cover swings open and the notebook takes over
 async function openJournal() {
   if (reduceMotion.matches || document.querySelector('.jfly')) { if (!document.querySelector('.jfly')) openWriting(); return; }
-  const r = $('#journal').getBoundingClientRect(), W = Math.min(240, innerWidth * .5), H = W * 1.36;
+  const r = $('#journal').getBoundingClientRect();
+  // the open notebook fills the sheet, less the strip for the close button underneath
+  const sw = sheet.offsetWidth, sh = sheet.offsetHeight - 54, spread = sw >= 760;
+  const W = spread ? sw / 2 : sw, H = sh, top = (innerHeight - sheet.offsetHeight) / 2, mid = innerWidth / 2;
   const el = document.createElement('div'); el.className = 'jfly';
-  el.innerHTML = '<div class="jf-page"></div><div class="jf-cover"><i></i>' + JPENDANT + '<em>JC</em></div>' + JCHARMS;
+  el.innerHTML = '<div class="jf-page"></div><div class="jf-cover"><b></b>' + JCHARMS + '<em>JC</em></div>';
+  el.style.setProperty('--jw', W + 'px');
   Object.assign(el.style, { left: r.left + 'px', top: r.top + 'px', width: r.width + 'px', height: r.height + 'px' });
   document.body.appendChild(el);
-  const to = { left: (innerWidth - W) / 2 + 'px', top: (innerHeight - H) / 2 + 'px', width: W + 'px', height: H + 'px' };
-  await el.animate([{ left: r.left + 'px', top: r.top + 'px', width: r.width + 'px', height: r.height + 'px', transform: 'rotate(-4deg)' }, Object.assign({ transform: 'rotate(0deg)' }, to)], { duration: 650, easing: 'cubic-bezier(.2,.8,.2,1)', fill: 'forwards' }).finished;
-  await el.querySelector('.jf-cover').animate([{ transform: 'rotateY(0deg)' }, { transform: 'rotateY(-165deg)' }], { duration: 600, easing: 'cubic-bezier(.4,0,.2,1)', fill: 'forwards' }).finished;
+  const centered = { left: mid - W / 2 + 'px', top: top + 'px', width: W + 'px', height: H + 'px' };
+  const ease = 'cubic-bezier(.2,.8,.2,1)';
+  await el.animate([{ left: r.left + 'px', top: r.top + 'px', width: r.width + 'px', height: r.height + 'px', transform: 'rotate(-4deg)' }, Object.assign({ transform: 'rotate(0deg)' }, centered)], { duration: 700, easing: ease, fill: 'forwards' }).finished;
+  if (spread) await el.animate([centered, Object.assign({}, centered, { left: mid + 'px' })], { duration: 450, easing: 'cubic-bezier(.45,.05,.3,1)', fill: 'forwards' }).finished;
+  await el.querySelector('.jf-cover').animate([{ transform: 'rotateY(0deg)' }, { transform: 'rotateY(-180deg)' }], { duration: 750, easing: 'cubic-bezier(.4,.08,.25,1)', fill: 'forwards' }).finished;
   openWriting();
-  await el.animate([{ opacity: 1 }, { opacity: 0, transform: 'scale(1.08)' }], { duration: 300, fill: 'forwards' }).finished;
+  await el.animate([{ opacity: 1 }, { opacity: 0 }], { duration: 250, fill: 'forwards' }).finished;
   el.remove();
 }
 // what's cooking: zoom in on the pan, then the week's menu
