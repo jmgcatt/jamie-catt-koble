@@ -1,19 +1,11 @@
-# Checks my Substack every 30 minutes and adds any new post to the journal,
-# with full-resolution photos and videos. When it finishes, "Deploy site"
-# (deploy.yml) republishes GitHub Pages, so the site updates on its own.
-# Run it right away from the repo's Actions tab: "Sync Substack" > "Run workflow".
-# It also runs whenever this file or the sync script changes, to test the change.
+# Adds any new post from my Substack to the journal, with full-resolution photos and videos.
+# Runs only when started by hand (Actions tab: "Sync Substack" > "Run workflow"): Substack blocks
+# GitHub's servers, so new posts are usually added from a Claude session instead, by running
+# scripts/sync-substack.py there. When this finishes, "Deploy site" (deploy.yml) republishes the site.
 name: Sync Substack
 
 on:
-  schedule:
-    - cron: '*/30 * * * *'
   workflow_dispatch:
-  push:
-    branches: [main]
-    paths:
-      - scripts/sync-substack.py
-      - .github/workflows/sync-substack.yml
 
 permissions:
   contents: write

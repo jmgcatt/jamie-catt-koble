@@ -12,9 +12,9 @@ Jamie Catt-Koble's portfolio: an interactive, colored-pencil illustration of the
 ## What's here
 
 - `index.html`: the whole site: one SVG scene plus all the sheets (modals), styles and scripts. **Write it ASCII-only**: escape anything else as `\uXXXX` in JS, or as HTML entities.
-- `posts.json`, `media/posts/`: journal posts from Substack, added every 30 minutes by `.github/workflows/sync-substack.yml` (`scripts/sync-substack.py`).
+- `posts.json`, `media/posts/`: journal posts from Substack. Substack blocks GitHub's servers, so when Jamie says they've posted, run `python3 scripts/sync-substack.py` in the session (it needs `jamiecatt.substack.com`, `substack-post-media.s3.amazonaws.com` and `substackcdn.com` allowed in the environment's network settings), then ship. `.github/workflows/sync-substack.yml` runs the same script, by hand only.
 - `scripts/sync-notion.js`: `npm run sync` turns Jamie's Notion databases into `data/*.json` and `assets/notion/`. Those are **built on every deploy and never committed** (they're in `.gitignore`).
-- `.github/workflows/deploy.yml`: runs the Notion sync and publishes to GitHub Pages on every push to `main`, every hour, and after each Substack sync. The only secret is `NOTION_TOKEN`; the database IDs are in the workflow.
+- `.github/workflows/deploy.yml`: runs the Notion sync and publishes to GitHub Pages on every push to `main`, every hour, and after a Substack sync. The only secret is `NOTION_TOKEN`; the database IDs are in the workflow.
 - Live site: https://jamie-catt.com (DNS at Squarespace, pointing to GitHub Pages).
 
 ## Notion (the "Jamie Catt-Koble" page)

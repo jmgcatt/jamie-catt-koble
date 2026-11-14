@@ -2,7 +2,8 @@
 """Add new posts from my Substack to the journal (posts.json + media/posts/).
 
 Run it from the website folder:  python3 scripts/sync-substack.py
-The GitHub Action in .github/workflows/sync-substack.yml runs it every 30 minutes.
+Usually run from a Claude session when I've posted (Substack blocks GitHub's servers);
+the GitHub Action in .github/workflows/sync-substack.yml runs it by hand.
 
 Media is always the highest resolution available:
 - images: the original upload from Substack's storage, never a resized CDN copy.
