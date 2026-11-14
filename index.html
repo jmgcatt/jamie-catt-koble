@@ -121,6 +121,8 @@ button{font:inherit;color:inherit}
 :focus-visible{outline:2.5px solid var(--persimmon);outline-offset:3px}
 #scene :focus-visible{outline:none}
 .hot:focus-visible{filter:drop-shadow(0 0 1.5px #c9663d) drop-shadow(0 0 3px #c9663d)}
+/* no glow around the object you're zoomed in on */
+body.zoomed .hot:focus-visible{filter:none}
 
 .scroller{position:absolute;inset:0;overflow:hidden}
 .stage{position:relative;width:100%;height:100%}
@@ -1099,21 +1101,19 @@ function buildWorkDesk() {
   const lid = 'M758,508 L858,508 L848,488 L768,488Z';
   piece(E('g', { class: 'lid-closed' }, g), { occ: lid, fill: [[lid, '#c9ccd0', .95], [apple(808, 498, .7) + leaf(808, 498, .7), '#9aa0a7', 1]], line: [lid, 'M760,505H856', { d: apple(808, 498, .7) + leaf(808, 498, .7), 'stroke-width': 1.2, stroke: '#7b8188' }] });
   const open = E('g', { class: 'lid-open' }, g);
-  // the lid and the deck are drawn clean (no pencil texture) so their edges stay crisp up close, like a real laptop
+  // colored-pencil texture like the rest of the house, clipped to the lid and deck shapes so the edges stay tidy
   const bezel = rr(765, 447, 86, 53, 4.5), screen = rect(768, 450, 80, 46), base = 'M767,500 H849 L852,511 Q852,512.4 850.6,512.4 H765.4 Q764,512.4 764,511Z';
-  E('path', { d: bezel, fill: '#3d3f45' }, open);
-  E('path', { d: screen, fill: '#7d8b98' }, open);
-  E('path', { d: base, fill: '#d6d9dd' }, open);
-  E('path', { d: 'M764.3,511.2 H851.7 V511.6 Q851.7,512.4 850.6,512.4 H765.4 Q764.3,512.4 764.3,511.6Z', fill: '#b9bdc2' }, open);
-  E('path', { d: 'M767,500 H849 V500.5 H767Z', fill: '#a9aeb4' }, open);
+  E('path', { d: bezel + base, fill: '#d6d9dd' }, E('clipPath', { id: 'laptopClip' }, $('#scene defs')));
+  const body = E('g', { 'clip-path': 'url(#laptopClip)' }, open);
   // keyboard: four rows of small rounded keys, a little wider toward you, a space bar, and a trackpad
   let keyRows = '';
   [[501.1, 769.4, 77.2, 14], [503.1, 768.9, 78.2, 14], [505.1, 768.4, 79.2, 13], [507.1, 767.9, 80.2, 0]].forEach(([y, x0, w, n]) => {
     if (n) { const k = w / n; for (let i = 0; i < n; i++) keyRows += rr(x0 + i * k + .35, y, k - .7, 1.45, .35); }
     else { const k = w / 12; [0, 1, 2].forEach(i => { keyRows += rr(x0 + i * k + .35, y, k - .7, 1.45, .35); }); keyRows += rr(x0 + 3 * k + .35, y, k * 6 - .7, 1.45, .35); [9, 10, 11].forEach(i => { keyRows += rr(x0 + i * k + .35, y, k - .7, 1.45, .35); }); }
   });
-  E('path', { d: keyRows, fill: '#62666d' }, open);
-  E('path', { d: rr(797, 509.1, 22, 2.3, .6), fill: '#c8ccd1', stroke: '#b4b9bf', 'stroke-width': .3 }, open);
+  // solid underneath, so the stand and wall never show through the pencil grain
+  E('path', { d: bezel, fill: '#3d3f45' }, body); E('path', { d: base, fill: '#d6d9dd' }, body);
+  piece(body, { fill: [[bezel, '#3d3f45', .95], [screen, '#7d8b98', .85], [base, '#d6d9dd', 1], ['M764,511.2 H852 V512.6 H764Z', '#b9bdc2', 1], ['M767,500 H849 V500.6 H767Z', '#a9aeb4', 1], [keyRows, '#62666d', .95], [rr(797, 509.1, 22, 2.3, .6), '#c4c8cd', 1]] });
   piece(open, { line: [{ d: 'M796,470q4,4 8,0M812,470q4,4 8,0', stroke: '#e6ebef', 'stroke-width': 1.8 }] });
   const boot = E('g', { class: 'boot' }, open);
   E('path', { d: screen, fill: '#23262b' }, boot);
