@@ -1,4 +1,4 @@
-# Jamie & Teo's House: notes for Claude
+# Jamie Catt-Koble's site: notes for Claude
 
 Jamie Catt-Koble's portfolio: an interactive, colored-pencil illustration of their tiny house with their tri-color Maltipoo, Teo. Jamie is a designer, illustrator and writer, and edits this site by chatting with Claude, often from their phone. They don't code, so do the whole job: make the change, check it, and ship it when asked.
 

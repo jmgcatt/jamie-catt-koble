@@ -1,4 +1,4 @@
-# Jamie & Teo's House
+# Jamie Catt-Koble
 
 My illustrated tiny-house portfolio. Quotes, monthly favorites and what I'm cooking come from Notion. Journal posts come from Substack.
 
