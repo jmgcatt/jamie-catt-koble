@@ -172,6 +172,7 @@ body.playing .notes .note:nth-child(2){animation-delay:-1.8s}
 .screen-bar h2{margin:0;font-family:var(--f-title);font-weight:400;font-size:26px;line-height:1.2;text-transform:lowercase;filter:url(#ink)}
 .screen .cards{flex:1;max-height:none;overflow-y:auto;grid-template-columns:repeat(3,minmax(0,1fr));padding:14px}
 .screen .cards[hidden]{display:none}
+.h-phone{display:none}
 .screen-project{flex:1;overflow-y:auto;padding:14px 22px 6px}
 .screen-project .sp-back{margin:0 0 10px;font-size:16px}
 .sp-head{display:flex;align-items:baseline;gap:12px;margin:0 0 8px}
@@ -728,8 +729,10 @@ blockquote{margin:0 0 28px;padding:0;font-family:var(--f-title);font-size:28px;l
   .screen{z-index:18}
   .screen .cards{grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;padding:10px}
   .screen-bar{padding:6px 10px;gap:4px 8px}
-  .screen-bar .seg button{font-size:13px;padding:2px 7px}
-  .screen .card{padding:5px 5px 7px}
+  .h-wide{display:none}.h-phone{display:inline}
+  .screen-bar .seg{padding:0;border:0;background:#fff}
+  .screen-bar .seg button{font-size:13px;line-height:1.15;padding:8px 10px}
+  .screen .card{padding:5px 5px 7px;border:0;background:#fff}
   .screen .c-t{font-size:18px}
   .screen-project{padding:10px 14px 6px}
   .rf-grid{grid-template-columns:minmax(0,1fr)}
@@ -737,7 +740,7 @@ blockquote{margin:0 0 28px;padding:0;font-family:var(--f-title);font-size:28px;l
   .sheet .spin-card{grid-template-columns:84px minmax(0,1fr)}
   .playlists{grid-template-columns:minmax(0,1fr)}
   .disc{width:84px;height:84px}
-  .screen-bar h2{font-size:20px}
+  .screen-bar h2{font-size:26px}
   .work-list button{grid-template-columns:110px minmax(0,1fr)}
   .sheet h2{font-size:42px}
   .meta{grid-template-columns:minmax(0,1fr)}
@@ -825,7 +828,7 @@ blockquote{margin:0 0 28px;padding:0;font-family:var(--f-title);font-size:28px;l
 
       <section class="screen" id="screen" aria-label="My work, on the laptop" hidden>
         <div class="screen-bar">
-          <div class="title-row"><h2>Design work</h2><div class="seg" id="screenSeg" role="group" aria-label="Filter by kind of work"><button type="button" data-cat="systems" aria-pressed="false">design systems</button><button type="button" data-cat="web" aria-pressed="false">web design</button><button type="button" data-cat="mobile" aria-pressed="false">mobile app design</button></div></div>
+          <div class="title-row"><h2><span class="h-wide">Design work</span><span class="h-phone">Designs</span></h2><div class="seg" id="screenSeg" role="group" aria-label="Filter by kind of work"><button type="button" data-cat="systems" aria-pressed="false">design systems</button><button type="button" data-cat="web" aria-pressed="false">web design</button><button type="button" data-cat="mobile" aria-pressed="false">mobile app design</button></div></div>
           <button class="t-x fs-x" id="screenX" type="button" aria-label="Close my design work"><svg viewBox="0 0 24 24" aria-hidden="true"><g fill="none" stroke="currentColor" stroke-linecap="round"><path d="M6.4 7.2 Q11.6 11.4 17.2 17.4" stroke-width="2.3"/><path d="M17.4 6.6 Q12.4 11.8 6.8 17.2" stroke-width="2.3"/><path d="M7.6 6.4 Q12.2 10.8 16.4 16.4" stroke-width="1" opacity=".4"/></g></svg></button>
         </div>
         <ul class="cards" id="cards"></ul>
