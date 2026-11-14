@@ -2,12 +2,18 @@
 # with full-resolution photos and videos. When it finishes, "Deploy site"
 # (deploy.yml) republishes GitHub Pages, so the site updates on its own.
 # Run it right away from the repo's Actions tab: "Sync Substack" > "Run workflow".
+# It also runs whenever this file or the sync script changes, to test the change.
 name: Sync Substack
 
 on:
   schedule:
     - cron: '*/30 * * * *'
   workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - scripts/sync-substack.py
+      - .github/workflows/sync-substack.yml
 
 permissions:
   contents: write

@@ -13,6 +13,11 @@ Media is always the highest resolution available:
 
 Only new posts are added. Posts already in posts.json are left alone, so any
 edits made by hand are kept. Paid-only posts are skipped.
+
+Substack sometimes turns away requests from GitHub's servers ("403 Forbidden").
+When its API does, the public RSS feed (/feed) is used instead. If Substack
+can't be reached at all, nothing changes and the next run tries again; the run
+is marked with a warning rather than failing (so no failure emails).
 """
 import html
 import json
@@ -20,9 +25,13 @@ import os
 import re
 import sys
 import tempfile
+import time
+import urllib.error
 import urllib.parse
 import urllib.request
-from datetime import datetime
+import xml.etree.ElementTree as ET
+from datetime import datetime, timezone
+from email.utils import parsedate_to_datetime
 from html.parser import HTMLParser
 
 PUB = 'https://jamiecatt.substack.com'
@@ -39,9 +48,19 @@ except ImportError:
 
 
 def get(url, binary=False):
-    with urllib.request.urlopen(urllib.request.Request(url, headers=UA), timeout=120) as r:
-        data = r.read()
-    return data if binary else data.decode('utf-8')
+    """Fetch a URL, trying again a couple of times if Substack is busy or refuses."""
+    for attempt in range(3):
+        try:
+            with urllib.request.urlopen(urllib.request.Request(url, headers=UA), timeout=120) as r:
+                data = r.read()
+            return data if binary else data.decode('utf-8')
+        except urllib.error.HTTPError as e:
+            if e.code not in (403, 429, 500, 502, 503, 504) or attempt == 2:
+                raise
+        except urllib.error.URLError:
+            if attempt == 2:
+                raise
+        time.sleep(5 * (attempt + 1))
 
 
 def get_json(url):
@@ -79,6 +98,7 @@ def save_image(url, dest_base):
         else:
             img = img.convert('RGB')
         name = dest_base + '.jpg'
+        WRITTEN.append(name)
         out = os.path.join(MEDIA_DIR, name)
         img.save(out + '.part', 'JPEG', quality=JPEG_QUALITY, optimize=True, progressive=True, subsampling=0)
         os.replace(out + '.part', out)
@@ -94,7 +114,11 @@ def save_video(upload_id, dest_base):
     return name
 
 
+WRITTEN = []  # media files saved for the post being added right now
+
+
 def write_file(name, data):
+    WRITTEN.append(name)
     out = os.path.join(MEDIA_DIR, name)
     with open(out + '.part', 'wb') as f:
         f.write(data)
@@ -217,6 +241,54 @@ def nice_date(iso):
     return f'{d:%b} {d.day}, {d.year}'
 
 
+CONTENT_NS = '{http://purl.org/rss/1.0/modules/content/}encoded'
+
+
+def rss_posts():
+    """Read the public RSS feed into the same shape the API gives."""
+    root = ET.fromstring(get(f'{PUB}/feed'))
+    items = []
+    for it in root.iter('item'):
+        link = (it.findtext('link') or '').strip()
+        m = re.search(r'/p/([^/?#]+)', link)
+        if not m:
+            continue
+        when = it.findtext('pubDate')
+        iso = parsedate_to_datetime(when).astimezone(timezone.utc).strftime('%Y-%m-%dT%H:%M:%S.000Z') if when else None
+        items.append({
+            'slug': m.group(1),
+            'title': html.unescape((it.findtext('title') or '').strip()),
+            'subtitle': html.unescape((it.findtext('description') or '').strip()),
+            'post_date': iso,
+            'canonical_url': link,
+            'body_html': it.findtext(CONTENT_NS) or '',
+        })
+    return items
+
+
+def post_list():
+    """The latest posts: from the API, or the RSS feed if the API refuses."""
+    try:
+        feed = get_json(f'{PUB}/api/v1/posts?limit=20')
+        return (feed.get('posts', feed) if isinstance(feed, dict) else feed), False
+    except Exception as e:
+        print(f'Substack API unavailable ({e}); reading the RSS feed instead')
+        return rss_posts(), True
+
+
+def full_post(item, from_rss):
+    if from_rss:
+        return item
+    try:
+        return get_json(f'{PUB}/api/v1/posts/{item["slug"]}')
+    except Exception as e:
+        print(f'could not read {item["slug"]} from the API ({e}); using the RSS feed')
+        for it in rss_posts():
+            if it['slug'] == item['slug']:
+                return it
+        raise
+
+
 def main():
     with open(POSTS_FILE, encoding='utf-8') as f:
         store = json.load(f)
@@ -224,8 +296,11 @@ def main():
     by_slug = {p.get('slug'): p for p in posts}
     os.makedirs(MEDIA_DIR, exist_ok=True)
 
-    feed = get_json(f'{PUB}/api/v1/posts?limit=20')
-    feed = feed.get('posts', feed) if isinstance(feed, dict) else feed
+    try:
+        feed, from_rss = post_list()
+    except Exception as e:
+        print(f'::warning::Substack could not be reached ({e}). Nothing changed; the next run will try again.')
+        return
     added = []
     for item in feed:
         slug = item.get('slug')
@@ -237,10 +312,20 @@ def main():
         if item.get('audience') not in (None, 'everyone'):
             print(f'skipping paid-only post: {slug}')
             continue
-        full = get_json(f'{PUB}/api/v1/posts/{slug}')
         key = re.sub(r'[^a-z0-9-]', '', slug.lower())[:60] or str(item.get('id'))
-        body = PostHTML(key)
-        body.feed(full.get('body_html') or '')
+        WRITTEN.clear()
+        try:
+            full = full_post(item, from_rss)
+            body = PostHTML(key)
+            body.feed(full.get('body_html') or '')
+        except Exception as e:
+            # Don't publish a post with missing photos or videos: undo and retry next run.
+            for name in WRITTEN:
+                for f in (name, name + '.part'):
+                    if os.path.exists(os.path.join(MEDIA_DIR, f)):
+                        os.unlink(os.path.join(MEDIA_DIR, f))
+            print(f'::warning::could not add "{slug}" yet ({e}); will try again next run')
+            continue
         post = {
             'key': key,
             'slug': slug,
