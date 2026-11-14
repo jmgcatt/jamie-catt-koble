@@ -426,7 +426,7 @@ body.playing .turntable .arm{transform:none}
 .shelf-book svg{display:block;width:100%;height:auto;overflow:visible}
 .shelf-note{max-width:200px;margin:0;padding:8px 12px;background:#fffaf0;border-radius:var(--wobble);font-size:13.5px;line-height:1.45;text-align:center;color:var(--ink-soft)}
 .sheet.shelf .empty-note{padding:18px 24px;background:#fffaf0;border-radius:var(--wobble);text-align:center}
-@media (hover:none){.shelf-book{transform:none;width:min(175px,42vw)}.shelf-row{gap:22px}}
+@media (hover:none){.shelf-book{transform:none;width:min(160px,36vw)}.shelf-row{gap:18px;flex-wrap:nowrap}}
 @media (prefers-reduced-motion:reduce){.shelf-book{transition:none}}
 /* the menu and the record player have no close button: a click anywhere around them closes them (Escape too) */
 .sheet.menu .sheet-bar,.sheet.player .sheet-bar{display:none}
@@ -861,7 +861,7 @@ blockquote{margin:0 0 28px;padding:0;font-family:var(--f-hand);font-size:30px;li
   <ol class="stubs" id="stubs"></ol>
 </aside>
 <div class="sr-only" aria-live="polite" id="live"></div>
-<svg width="0" height="0" style="position:absolute;overflow:hidden" aria-hidden="true"><defs id="artDefs"><filter id="coverPencil" x="0" y="0" width="100%" height="100%" color-interpolation-filters="sRGB"><feColorMatrix type="saturate" values=".88" result="c"/><feTurbulence type="fractalNoise" baseFrequency=".85" numOctaves="2" seed="4" result="n"/><feColorMatrix in="n" type="matrix" values="0 0 0 0 .99  0 0 0 0 .96  0 0 0 0 .9  -2.2 0 0 0 1.25" result="sp"/><feComposite in="sp" in2="SourceAlpha" operator="in" result="sp2"/><feMerge><feMergeNode in="c"/><feMergeNode in="sp2"/></feMerge></filter><filter id="ink" x="-5%" y="-25%" width="110%" height="150%" color-interpolation-filters="sRGB"><feMorphology operator="dilate" radius=".1" result="t"/><feTurbulence type="fractalNoise" baseFrequency=".06" numOctaves="2" seed="2" result="w"/><feDisplacementMap in="t" in2="w" scale="2.2" xChannelSelector="R" yChannelSelector="G" result="d"/><feTurbulence type="fractalNoise" baseFrequency="1.2" numOctaves="1" seed="9" result="g"/><feColorMatrix in="g" type="matrix" values="0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  -2.2 0 0 0 2.1" result="ga"/><feComposite in="d" in2="ga" operator="in"/></filter></defs></svg>
+<svg width="0" height="0" style="position:absolute;overflow:hidden" aria-hidden="true"><defs id="artDefs"><filter id="coverPencil" x="0" y="0" width="100%" height="100%" color-interpolation-filters="sRGB"><feColorMatrix type="saturate" values=".88" result="c"/><feTurbulence type="fractalNoise" baseFrequency=".85" numOctaves="2" seed="4" result="n"/><feColorMatrix in="n" type="matrix" values="0 0 0 0 .99  0 0 0 0 .96  0 0 0 0 .9  -1.5 0 0 0 .78" result="sp"/><feComposite in="sp" in2="SourceAlpha" operator="in" result="sp2"/><feMerge><feMergeNode in="c"/><feMergeNode in="sp2"/></feMerge></filter><filter id="ink" x="-5%" y="-25%" width="110%" height="150%" color-interpolation-filters="sRGB"><feMorphology operator="dilate" radius=".1" result="t"/><feTurbulence type="fractalNoise" baseFrequency=".06" numOctaves="2" seed="2" result="w"/><feDisplacementMap in="t" in2="w" scale="2.2" xChannelSelector="R" yChannelSelector="G" result="d"/><feTurbulence type="fractalNoise" baseFrequency="1.2" numOctaves="1" seed="9" result="g"/><feColorMatrix in="g" type="matrix" values="0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  -2.2 0 0 0 2.1" result="ga"/><feComposite in="d" in2="ga" operator="in"/></filter></defs></svg>
 
 <script>
 const $ = s => document.querySelector(s);
@@ -2180,15 +2180,15 @@ function bookItem(b) {
 let SHELF = [];
 const SHELF_COLORS = ['#7a2633', '#3f6aa0', '#6f8f5a', '#c9663d', '#5a4a6e', '#b8902f'];
 function shelfArt(b) {
-  if (b.image) return `<svg viewBox="22 16 82 128" aria-hidden="true"><use href="#fav-book-back"/><image href="${esc(b.image)}" x="28" y="22" width="64" height="104" preserveAspectRatio="xMidYMid slice" filter="url(#coverPencil)"/><use href="#fav-book-front"/></svg>`;
+  if (b.image) return `<svg viewBox="22 16 82 128" aria-hidden="true"><use href="#fav-book-back" x="0" y="0" width="120" height="150"/><image href="${esc(b.image)}" x="28" y="22" width="64" height="104" preserveAspectRatio="xMidYMid slice" filter="url(#coverPencil)"/><use href="#fav-book-front" x="0" y="0" width="120" height="150"/></svg>`;
   // no cover found: a cloth cover with the title and author written on it
   const color = SHELF_COLORS[[...(b.title || '')].reduce((h, c) => (h * 31 + c.charCodeAt(0)) >>> 0, 7) % SHELF_COLORS.length];
   const words = String(b.title || '').split(/\s+/), lines = [];
   words.forEach(w => { const l = lines[lines.length - 1]; if (l && (l + ' ' + w).length <= 11) lines[lines.length - 1] = l + ' ' + w; else lines.push(w); });
   const ts = lines.slice(0, 5).map((l, i) => `<tspan x="66" dy="${i ? 12 : 0}">${esc(l)}</tspan>`).join('');
-  return `<svg viewBox="22 16 82 128" aria-hidden="true"><use href="#fav-book-back"/><rect x="28" y="22" width="64" height="104" rx="4" fill="${color}" filter="url(#pencil)"/>
+  return `<svg viewBox="22 16 82 128" aria-hidden="true"><use href="#fav-book-back" x="0" y="0" width="120" height="150"/><rect x="28" y="22" width="64" height="104" rx="4" fill="${color}" filter="url(#pencil)"/>
     <text x="66" y="${62 - lines.length * 4}" text-anchor="middle" font-family="Gaegu, cursive" font-weight="700" font-size="12" fill="#fffaf0">${ts}</text>
-    ${b.author ? `<text x="66" y="114" text-anchor="middle" font-family="Gaegu, cursive" font-size="8.5" fill="#fffaf0" opacity=".85">${esc(b.author)}</text>` : ''}<use href="#fav-book-front"/></svg>`;
+    ${b.author ? `<text x="66" y="114" text-anchor="middle" font-family="Gaegu, cursive" font-size="8.5" fill="#fffaf0" opacity=".85">${esc(b.author)}</text>` : ''}<use href="#fav-book-front" x="0" y="0" width="120" height="150"/></svg>`;
 }
 function shelfBooks() {
   if (readState === 'loading') return '<p class="empty-note">Finding the books\u2026</p>';
