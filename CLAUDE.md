@@ -4,7 +4,7 @@ Jamie Catt-Koble's portfolio: an interactive, colored-pencil illustration of the
 
 ## How Jamie works with you
 
-- **"Ship it" / deploy / push / merge** means: commit everything to `main` with a short, plain message, push, watch the **Deploy site** GitHub Action until it finishes, check the live site, and fix anything that broke. Don't ask Jamie to run commands or use GitHub Desktop. Don't push unless Jamie asks.
+- **Ship every change automatically.** Jamie wants each update live as soon as it's done and checked, without being asked: commit to `main` with a short, plain message, push, watch the **Deploy site** GitHub Action until it finishes, check the live site, and fix anything that broke. Don't ask Jamie to run commands or use GitHub Desktop.
 - If you're working on a branch (cloud sessions often are), shipping means getting the change onto `main`: merge the branch or pull request yourself.
 - Jamie reviews visually. Describe changes in terms of what they'll see, not code. Small, careful tweaks: don't redesign things they didn't mention.
 - Jamie often sends follow-up requests while you're working. Fold them into the current work.
