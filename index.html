@@ -1702,12 +1702,14 @@ function shots(p) {
 }
 const thumb = id => `<svg viewBox="0 0 600 300" aria-hidden="true"><use href="#art-${id}" width="600" height="300"/></svg>`;
 const KINDS = { avis: ['systems', 'mobile'], mayo: ['systems'], rcp: ['web'], onepass: ['mobile'], ally: ['web'], kaiser: ['web'], shore: ['web'], albertsons: ['mobile'], climatebase: ['web', 'systems'] };
+// work is listed newest year first; projects from the same year keep their order
+const byYear = projects.map((p, i) => i).sort((a, b) => parseInt(projects[b].year) - parseInt(projects[a].year) || a - b);
 let workFilter = null;
 // press a kind to filter; press it again to see everything
 function renderCards(kind) {
   workFilter = kind || null;
   document.querySelectorAll('#screenSeg [data-cat]').forEach(t => t.setAttribute('aria-pressed', t.dataset.cat === workFilter));
-  $('#cards').innerHTML = projects.map((p, i) => p.cat !== 'Design' || (workFilter && !(KINDS[p.id] || []).includes(workFilter)) ? '' : `<li><button class="card" type="button" data-open="${i}">${thumb(p.id)}<span class="c-t">${esc(p.title)}</span><span class="c-m">${p.year}</span></button></li>`).join('');
+  $('#cards').innerHTML = byYear.map(i => [projects[i], i]).map(([p, i]) => p.cat !== 'Design' || (workFilter && !(KINDS[p.id] || []).includes(workFilter)) ? '' : `<li><button class="card" type="button" data-open="${i}">${thumb(p.id)}<span class="c-t">${esc(p.title)}</span><span class="c-m">${p.year}</span></button></li>`).join('');
   $('#cards').scrollTop = 0;
 }
 document.querySelectorAll('#screenSeg [data-cat]').forEach(t => t.addEventListener('click', () => renderCards(workFilter === t.dataset.cat ? null : t.dataset.cat)));
@@ -1765,7 +1767,7 @@ function showCards() {
   const c = $('#cards .card'); if (c) c.focus({ preventScroll: true });
 }
 function workList(cat) {
-  return `<ul class="work-list">${projects.map((p, i) => p.cat !== cat ? '' : `<li><button type="button" data-open="${i}">${thumb(p.id)}<span><b>${esc(p.title)}</b><span>${p.year}</span></span></button></li>`).join('')}</ul>`;
+  return `<ul class="work-list">${byYear.map(i => [projects[i], i]).map(([p, i]) => p.cat !== cat ? '' : `<li><button type="button" data-open="${i}">${thumb(p.id)}<span><b>${esc(p.title)}</b><span>${p.year}</span></span></button></li>`).join('')}</ul>`;
 }
 function openWork(cat = 'Design') {
   const lede = cat === 'Design' ? 'Design systems, product and brand work for health, finance, travel and climate.' : 'Book covers, packaging and watercolor illustration.';
