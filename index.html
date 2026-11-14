@@ -476,6 +476,17 @@ body.playing .turntable .arm{transform:none}
 /* a turning page: shading sweeps across it, and it casts a soft shadow on the page underneath */
 .jb-face .jb-shade{position:absolute;inset:0;pointer-events:none;opacity:0;background:linear-gradient(90deg,rgba(43,30,22,.28),rgba(43,30,22,.06) 40%,rgba(255,250,235,.18) 70%,rgba(43,30,22,.1))}
 .jb-face.back .jb-shade{transform:scaleX(-1)}
+.jb-pages{touch-action:none}
+.jb-curl{position:absolute;inset:0;z-index:3;pointer-events:none;overflow:hidden;border-radius:3px 8px 8px 3px}
+.jb-curl .jb-face.jc-top{border-radius:3px 8px 8px 3px}
+.jb-curl .jb-face.jc-top::after{background:linear-gradient(90deg,rgba(74,58,46,.13),transparent 30px)}
+.jb-curl .jc-under,.jb-curl .jc-lift,.jb-curl .jc-flap{position:absolute;inset:0}
+.jb-curl .jc-under{overflow:hidden}
+.jb-curl .jb-face.jc-top{z-index:1}
+.jb-curl .jb-face.jc-top .jb-shade{display:none}
+.jb-curl .jc-lift{z-index:2}
+.jb-curl .jc-flap{overflow:hidden;transform-origin:0 0;box-sizing:border-box;background:var(--paper-tex),#f6efd6;border:1.5px solid #c9b48f;border-radius:3px 8px 8px 3px}
+.jc-band{position:absolute;height:400vmax;transform-origin:0 0;pointer-events:none}
 .jb-cast{position:absolute;top:0;bottom:0;z-index:2;pointer-events:none;opacity:0}
 .jb-no{position:absolute;bottom:20px;z-index:4;font-family:var(--f-hand);font-size:18px;color:var(--ink-soft);transform:translateX(-50%);pointer-events:none}
 .jb-no-l{display:none;left:25%}
@@ -559,7 +570,7 @@ blockquote{margin:0 0 28px;padding:0;font-family:var(--f-hand);font-size:30px;li
 
 /* rooms, sizes and touch */
 .app{height:100vh;height:100svh}
-#stage{touch-action:pan-y}
+#stage{touch-action:none}
 .navbar{display:none}
 .sound{transition:padding .3s ease,gap .3s ease}
 #sndVol{transition:width .35s cubic-bezier(.2,.8,.2,1),opacity .25s ease}
@@ -1935,6 +1946,7 @@ async function turnPage(dir) {
   if (to < 0 || to > book.n - 1) return;
   $('#jbFlow').querySelectorAll('video').forEach(v => v.pause());
   if (reduceMotion.matches) { book.at = to; return showBook(); }
+  if (!spread && CURL_OK) return curlTurn(dir);
   book.busy = true;
   const pages = $('#jbPages');
   const layer = (x, cls, faces) => { const d = document.createElement('div'); d.className = 'jb-sheet ' + cls; d.style.left = x + 'px'; d.style.width = P + 'px'; d.append(...faces); pages.insertBefore(d, $('.jb-no-l')); return d; };
@@ -1978,7 +1990,7 @@ async function turnPage(dir) {
 }
 // a click on a page turns it: the right half goes forward, the left half goes back
 sheet.addEventListener('click', e => {
-  if (!book || !sheet.classList.contains('book') || e.target.closest('a, button, video, input')) return;
+  if (!book || pageDragged || !sheet.classList.contains('book') || e.target.closest('a, button, video, input')) return;
   const pages = $('#jbPages'); if (!pages || !pages.contains(e.target)) return;
   const r = pages.getBoundingClientRect(); turnPage(e.clientX > r.left + r.width / 2 ? 1 : -1);
 });
@@ -1986,10 +1998,142 @@ sheet.addEventListener('keydown', e => {
   if (!sheet.classList.contains('book') || (e.key !== 'ArrowLeft' && e.key !== 'ArrowRight') || e.target.closest('video, input, textarea')) return;
   e.preventDefault(); turnPage(e.key === 'ArrowRight' ? 1 : -1);
 });
-// swipe to turn on touch screens
-let swipeX = null;
-sheet.addEventListener('pointerdown', e => { swipeX = sheet.classList.contains('book') && e.pointerType !== 'mouse' && !e.target.closest('video') ? e.clientX : null; });
-sheet.addEventListener('pointerup', e => { if (swipeX === null) return; const dx = e.clientX - swipeX; swipeX = null; if (Math.abs(dx) > 50) turnPage(dx < 0 ? 1 : -1); });
+// one page at a time (phones): the page curls like paper. Grab it anywhere and it follows your finger: the corner lifts,
+// the page folds along a line, its blank back shows, and the fold shades the page and casts a soft shadow on the next one.
+// Let go past a quarter turn (or flick) and it turns over; otherwise it falls back flat.
+const CURL_OK = typeof CSS !== 'undefined' && CSS.supports('clip-path', 'polygon(0 0, 1px 0, 0 1px)');
+const curlEase = t => 1 - Math.pow(1 - t, 3);
+// the part of the page box on one side of the fold
+function clipRect(P, H, M, n, keepFlap) {
+  const side = q => ((q[0] - M[0]) * n[0] + (q[1] - M[1]) * n[1]) * (keepFlap ? 1 : -1);
+  const box = [[0, 0], [P, 0], [P, H], [0, H]], out = [];
+  box.forEach((a, i) => {
+    const b = box[(i + 1) % 4], sa = side(a), sb = side(b);
+    if (sa >= 0) out.push(a);
+    if ((sa >= 0) !== (sb >= 0)) { const t = sa / (sa - sb); out.push([a[0] + (b[0] - a[0]) * t, a[1] + (b[1] - a[1]) * t]); }
+  });
+  return out.length > 2 ? `polygon(${out.map(q => `${q[0].toFixed(1)}px ${q[1].toFixed(1)}px`).join(',')})` : 'polygon(0 0,0 0,0 0)';
+}
+// a strip of shading that starts on the fold and runs a set way from it
+function foldBand(parent, cls) { const b = document.createElement('i'); b.className = 'jc-band ' + cls; parent.appendChild(b); return b; }
+function placeBand(b, M, ang, len, grad) {
+  Object.assign(b.style, { left: M[0] + 'px', top: M[1] + 'px', width: Math.max(1, len) + 'px', transform: `rotate(${ang}rad) translateY(-50%)`, background: grad });
+}
+function makeCurl(turning) {
+  const { P, H } = book, pages = $('#jbPages');
+  const c = document.createElement('div'); c.className = 'jb-curl';
+  const under = document.createElement('div'); under.className = 'jc-under';
+  const top = bookFace(turning, 'jc-top');
+  const lift = document.createElement('div'); lift.className = 'jc-lift';
+  const flap = document.createElement('div'); flap.className = 'jc-flap';
+  lift.appendChild(flap); c.append(under, top, lift); pages.insertBefore(c, $('.jb-no-l'));
+  const bands = { cast: foldBand(under, 'cast'), bend: foldBand(top, 'bend'), back: foldBand(flap, 'back') };
+  return {
+    el: c, cy: H, F: [P, H],
+    // the page's lifted corner is at F; C is where that corner lies when the page is flat
+    set(F) {
+      const cy = this.cy, C = [P, cy], S = [0, cy], S2 = [0, H - cy];
+      // paper doesn't stretch: the corner stays within reach of the spine
+      let d = Math.hypot(F[0] - S[0], F[1] - S[1]); if (d > P) F = [S[0] + (F[0] - S[0]) * P / d, S[1] + (F[1] - S[1]) * P / d];
+      const R2 = Math.hypot(P, H); d = Math.hypot(F[0] - S2[0], F[1] - S2[1]); if (d > R2) F = [S2[0] + (F[0] - S2[0]) * R2 / d, S2[1] + (F[1] - S2[1]) * R2 / d];
+      this.F = F;
+      const vx = C[0] - F[0], vy = C[1] - F[1], w = Math.hypot(vx, vy) / 2;
+      if (w < .5) { c.style.visibility = 'hidden'; top.style.clipPath = flap.style.clipPath = ''; return; }
+      c.style.visibility = '';
+      const n = [vx / (2 * w), vy / (2 * w)], M = [(C[0] + F[0]) / 2, (C[1] + F[1]) / 2], ang = Math.atan2(n[1], n[0]), mn = M[0] * n[0] + M[1] * n[1];
+      top.style.clipPath = clipRect(P, H, M, n, false);
+      // the back of the page is the folded-over part, mirrored across the fold
+      flap.style.clipPath = clipRect(P, H, M, n, true);
+      flap.style.transform = `matrix(${1 - 2 * n[0] * n[0]},${-2 * n[0] * n[1]},${-2 * n[0] * n[1]},${1 - 2 * n[1] * n[1]},${2 * mn * n[0]},${2 * mn * n[1]})`;
+      const k = Math.min(1, w / (P * .35)), deep = Math.min(w, 70);
+      under.style.clipPath = flap.style.clipPath;
+      placeBand(bands.cast, M, ang, deep, `linear-gradient(90deg,rgba(43,30,22,${(.38 * k).toFixed(3)}),rgba(43,30,22,${(.12 * k).toFixed(3)}) 35%,transparent)`);
+      placeBand(bands.bend, M, ang + Math.PI, Math.min(w * .9, 46), `linear-gradient(90deg,rgba(43,30,22,${(.2 * k).toFixed(3)}),rgba(43,30,22,0))`);
+      placeBand(bands.back, M, ang, w * 2, `linear-gradient(90deg,rgba(43,30,22,.2),rgba(255,251,240,.32) 14%,rgba(255,251,240,.1) 32%,rgba(43,30,22,.06) 70%,rgba(43,30,22,.14))`);
+      lift.style.filter = `drop-shadow(${(-n[0] * 3 * k).toFixed(1)}px ${(-n[1] * 3 * k).toFixed(1)}px ${(4 + 6 * k).toFixed(1)}px rgba(43,30,22,${(.28 * k).toFixed(3)}))`;
+    },
+    tween(to, ms, arc, ease = curlEase) {
+      const from = this.F.slice(), t0 = performance.now();
+      return new Promise(done => {
+        const step = now => {
+          const t = Math.min(1, (now - t0) / ms), e = ease(t), lift = arc ? Math.sin(Math.PI * e) * arc : 0;
+          this.set([from[0] + (to[0] - from[0]) * e, from[1] + (to[1] - from[1]) * e - lift]);
+          t < 1 ? requestAnimationFrame(step) : done();
+        };
+        requestAnimationFrame(step);
+      });
+    }
+  };
+}
+// start a turn: forward lifts the current page off the next one; back brings the previous page over from the spine
+function curlStart(dir, y) {
+  const { P, H } = book, from = book.at, to = from + dir;
+  if (to < 0 || to > book.n - 1) return null;
+  $('#jbFlow').querySelectorAll('video').forEach(v => v.pause());
+  book.busy = true;
+  if (dir > 0) { book.at = to; showBook(); }
+  const cu = makeCurl(dir > 0 ? from : to);
+  // grab near the top and the top corner lifts; anywhere else, the bottom corner
+  cu.cy = y != null && y < H * .4 ? 0 : H;
+  cu.dir = dir; cu.from = from; cu.to = to;
+  cu.set(dir > 0 ? [P, cu.cy] : [-P, cu.cy]);
+  return cu;
+}
+async function curlEnd(cu, done) {
+  const { P } = book, end = done ? (cu.dir > 0 ? [-P, cu.cy] : [P, cu.cy]) : (cu.dir > 0 ? [P, cu.cy] : [-P, cu.cy]);
+  const dist = Math.hypot(end[0] - cu.F[0], end[1] - cu.F[1]);
+  await cu.tween(end, Math.max(180, Math.min(520, dist * 1.1)), 0);
+  if (done) book.at = cu.to; else book.at = cu.from;
+  showBook(); cu.el.remove(); book.busy = false;
+}
+async function curlTurn(dir) {
+  if (!book || book.busy) return;
+  if (reduceMotion.matches) { const to = book.at + dir; if (to >= 0 && to <= book.n - 1) { book.at = to; showBook(); } return; }
+  const cu = curlStart(dir); if (!cu) return;
+  const { P, H } = book;
+  // a tap: the corner lifts and the page sweeps over in a gentle arc
+  await cu.tween(dir > 0 ? [-P, cu.cy] : [P, cu.cy], 900, H * .16, t => t < .5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2);
+  book.at = cu.to; showBook(); cu.el.remove(); book.busy = false;
+}
+let pageDrag = null, pageDragged = false;
+sheet.addEventListener('pointerdown', e => {
+  if (!book || book.busy || !sheet.classList.contains('book') || !e.isPrimary || e.button > 0 || e.target.closest('button, video, input')) return;
+  const pages = $('#jbPages'); if (!pages || !pages.contains(e.target)) return;
+  pageDrag = { x: e.clientX, y: e.clientY, id: e.pointerId, cu: null, t: performance.now(), vx: 0, lx: e.clientX, lt: performance.now() };
+});
+sheet.addEventListener('pointermove', e => {
+  const d = pageDrag; if (!d || e.pointerId !== d.id) return;
+  const dx = e.clientX - d.x, dy = e.clientY - d.y, now = performance.now();
+  if (!d.cu && !d.swipe) {
+    if (Math.abs(dx) < 8 || Math.abs(dx) < Math.abs(dy)) return;
+    const dir = dx < 0 ? 1 : -1;
+    if (book.spread || !CURL_OK || reduceMotion.matches) { d.swipe = dir; return; }
+    const r = $('#jbPages').getBoundingClientRect();
+    d.cu = curlStart(dir, d.y - r.top); if (!d.cu) { pageDrag = null; return; }
+    d.x = e.clientX; d.y = e.clientY; d.gy = d.y - r.top;
+    try { $('#jbPages').setPointerCapture(e.pointerId); } catch (err) { }
+  }
+  if (d.swipe) return;
+  if (now > d.lt) { d.vx = .7 * d.vx + .3 * (e.clientX - d.lx) / (now - d.lt); d.lx = e.clientX; d.lt = now; }
+  const { P } = book, cu = d.cu, ddx = e.clientX - d.x, ddy = e.clientY - d.y;
+  // the lifted corner moves a little faster than the finger, so half a page's swipe turns it
+  const x0 = cu.dir > 0 ? P : -P;
+  cu.set([x0 + ddx * 1.7, cu.cy + ddy * .6 - Math.min(1, Math.abs(ddx) / P) * (cu.cy ? 1 : -1) * book.H * .06]);
+});
+function pageDragEnd(e) {
+  const d = pageDrag; if (!d || e.pointerId !== d.id) return; pageDrag = null;
+  if (d.swipe) { pageDragged = true; setTimeout(() => { pageDragged = false; }, 60); if (Math.abs(e.clientX - d.x) > 50) turnPage(d.swipe); return; }
+  if (!d.cu) return;
+  pageDragged = true; setTimeout(() => { pageDragged = false; }, 60);
+  const { P } = book, cu = d.cu, x = cu.F[0];
+  const flick = e.type !== 'pointercancel' && Math.abs(d.vx) > .45 && (cu.dir > 0 ? d.vx < 0 : d.vx > 0);
+  const far = cu.dir > 0 ? x < P * .45 : x > -P * .45;
+  curlEnd(cu, e.type !== 'pointercancel' && (flick || far));
+}
+sheet.addEventListener('pointerup', pageDragEnd); sheet.addEventListener('pointercancel', pageDragEnd);
+// turning a page that starts on a photo or link shouldn't open it
+sheet.addEventListener('click', e => { if (pageDragged && e.target.closest('#jbPages')) { e.preventDefault(); e.stopPropagation(); } }, true);
+sheet.addEventListener('dragstart', e => { if (e.target.closest && e.target.closest('#jbPages')) e.preventDefault(); });
 addEventListener('resize', () => { if (book) layoutBook(); });
 body.addEventListener('click', e => { const b = e.target.closest('[data-post]'); if (b) return openPost(+b.dataset.post); if (e.target.closest('[data-journal]')) openWriting(); });
 
@@ -2818,11 +2962,14 @@ function scaleTexture(k) {
 }
 const setVB = v => { vb = v; svg.setAttribute('viewBox', v.map(n => Math.round(n * 100) / 100).join(' ')); scaleTexture(texBase / v[2]); };
 const pause = ms => new Promise(r => setTimeout(r, reduceMotion.matches ? 0 : ms));
+let vbGen = 0;
 function animVB(to, ms) {
+  const gen = ++vbGen;
   return new Promise(done => {
     if (reduceMotion.matches) { setVB(to); return done(); }
     const from = vb.slice(), t0 = performance.now();
     const step = now => {
+      if (gen !== vbGen) return done();
       const t = Math.min(1, (now - t0) / ms), e = t < .5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2;
       setVB(from.map((f, i) => f + (to[i] - f) * e));
       t < 1 ? requestAnimationFrame(step) : done();
@@ -3179,11 +3326,13 @@ function setSlide(v) {
   rooms.setAttribute('transform', t); $('#fx').setAttribute('transform', TEO.outside ? '' : t);
   roomClip.setAttribute('x', r1(80 + v));
 }
+let slideGen = 0;
 function animSlide(to, ms) {
+  const gen = ++slideGen;
   return new Promise(done => {
     const from = slide; if (reduceMotion.matches || Math.abs(to - from) < .5) { setSlide(to); return done(); }
     const t0 = performance.now();
-    const tick = now => { const t = Math.min(1, (now - t0) / ms), e = t < .5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2; setSlide(from + (to - from) * e); t < 1 ? requestAnimationFrame(tick) : done(); };
+    const tick = now => { if (gen !== slideGen) return done(); const t = Math.min(1, (now - t0) / ms), e = t < .5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2; setSlide(from + (to - from) * e); t < 1 ? requestAnimationFrame(tick) : done(); };
     requestAnimationFrame(tick);
   });
 }
@@ -3284,24 +3433,38 @@ addEventListener('mousemove', e => {
   if (!want && edgeTimer) { clearTimeout(edgeTimer); edgeTimer = null; }
 });
 // drag or swipe sideways to move, and it snaps to the next room or stop
+// the scene follows the finger from the moment it starts moving (no jump), at most once per frame,
+// and lands on whole screen pixels so the pencil grain doesn't shimmer
 let drag = null, dragged = false;
 stage.addEventListener('pointerdown', e => {
-  if (moving || zoomed || zooming || e.button > 0 || e.target.closest('.screen, .canvas-view, .teo-bubbles')) return;
-  drag = { x: e.clientX, y: e.clientY, id: e.pointerId, vb: vb.slice(), slide, on: false };
+  if (moving || zoomed || zooming || e.button > 0 || !e.isPrimary || e.target.closest('.screen, .canvas-view, .teo-bubbles')) return;
+  drag = { x: e.clientX, y: e.clientY, x0: e.clientX, id: e.pointerId, vb: vb.slice(), slide, on: false, raf: 0, dx: 0 };
 });
+function dragFrame() {
+  const d = drag; if (!d) return; d.raf = 0;
+  const r = stage.getBoundingClientRect(), k = phone.matches ? d.vb[2] / r.width : Math.max(d.vb[2] / r.width, d.vb[3] / r.height);
+  const px = k / (devicePixelRatio || 1), snap = v => Math.round(v / px) * px;
+  if (!phone.matches && placeIdx < 2) setSlide(Math.max(0, Math.min(SLIDE_MAX, snap(d.slide - d.dx * k))));
+  else setVB([snap(d.vb[0] - d.dx * k), d.vb[1], d.vb[2], d.vb[3]]);
+}
 stage.addEventListener('pointermove', e => {
   if (!drag || e.pointerId !== drag.id) return;
   const dx = e.clientX - drag.x, dy = e.clientY - drag.y;
-  if (!drag.on) { if (Math.abs(dx) < 12 || Math.abs(dx) < Math.abs(dy)) return; drag.on = true; try { stage.setPointerCapture(e.pointerId); } catch (err) { } }
-  const r = stage.getBoundingClientRect(), k = phone.matches ? drag.vb[2] / r.width : Math.max(drag.vb[2] / r.width, drag.vb[3] / r.height);
-  if (!phone.matches && placeIdx < 2) setSlide(Math.max(0, Math.min(SLIDE_MAX, drag.slide - dx * k)));
-  else setVB([drag.vb[0] - dx * k, drag.vb[1], drag.vb[2], drag.vb[3]]);
+  if (!drag.on) {
+    if (Math.abs(dx) < 10 || Math.abs(dx) < Math.abs(dy)) return;
+    // start from where the camera is now (it may still be settling) and from where the finger is now
+    drag.on = true; vbGen++; slideGen++; drag.vb = vb.slice(); drag.slide = slide; drag.x = e.clientX;
+    try { stage.setPointerCapture(e.pointerId); } catch (err) { }
+  }
+  drag.dx = e.clientX - drag.x;
+  if (!drag.raf) drag.raf = requestAnimationFrame(dragFrame);
 });
 function endDrag(e) {
   if (!drag || e.pointerId !== drag.id) return;
-  const d = drag; drag = null; if (!d.on) return;
+  const d = drag; drag = null; if (d.raf) cancelAnimationFrame(d.raf); if (!d.on) return;
   dragged = true; setTimeout(() => { dragged = false; }, 60);
-  const dir = Math.abs(e.clientX - d.x) > 50 ? (e.clientX < d.x ? 1 : -1) : 0, cur = phone.matches ? stopIdx : placeIdx, max = placeIdx === 2 ? 2 : phone.matches ? STOPS.length - 1 : PLACES.length - 1;
+  // a cancelled touch (the browser took over) just settles back
+  const dir = e.type !== 'pointercancel' && Math.abs(e.clientX - d.x0) > 50 ? (e.clientX < d.x0 ? 1 : -1) : 0, cur = phone.matches ? stopIdx : placeIdx, max = placeIdx === 2 ? 2 : phone.matches ? STOPS.length - 1 : PLACES.length - 1;
   if (dir && cur + dir >= 0 && cur + dir <= max) stepBy(dir); else { animVB(homeVB(), 300); animSlide(homeSlide(), 300); }
 }
 stage.addEventListener('pointerup', endDrag); stage.addEventListener('pointercancel', endDrag);
