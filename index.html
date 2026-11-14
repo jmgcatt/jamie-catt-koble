@@ -6,7 +6,7 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=La+Belle+Aurore&family=Zen+Maru+Gothic:wght@400;500;700&display=swap">
 <style>
-:root{--modal-w:min(1000px,calc(100vw - 32px));--modal-h:min(90vh,1040px)}
+:root{--hline:url("data:image/svg+xml,%3Csvg%20xmlns%3D%27http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%27%20viewBox%3D%270%200%20400%208%27%20preserveAspectRatio%3D%27none%27%3E%3Cpath%20d%3D%27M1%2C4%20C40%2C2.6%2090%2C5.2%20140%2C3.8%20S240%2C2.4%20290%2C4.4%20S370%2C5%20399%2C3.2%27%20fill%3D%27none%27%20stroke%3D%27%2376614f%27%20stroke-width%3D%271.5%27%20stroke-linecap%3D%27round%27%20opacity%3D%27.55%27%20vector-effect%3D%27non-scaling-stroke%27%2F%3E%3C%2Fsvg%3E");--hline2:url("data:image/svg+xml,%3Csvg%20xmlns%3D%27http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%27%20viewBox%3D%270%200%20400%208%27%20preserveAspectRatio%3D%27none%27%3E%3Cpath%20d%3D%27M1%2C3.4%20C50%2C5%20110%2C2.8%20170%2C4.2%20S270%2C5.4%20330%2C3.4%20S385%2C2.8%20399%2C4.6%27%20fill%3D%27none%27%20stroke%3D%27%2376614f%27%20stroke-width%3D%271.5%27%20stroke-linecap%3D%27round%27%20opacity%3D%27.55%27%20vector-effect%3D%27non-scaling-stroke%27%2F%3E%3C%2Fsvg%3E");--modal-w:min(1000px,calc(100vw - 32px));--modal-h:min(90vh,1040px)}
 /* Layout: one pencil-drawn cutaway room on cream paper fills the screen; quiet chrome sits in the margins; reading happens on a paper sheet that slides in from the right. */
 :root{
   --paper:#fbf6ec; --paper-2:#f3e9d6; --ink:#4a3a2e; --ink-soft:#76614f; --link:#7a2633; --brown:#9b7352;
@@ -61,7 +61,7 @@ button{font:inherit;color:inherit}
 .stub:nth-child(odd){transform:rotate(-.7deg)}
 .stub:nth-child(even){transform:rotate(.6deg)}
 .stub{-webkit-mask:radial-gradient(circle 8px at left center,#0000 7.5px,#000 8px) left/51% 100% no-repeat,radial-gradient(circle 8px at right center,#0000 7.5px,#000 8px) right/51% 100% no-repeat;mask:radial-gradient(circle 8px at left center,#0000 7.5px,#000 8px) left/51% 100% no-repeat,radial-gradient(circle 8px at right center,#0000 7.5px,#000 8px) right/51% 100% no-repeat}
-.stub-top{display:flex;justify-content:space-between;align-items:baseline;padding-bottom:6px;border-bottom:2px dashed rgba(74,58,46,.3)}
+.stub-top{display:flex;justify-content:space-between;align-items:baseline;padding-bottom:8px;background:var(--hline) left bottom/100% 7px no-repeat}
 .stub-top b{font-family:var(--f-hand);font-size:20px;color:var(--persimmon);font-variant-numeric:tabular-nums}
 .stub-top span{font-size:11.5px;letter-spacing:.12em;text-transform:uppercase;color:var(--ink-soft)}
 .stub-q{margin:8px 0 4px;font-family:var(--f-hand);font-size:16.5px;line-height:1.25}
@@ -167,7 +167,7 @@ body.playing .notes .note:nth-child(2){animation-delay:-1.8s}
 #laptop.ready .screen-on{opacity:1}
 .screen{position:absolute;z-index:6;display:flex;flex-direction:column;overflow:hidden;background:#fdf6e6;border-radius:3px;animation:screenIn .5s ease}
 @keyframes screenIn{from{opacity:0}to{opacity:1}}
-.screen-bar{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:center;gap:8px 12px;padding:10px 14px;border-bottom:1.5px dashed rgba(74,58,46,.25)}
+.screen-bar{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:center;gap:8px 12px;padding:10px 14px;background:var(--hline2) left bottom/100% 7px no-repeat}
 .screen-bar .seg button{font-size:16px;padding:3px 10px}
 .screen-bar h2{margin:0;font-family:var(--f-title);font-weight:400;font-size:26px;line-height:1.2;text-transform:lowercase;filter:url(#ink)}
 .screen .cards{flex:1;max-height:none;overflow-y:auto;grid-template-columns:repeat(3,minmax(0,1fr));padding:14px}
@@ -183,7 +183,7 @@ body.playing .notes .note:nth-child(2){animation-delay:-1.8s}
 .cv-open svg,.cv-open img{display:block;max-width:100%;max-height:100%;width:100%;height:auto;object-fit:contain}
 .art img{display:block;width:100%;height:auto}
 .cv-empty{margin:0;padding:12px;text-align:center;font-family:var(--f-hand);font-size:20px;line-height:1.3;color:var(--ink-soft)}
-.cv-bar{display:flex;align-items:center;justify-content:space-between;gap:8px;padding:6px 12px;border-top:1.5px dashed rgba(74,58,46,.25)}
+.cv-bar{display:flex;align-items:center;justify-content:space-between;gap:8px;padding:6px 12px;background:var(--hline) left top/100% 7px no-repeat}
 .cv-cap{flex:1;min-width:0;margin:0;text-align:center;font-size:13px;line-height:1.35;color:var(--ink-soft)}
 .cv-cap b{display:block;font-family:var(--f-title);font-weight:400;font-size:23px;color:var(--ink)}
 .cv-arrow{width:32px;height:32px;flex:none;background:none;border:1.5px solid var(--ink);border-radius:50%;font-family:var(--f-hand);font-size:20px;line-height:1}
@@ -307,7 +307,7 @@ body.zoomed .edge-tab,.edge-tab[hidden]{display:none}
 .ticket-wrap{position:fixed;inset:0;z-index:9;width:min(440px,calc(100vw - 32px));height:fit-content;margin:auto;animation:pop .35s cubic-bezier(.2,.8,.2,1)}
 .ticket{position:relative;background:#fffaf0;border-radius:var(--wobble);padding:20px 28px 22px}
 .ticket{-webkit-mask:radial-gradient(circle 10px at left center,#0000 9.5px,#000 10px) left/51% 100% no-repeat,radial-gradient(circle 10px at right center,#0000 9.5px,#000 10px) right/51% 100% no-repeat;mask:radial-gradient(circle 10px at left center,#0000 9.5px,#000 10px) left/51% 100% no-repeat,radial-gradient(circle 10px at right center,#0000 9.5px,#000 10px) right/51% 100% no-repeat}
-.t-top{display:flex;justify-content:space-between;align-items:baseline;border-bottom:2px dashed rgba(74,58,46,.3);padding-bottom:8px}
+.t-top{display:flex;justify-content:space-between;align-items:baseline;background:var(--hline2) left bottom/100% 7px no-repeat;padding-bottom:10px}
 .t-no{font-family:var(--f-hand);font-weight:700;font-size:30px;color:var(--persimmon);font-variant-numeric:tabular-nums}
 .t-date{font-size:12px;letter-spacing:.12em;text-transform:uppercase;color:var(--ink-soft)}
 .t-kick{margin:12px 0 6px;font-size:11.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--ink-soft)}
@@ -441,7 +441,7 @@ body.playing .turntable .arm{transform:none}
 .sheet.menu .dish{width:min(200px,42vw);box-sizing:border-box;padding:18px 16px 20px;gap:8px;background:#fffaf0;border-radius:var(--wobble);box-shadow:inset 0 0 0 6px #fffaf0,inset 0 0 0 7.5px rgba(201,102,61,.4)}
 .sheet.menu .dish:nth-child(odd){transform:rotate(-1.2deg)}
 .sheet.menu .dish:nth-child(3n){transform:rotate(.8deg)}
-.sheet.menu .dish b{margin:0 6px;padding-top:10px;border-top:1.5px dashed rgba(74,58,46,.28)}
+.sheet.menu .dish b{margin:0 6px;padding-top:12px;background:var(--hline) left top/100% 7px no-repeat}
 .sheet.menu .empty-note{padding:18px 24px;background:#fffaf0;border-radius:var(--wobble);text-align:center}
 .sheet.book{background:none;border:0;filter:none;overflow:hidden}
 .sheet.book .sheet-bar{position:absolute;top:30px;right:38px;left:auto;bottom:auto;z-index:6;padding:0;background:none;border:0;transform:none}
@@ -524,7 +524,7 @@ body.playing .turntable .arm{transform:none}
 .book span{font-size:13.5px;color:var(--ink-soft)}
 .book .book-tools{display:flex;gap:14px;margin-top:4px}
 .empty-note{margin:0;color:var(--ink-soft)}
-.read-form{margin-top:6px;padding-top:18px;border-top:1.5px dashed rgba(74,58,46,.3)}
+.read-form{margin-top:6px;padding-top:18px;background:var(--hline2) left top/100% 7px no-repeat}
 .rf-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;margin-bottom:10px}
 .rf-grid input,.rf-grid select{min-width:0;font:inherit;font-size:14.5px;padding:7px 9px;background:#fff;border:1.5px solid var(--ink);border-radius:8px}
 .exp b{font-weight:700}
@@ -573,7 +573,7 @@ body.playing .turntable .arm{transform:none}
 .lede{margin:12px 0 22px;font-size:18.5px;line-height:1.55}
 .art{margin:0 0 22px;border:2px solid var(--ink);border-radius:var(--wobble);overflow:hidden;background:#fffdf7}
 .art svg{display:block;width:100%;height:auto;aspect-ratio:2/1}
-.meta{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px 20px;margin:0 0 30px;padding:14px 0;border-block:1.5px dashed rgba(74,58,46,.3)}
+.meta{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px 20px;margin:0 0 30px;padding:16px 0;background:var(--hline) left top/100% 7px no-repeat,var(--hline2) left bottom/100% 7px no-repeat}
 .meta dt{font-size:11.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--ink-soft)}
 .meta dd{margin:2px 0 0;font-size:15px}
 .sheet h3{margin:0 0 8px;font-family:var(--f-title);font-weight:400;font-size:28px;line-height:1.2;filter:url(#ink)}
@@ -670,8 +670,16 @@ blockquote{margin:0 0 28px;padding:0;font-family:var(--f-hand);font-size:30px;li
   .canvas-view{position:fixed!important;inset:0!important;width:auto!important;height:auto!important;z-index:18;border-radius:0;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
   .canvas-view .fs-x{display:grid;position:absolute;top:calc(8px + env(safe-area-inset-top,0px));right:8px;z-index:2}
   .cv-art{padding:52px 16px 16px}
-  .tdrawer{top:auto;bottom:0;left:0;right:0;width:100%;height:auto;box-sizing:border-box;padding-left:max(42px,env(safe-area-inset-left,0px));padding-right:max(18px,env(safe-area-inset-right,0px));max-height:85vh;max-height:85dvh;transform:none;border-bottom:0;border-radius:18px 18px 0 0;padding-bottom:calc(26px + env(safe-area-inset-bottom,0px));animation:sheetUp .35s cubic-bezier(.2,.8,.2,1)}
+  .tdrawer{border:0!important;top:auto;bottom:0;left:0;right:0;width:100%;height:auto;box-sizing:border-box;padding-left:max(42px,env(safe-area-inset-left,0px));padding-right:max(18px,env(safe-area-inset-right,0px));max-height:85vh;max-height:85dvh;transform:none;border-bottom:0;border-radius:18px 18px 0 0;padding-bottom:calc(26px + env(safe-area-inset-bottom,0px));animation:sheetUp .35s cubic-bezier(.2,.8,.2,1)}
   .ticket-wrap{max-height:calc(100vh - 32px);max-height:calc(100dvh - 32px);overflow-y:auto}
+  .menu-list{position:fixed;top:auto;left:0;right:0;bottom:0;width:auto;height:80vh;height:80dvh;z-index:22;box-sizing:border-box;align-content:start;overflow-y:auto;
+    padding:34px max(18px,env(safe-area-inset-right,0px)) calc(26px + env(safe-area-inset-bottom,0px)) 46px;
+    background:#fffdf6;background-image:linear-gradient(90deg,transparent 30px,#e9aa9c 30px,#e9aa9c 31.5px,transparent 31.5px),repeating-linear-gradient(180deg,transparent 0 47px,#d6e4ec 47px 48px);background-position:0 0,0 34px;background-attachment:local;
+    border:0;border-radius:18px 18px 0 0;box-shadow:none;transform:none;filter:none;animation:sheetUp .35s cubic-bezier(.2,.8,.2,1)}
+  .menu-list::before{display:none}
+  .menu-list li{height:48px;padding-bottom:6px}
+  .menu-list .link{font-size:22px}
+  .top:has(.menu-list:not([hidden])){z-index:23}
 }
 @media (max-width:1100px) and (orientation:portrait){
   /* the house fills the whole screen; the bar floats over it, with a soft dark fade at the top and bottom so the white controls read */
@@ -681,7 +689,7 @@ blockquote{margin:0 0 28px;padding:0;font-family:var(--f-hand);font-size:30px;li
   .scroller::after{bottom:0;height:calc(150px + env(safe-area-inset-bottom,0px));background:linear-gradient(rgba(34,24,18,0),rgba(34,24,18,.32) 45%,rgba(34,24,18,.66))}
   .navbar{position:fixed;inset:auto 0 0;z-index:6;display:grid;gap:6px;padding:8px max(12px,env(safe-area-inset-right,0px)) calc(8px + env(safe-area-inset-bottom,0px)) max(12px,env(safe-area-inset-left,0px));background:none;border:0;color:#fffaf0}
   .top,.top .mark h1,.top .mark p{color:#fffaf0}
-  .navbar .nav-name{color:#fffaf0}
+  .navbar .nav-name{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
   .navbar .dots i{border-color:#fffaf0}
   .navbar .dots i.on{background:#fffaf0}
   .menu-btn,.stub-btn,.navbar .sound{background:none;border-color:#fffaf0;color:#fffaf0}
@@ -1915,7 +1923,12 @@ document.addEventListener('click', e => {
   if (o) openProject(+o.dataset.open);
 });
 const menuBtn = $('#menuBtn'), menuList = $('#menuList');
-function setMenu(open) { menuList.hidden = !open; menuBtn.setAttribute('aria-expanded', open); if (open) menuList.querySelector('button').focus({ preventScroll: true }); }
+function setMenu(open) {
+  menuList.hidden = !open; menuBtn.setAttribute('aria-expanded', open);
+  // on phones the menu is a bottom sheet over a soft scrim, like the ephemera drawer
+  if (mobile.matches && $('#tDrawer').hidden) $('#tdScrim').hidden = !open;
+  if (open) menuList.querySelector('button').focus({ preventScroll: true });
+}
 menuBtn.onclick = e => { e.stopPropagation(); setMenu(menuList.hidden); };
 document.addEventListener('click', e => { if (!menuList.hidden && !e.target.closest('.menu')) setMenu(false); });
 $('#navWork').onclick = () => { setMenu(false); openWork(); }; $('#navTiny').onclick = () => { setMenu(false); openTiny(); }; $('#navAbout').onclick = () => { setMenu(false); openAbout(); };
@@ -3048,7 +3061,7 @@ let drawerReturn = null;
 function openDrawer() { drawerReturn = document.activeElement; renderDrawer(); $('#tdScrim').hidden = false; $('#tDrawer').hidden = false; stubBtn.setAttribute('aria-expanded', 'true'); app.inert = true; $('#tdClose').focus({ preventScroll: true }); }
 function closeDrawer() { $('#tdScrim').hidden = true; $('#tDrawer').hidden = true; stubBtn.setAttribute('aria-expanded', 'false'); app.inert = false; if (drawerReturn && drawerReturn.isConnected) drawerReturn.focus({ preventScroll: true }); }
 stubBtn.onclick = e => { e.stopPropagation(); openDrawer(); };
-$('#tdClose').onclick = closeDrawer; $('#tdScrim').onclick = closeDrawer;
+$('#tdClose').onclick = closeDrawer; $('#tdScrim').onclick = () => { if (!menuList.hidden) setMenu(false); else closeDrawer(); };
 $('#tDrawer').addEventListener('keydown', e => {
   if (e.key !== 'Tab') return;
   const f = [...$('#tDrawer').querySelectorAll('button')], first = f[0], last = f[f.length - 1];
@@ -3628,11 +3641,39 @@ function nearestStop(p) {
   STOPS.forEach((st, i) => { if (st.place === p && (best < 0 || Math.abs(st.cx - c) < Math.abs(STOPS[best].cx - c))) best = i; });
   return Math.max(0, best);
 }
+// the front door's threshold, in the rooms' own drawing coordinates
+function doorSpot() {
+  const el = document.getElementById('door'), b = el.getBBox(), m = rooms.getScreenCTM().inverse().multiply(el.getScreenCTM());
+  const p = svg.createSVGPoint(); p.x = b.x + b.width / 2; p.y = b.y + b.height; const q = p.matrixTransform(m);
+  return { x: q.x, y: q.y - 4 };
+}
+function fadeTeo(to, ms) {
+  const from = +getComputedStyle(teo).opacity;
+  teo.style.transition = 'none';
+  return tween(ms, t => { teo.style.opacity = from + (to - from) * t; }).then(() => { teo.style.opacity = to; teo.style.transition = ''; });
+}
+// stepping through the doorway: a little smaller as he goes into it, fading out (or the reverse coming in)
+async function throughDoor(coming, d) {
+  setPose('stand'); teo.classList.add('walking');
+  const y0 = coming ? d.y - 6 : d.y + 10, y1 = coming ? d.y + 10 : d.y - 6, s0 = coming ? .86 : 1, s1 = coming ? 1 : .86;
+  if (coming) { teo.style.opacity = 0; }
+  const from = +getComputedStyle(teo).opacity;
+  teo.style.transition = 'none';
+  await tween(650, t => { TEO.y = y0 + (y1 - y0) * t; TEO.s = s0 + (s1 - s0) * t; teo.style.opacity = coming ? t : from * (1 - t); placeTeo(); });
+  teo.style.opacity = coming ? 1 : 0; teo.style.transition = ''; TEO.s = 1; if (!coming) placeTeo();
+  teo.classList.remove('walking');
+}
 function teoOut() {
   TEO.outside = true; document.body.classList.add('outside');
   (async () => {
     await waitIdle(); TEO.busy = true;
-    try { await leaveCave(); dropToy(); await walkTo(1100, 664, 170); teo.classList.add('away'); await nap(300); world.insertBefore(toyEl, $('#night')); world.insertBefore(teo, $('#night')); TEO.x = 1236; TEO.y = 754; placeTeo(); teo.classList.remove('away'); await walkTo(YARD[0], YARD[1], 140); TEO.f = 1; setPose('sit'); teoSay('Teo follows you outside.'); }
+    try {
+      await leaveCave(); dropToy();
+      // to the front door and out through it, then round the house to the yard
+      const d = doorSpot(); await walkTo(d.x, d.y + 10, 170); await throughDoor(false, d);
+      await nap(450); world.insertBefore(toyEl, $('#night')); world.insertBefore(teo, $('#night'));
+      TEO.x = 1268; TEO.y = 754; TEO.f = -1; TEO.s = 1; placeTeo(); await fadeTeo(1, 350); await walkTo(YARD[0], YARD[1], 140); TEO.f = 1; setPose('sit'); teoSay('Teo follows you outside.');
+    }
     finally { TEO.busy = false; }
   })();
 }
@@ -3640,7 +3681,14 @@ function teoIn() {
   TEO.outside = false; document.body.classList.remove('outside');
   (async () => {
     await waitIdle(); TEO.busy = true;
-    try { dropToy(); setToy(780, 680); teo.parentNode.insertBefore(toyEl, teo); await walkTo(1236, 754, 170); teo.classList.add('away'); await nap(300); rooms.insertBefore(teo, $('#bedFront')); rooms.insertBefore(toyEl, teo); TEO.x = 1100; TEO.y = 664; placeTeo(); teo.classList.remove('away'); await walkTo(HOME[0], HOME[1], 140); TEO.f = 1; placeTeo(); setPose('lie'); }
+    try {
+      dropToy(); setToy(780, 680); teo.parentNode.insertBefore(toyEl, teo);
+      // round the house to the front door, and in through it
+      await walkTo(1268, 754, 170); await fadeTeo(0, 300); await nap(450);
+      rooms.insertBefore(teo, $('#bedFront')); rooms.insertBefore(toyEl, teo);
+      const d = doorSpot(); TEO.x = d.x; TEO.y = d.y; TEO.f = 1; placeTeo(); await throughDoor(true, d);
+      await walkTo(HOME[0], HOME[1], 140); TEO.f = 1; placeTeo(); setPose('lie');
+    }
     finally { TEO.busy = false; }
   })();
 }
