@@ -593,8 +593,6 @@ blockquote{margin:0 0 28px;padding:0;font-family:var(--f-hand);font-size:30px;li
 .nav-left{justify-self:start}
 .nav-right{justify-self:end}
 .nav-pager{display:flex;align-items:center;gap:4px}
-.nav-btn{display:grid;place-items:center;width:44px;height:44px;padding:0;background:none;border:1.5px solid var(--ink);border-radius:50%;font-family:var(--f-hand);font-size:28px;line-height:1;color:var(--ink)}
-.nav-btn:disabled{opacity:.3}
 .nav-name{min-width:84px;text-align:center;font-family:var(--f-hand);font-size:20px;line-height:1.1}
 @supports (height:100dvh){
   :root{--modal-h:min(90dvh,1040px)}
@@ -627,6 +625,18 @@ blockquote{margin:0 0 28px;padding:0;font-family:var(--f-hand);font-size:30px;li
   .jbook{padding:max(12px,env(safe-area-inset-top,0px)) 16px max(14px,env(safe-area-inset-bottom,0px)) 24px;border-radius:0;border:0}
   .sheet .jb-flow h2{font-size:38px}
   .post.jb-flow{font-size:16px;line-height:1.7}
+  .sheet.book{background:var(--paper)}
+  .sheet.book .sheet-bar{left:max(10px,env(safe-area-inset-left,0px));transform:none}
+  .jb-no-r{left:auto;right:4px;bottom:calc(-26px - max(14px,env(safe-area-inset-bottom,0px)));transform:translateY(50%);font-size:19px;color:var(--ink)}
+  /* the menu on phones: one dish card on top of a little stack; swipe it away and it tucks back in at the bottom */
+  .sheet.menu .dish-grid.stack{display:grid;justify-content:center;gap:0;padding:24px 0 40px}
+  .sheet.menu .dish-grid.stack .dish{grid-area:1/1;width:min(250px,68vw);touch-action:pan-y;user-select:none;-webkit-user-select:none;transition:transform .5s cubic-bezier(.2,.8,.2,1),opacity .35s ease}
+  .sheet.menu .dish-grid.stack .dish img{-webkit-user-drag:none;pointer-events:none}
+  .sheet.menu .dish-grid.stack .dish[data-p="0"]{z-index:5;transform:rotate(-1deg)}
+  .sheet.menu .dish-grid.stack .dish[data-p="1"]{z-index:4;transform:translate(7px,9px) rotate(3deg)}
+  .sheet.menu .dish-grid.stack .dish[data-p="2"]{z-index:3;transform:translate(-7px,15px) rotate(-4deg)}
+  .sheet.menu .dish-grid.stack .dish[data-p="far"]{z-index:1;opacity:0;transform:translate(0,18px) rotate(1deg)}
+  .sheet.menu .dish-grid.stack .dish.held{transition:none}
   .sheet-body{padding-left:max(40px,env(safe-area-inset-left,0px));padding-right:max(18px,env(safe-area-inset-right,0px));padding-bottom:calc(28px + env(safe-area-inset-bottom,0px))}
   .screen,.canvas-view{position:fixed!important;inset:0!important;width:auto!important;height:auto!important;z-index:18;border-radius:0;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
   .fs-x{display:grid;position:static;margin-left:auto}
@@ -794,7 +804,7 @@ blockquote{margin:0 0 28px;padding:0;font-family:var(--f-hand);font-size:30px;li
     <div class="dots" id="dots" aria-hidden="true"></div>
     <div class="nav-row">
       <div class="nav-left" id="navLeft"></div>
-      <div class="nav-pager"><button class="nav-btn" id="navPrev" type="button" aria-label="Move left">&lsaquo;</button><span class="nav-name" id="navName" aria-live="polite"></span><button class="nav-btn" id="navNext" type="button" aria-label="Move right">&rsaquo;</button></div>
+      <div class="nav-pager"><span class="nav-name" id="navName" aria-live="polite"></span></div>
       <div class="nav-right" id="navRight"></div>
     </div>
   </nav>
@@ -2240,9 +2250,61 @@ function openWeekly(k) {
     <button class="btn-ink" type="submit">${w.button}</button><p class="cv-msg" id="wfMsg"></p></form>` : ''}`, false, null);
   // the menu has no index card behind it: each dish is its own menu card in the middle of the screen
   sheet.classList.toggle('menu', k === 'menu');
+  stackDishes();
 }
+// phones: the dish cards sit in one stack. Swipe the top card either way and it slides off, then tucks back in
+// at the bottom, so you can keep going round and round
+const dishStackMQ = matchMedia('(max-width:760px)');
+let dishOrder = [];
+function stackDishes() {
+  const g = sheet.classList.contains('menu') && $('#weeklyList .dish-grid');
+  if (!g) { dishOrder = []; return; }
+  const cards = [...g.children], on = dishStackMQ.matches && cards.length > 1;
+  g.classList.toggle('stack', on);
+  dishOrder = on ? cards : [];
+  cards.forEach(c => { c.style.transform = ''; c.classList.remove('held'); if (!on) delete c.dataset.p; });
+  placeDishes();
+}
+function placeDishes() {
+  dishOrder.forEach((c, i) => { c.dataset.p = i < 3 ? i : 'far'; c.setAttribute('aria-hidden', i ? 'true' : 'false'); c.inert = i > 0; });
+}
+function throwDish(dir, dy = 0) {
+  const c = dishOrder[0]; if (!c || c.dataset.flying) return;
+  c.dataset.flying = '1'; c.classList.remove('held');
+  c.style.transform = `translate(${dir * 120}vw,${dy}px) rotate(${dir * 22}deg)`;
+  setTimeout(() => {
+    // to the bottom of the stack: it slides back in underneath the others
+    dishOrder.push(dishOrder.shift()); placeDishes();
+    c.style.transform = ''; delete c.dataset.flying;
+  }, 260);
+}
+let dishDrag = null, dishDragged = false;
+sheet.addEventListener('pointerdown', e => {
+  const c = e.target.closest('.dish-grid.stack .dish');
+  if (!c || c !== dishOrder[0] || c.dataset.flying || !e.isPrimary || e.button > 0) return;
+  dishDrag = { c, x: e.clientX, y: e.clientY, id: e.pointerId, on: false, vx: 0, lx: e.clientX, lt: performance.now() };
+});
+sheet.addEventListener('pointermove', e => {
+  const d = dishDrag; if (!d || e.pointerId !== d.id) return;
+  const dx = e.clientX - d.x, dy = e.clientY - d.y, now = performance.now();
+  if (!d.on) { if (Math.abs(dx) < 8 || Math.abs(dx) < Math.abs(dy)) return; d.on = true; d.c.classList.add('held'); try { d.c.setPointerCapture(e.pointerId); } catch (err) { } }
+  if (now > d.lt) { d.vx = .7 * d.vx + .3 * (e.clientX - d.lx) / (now - d.lt); d.lx = e.clientX; d.lt = now; }
+  d.c.style.transform = `translate(${dx}px,${dy * .25}px) rotate(${-1 + dx * .06}deg)`;
+});
+function dishDragEnd(e) {
+  const d = dishDrag; if (!d || e.pointerId !== d.id) return; dishDrag = null;
+  if (!d.on) return;
+  dishDragged = true; setTimeout(() => { dishDragged = false; }, 60);
+  const dx = e.clientX - d.x;
+  if (e.type !== 'pointercancel' && (Math.abs(dx) > 70 || Math.abs(d.vx) > .5)) throwDish(Math.sign(Math.abs(dx) > 70 ? dx : d.vx), (e.clientY - d.y) * .25);
+  else { d.c.classList.remove('held'); d.c.style.transform = ''; }
+}
+sheet.addEventListener('pointerup', dishDragEnd); sheet.addEventListener('pointercancel', dishDragEnd);
+sheet.addEventListener('click', e => { if (dishDragged && e.target.closest('.dish-grid.stack')) { e.preventDefault(); e.stopPropagation(); } }, true);
+sheet.addEventListener('keydown', e => { if (dishOrder.length && (e.key === 'ArrowLeft' || e.key === 'ArrowRight')) { e.preventDefault(); throwDish(e.key === 'ArrowRight' ? 1 : -1); } });
+dishStackMQ.addEventListener('change', stackDishes);
 sheet.addEventListener('click', e => { if ((sheet.classList.contains('menu') || sheet.classList.contains('player')) && (e.target === sheet || e.target === body || e.target.id === 'weeklyList' || e.target.classList.contains('dish-grid') || e.target.classList.contains('player-deck') || e.target.classList.contains('crate'))) closeSheet(); });
-function refreshWeekly() { const el = $('#weeklyList'); if (weeklyOpen && el && sheet.classList.contains('open')) el.innerHTML = weeklyList(weeklyOpen); }
+function refreshWeekly() { const el = $('#weeklyList'); if (weeklyOpen && el && sheet.classList.contains('open')) { el.innerHTML = weeklyList(weeklyOpen); stackDishes(); } }
 async function initWeekly() {
   if (staticSite || !window.claude || !window.claude.use) { if (!staticSite) Object.values(WEEKLY).forEach(w => { w.state = 'error'; }); return; }
   const timer = setTimeout(() => { Object.values(WEEKLY).forEach(w => { if (w.state === 'loading') w.state = 'error'; }); refreshWeekly(); }, 10000);
@@ -3391,7 +3453,6 @@ function updateNav() {
   if (!STOPS.length) return;
   [...$('#dots').children].forEach((d, i) => d.classList.toggle('on', i === stopIdx));
   $('#navName').textContent = placeIdx === 2 ? 'yard' : STOPS[stopIdx].name;
-  $('#navPrev').disabled = placeIdx !== 2 && stopIdx === 0; $('#navNext').disabled = placeIdx === 2 || stopIdx === STOPS.length - 1;
 }
 // i is a room on wider screens and a stop on portrait phones
 async function moveTo(i, ms) {
@@ -3423,7 +3484,6 @@ async function goInside() {
   sparkleInView(); say('Back inside the house.');
 }
 $('#goOut').onclick = () => stepBy(1); $('#goIn').onclick = () => stepBy(-1);
-$('#navPrev').onclick = () => stepBy(-1); $('#navNext').onclick = () => stepBy(1);
 addEventListener('mousemove', e => {
   const low = !phone.matches && e.clientY > 90;
   $('#goOut').classList.toggle('near', low && e.clientX > innerWidth - 140); $('#goIn').classList.toggle('near', low && e.clientX < 140);
