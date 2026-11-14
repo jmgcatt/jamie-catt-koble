@@ -413,6 +413,21 @@ body.playing .turntable .arm{transform:none}
 @media (hover:none){.sleeve{transform:none}.crate{flex-wrap:wrap;gap:16px}.sleeve,.sleeve svg{width:min(110px,27vw);height:auto}}
 @media (prefers-reduced-motion:reduce){.turntable .rec{animation:none}.sleeve{transition:none}}
 .sheet.menu{background:transparent;border:0;filter:none}
+/* the reading stack: the books stand up in a row over the house, angled like the record sleeves */
+.sheet.shelf{background:transparent;border:0;filter:none}
+.sheet.shelf .sheet-bar{display:none}
+.sheet.shelf .sheet-body{min-height:100%;box-sizing:border-box;display:flex;flex-direction:column;align-items:center;justify-content:center;padding-top:0}
+.sheet.shelf #readingLists{width:100%}
+.shelf-row{list-style:none;display:flex;flex-wrap:wrap;justify-content:center;align-items:flex-end;gap:34px;margin:0;padding:24px 0 30px}
+.shelf-row li{position:relative;display:grid;justify-items:center;gap:8px}
+.shelf-row li:hover,.shelf-row li:focus-within{z-index:2}
+.shelf-book{display:block;width:210px;transform:perspective(900px) rotateY(24deg);transform-origin:left center;transition:transform .45s cubic-bezier(.2,.8,.2,1)}
+.shelf-book:hover,.shelf-book:focus-visible{transform:perspective(800px) rotateY(0) translateY(-10px) scale(1.05)}
+.shelf-book svg{display:block;width:100%;height:auto;overflow:visible}
+.shelf-note{max-width:200px;margin:0;padding:8px 12px;background:#fffaf0;border-radius:var(--wobble);font-size:13.5px;line-height:1.45;text-align:center;color:var(--ink-soft)}
+.sheet.shelf .empty-note{padding:18px 24px;background:#fffaf0;border-radius:var(--wobble);text-align:center}
+@media (hover:none){.shelf-book{transform:none;width:min(175px,42vw)}.shelf-row{gap:22px}}
+@media (prefers-reduced-motion:reduce){.shelf-book{transition:none}}
 /* the menu and the record player have no close button: a click anywhere around them closes them (Escape too) */
 .sheet.menu .sheet-bar,.sheet.player .sheet-bar{display:none}
 .sheet.menu .sheet-body{min-height:100%;box-sizing:border-box;display:flex;flex-direction:column;align-items:center;justify-content:center;padding-top:0}
@@ -638,9 +653,8 @@ blockquote{margin:0 0 28px;padding:0;font-family:var(--f-hand);font-size:30px;li
   .sheet.menu .dish-grid.stack .dish[data-p="far"]{z-index:1;opacity:0;transform:translate(0,18px) rotate(1deg)}
   .sheet.menu .dish-grid.stack .dish.held{transition:none}
   .sheet-body{padding-left:max(40px,env(safe-area-inset-left,0px));padding-right:max(18px,env(safe-area-inset-right,0px));padding-bottom:calc(28px + env(safe-area-inset-bottom,0px))}
-  .screen,.canvas-view{position:fixed!important;inset:0!important;width:auto!important;height:auto!important;z-index:18;border-radius:0;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
-  .fs-x{display:grid;position:static;margin-left:auto}
-  .canvas-view .fs-x{position:absolute;top:calc(8px + env(safe-area-inset-top,0px));right:8px;z-index:2}
+  .canvas-view{position:fixed!important;inset:0!important;width:auto!important;height:auto!important;z-index:18;border-radius:0;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+  .canvas-view .fs-x{display:grid;position:absolute;top:calc(8px + env(safe-area-inset-top,0px));right:8px;z-index:2}
   .cv-art{padding:52px 16px 16px}
   .tdrawer{top:auto;bottom:0;left:0;right:0;width:100%;height:auto;box-sizing:border-box;padding-left:max(42px,env(safe-area-inset-left,0px));padding-right:max(18px,env(safe-area-inset-right,0px));max-height:85vh;max-height:85dvh;transform:none;border-bottom:0;border-radius:18px 18px 0 0;padding-bottom:calc(26px + env(safe-area-inset-bottom,0px));animation:sheetUp .35s cubic-bezier(.2,.8,.2,1)}
   .ticket-wrap{max-height:calc(100vh - 32px);max-height:calc(100dvh - 32px);overflow-y:auto}
@@ -649,6 +663,7 @@ blockquote{margin:0 0 28px;padding:0;font-family:var(--f-hand);font-size:30px;li
   .scroller{bottom:calc(92px + env(safe-area-inset-bottom,0px))}
   .navbar{position:fixed;inset:auto 0 0;z-index:6;display:grid;gap:6px;padding:8px max(12px,env(safe-area-inset-right,0px)) calc(8px + env(safe-area-inset-bottom,0px)) max(12px,env(safe-area-inset-left,0px));background:var(--paper);border-top:1.5px solid var(--ink)}
   .edge-tab{display:none!important}
+  .ticket-wrap{inset:12px 0 calc(var(--nav-h,92px) + 10px);max-height:calc(100vh - var(--nav-h,92px) - 22px);max-height:calc(100dvh - var(--nav-h,92px) - 22px);overflow-y:auto;overscroll-behavior:contain}
 }
 @media (max-width:760px){
   .teo-bubbles{flex-wrap:wrap;justify-content:center;width:300px}
@@ -658,15 +673,21 @@ blockquote{margin:0 0 28px;padding:0;font-family:var(--f-hand);font-size:30px;li
   #sndVol{width:60px}
   .link{font-size:19px}
   .hint p{display:none}
-  .cards,.screen .cards{grid-template-columns:minmax(0,1fr)}
+  .cards{grid-template-columns:minmax(0,1fr)}
+  /* the laptop on phones: the desktop screen, a little smaller */
+  .screen{z-index:18}
+  .screen .cards{grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;padding:10px}
+  .screen-bar{padding:6px 10px;gap:4px 8px}
+  .screen-bar .seg button{font-size:13px;padding:2px 7px}
+  .screen .card{padding:5px 5px 7px}
+  .screen .c-t{font-size:15px}
+  .screen-project{padding:10px 14px 6px}
   .rf-grid{grid-template-columns:minmax(0,1fr)}
   .post-grid{grid-template-columns:minmax(0,1fr)}
   .sheet .spin-card{grid-template-columns:84px minmax(0,1fr)}
   .playlists{grid-template-columns:minmax(0,1fr)}
   .disc{width:84px;height:84px}
   .screen-bar h2{font-size:20px}
-  .card{display:grid;grid-template-columns:110px minmax(0,1fr);grid-template-rows:auto auto;column-gap:12px;align-items:center;transform:none!important}
-  .card svg{grid-row:span 2}
   .work-list button{grid-template-columns:110px minmax(0,1fr)}
   .sheet h2{font-size:42px}
   .meta{grid-template-columns:minmax(0,1fr)}
@@ -840,7 +861,7 @@ blockquote{margin:0 0 28px;padding:0;font-family:var(--f-hand);font-size:30px;li
   <ol class="stubs" id="stubs"></ol>
 </aside>
 <div class="sr-only" aria-live="polite" id="live"></div>
-<svg width="0" height="0" style="position:absolute;overflow:hidden" aria-hidden="true"><defs id="artDefs"><filter id="ink" x="-5%" y="-25%" width="110%" height="150%" color-interpolation-filters="sRGB"><feMorphology operator="dilate" radius=".1" result="t"/><feTurbulence type="fractalNoise" baseFrequency=".06" numOctaves="2" seed="2" result="w"/><feDisplacementMap in="t" in2="w" scale="2.2" xChannelSelector="R" yChannelSelector="G" result="d"/><feTurbulence type="fractalNoise" baseFrequency="1.2" numOctaves="1" seed="9" result="g"/><feColorMatrix in="g" type="matrix" values="0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  -2.2 0 0 0 2.1" result="ga"/><feComposite in="d" in2="ga" operator="in"/></filter></defs></svg>
+<svg width="0" height="0" style="position:absolute;overflow:hidden" aria-hidden="true"><defs id="artDefs"><filter id="coverPencil" x="0" y="0" width="100%" height="100%" color-interpolation-filters="sRGB"><feColorMatrix type="saturate" values=".88" result="c"/><feTurbulence type="fractalNoise" baseFrequency=".85" numOctaves="2" seed="4" result="n"/><feColorMatrix in="n" type="matrix" values="0 0 0 0 .99  0 0 0 0 .96  0 0 0 0 .9  -2.2 0 0 0 1.25" result="sp"/><feComposite in="sp" in2="SourceAlpha" operator="in" result="sp2"/><feMerge><feMergeNode in="c"/><feMergeNode in="sp2"/></feMerge></filter><filter id="ink" x="-5%" y="-25%" width="110%" height="150%" color-interpolation-filters="sRGB"><feMorphology operator="dilate" radius=".1" result="t"/><feTurbulence type="fractalNoise" baseFrequency=".06" numOctaves="2" seed="2" result="w"/><feDisplacementMap in="t" in2="w" scale="2.2" xChannelSelector="R" yChannelSelector="G" result="d"/><feTurbulence type="fractalNoise" baseFrequency="1.2" numOctaves="1" seed="9" result="g"/><feColorMatrix in="g" type="matrix" values="0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  -2.2 0 0 0 2.1" result="ga"/><feComposite in="d" in2="ga" operator="in"/></filter></defs></svg>
 
 <script>
 const $ = s => document.querySelector(s);
@@ -1748,7 +1769,7 @@ const sheet = $('#sheet'), scrim = $('#scrim'), app = $('#app'), body = $('#shee
 let lastFocus = null;
 const say = t => { live.textContent = ''; setTimeout(() => live.textContent = t, 30); };
 function openSheet(html, showBack, seg, barTitle) {
-  clearTimeout(sheetLookTimer); sheet.classList.remove('book', 'player', 'menu'); book = null;
+  clearTimeout(sheetLookTimer); sheet.classList.remove('book', 'player', 'menu', 'shelf'); book = null;
   $('#barTitle').innerHTML = barTitle || ''; $('#barTitle').hidden = !barTitle;
   if (!sheet.classList.contains('open')) lastFocus = document.activeElement;
   body.innerHTML = html; sheet.scrollTop = 0;
@@ -1763,7 +1784,7 @@ function closeSheet() {
   readingOpen = false; recordsOpen = false; weeklyOpen = null;
   sheet.classList.remove('open'); scrim.classList.remove('open'); app.inert = false; book = null;
   // the special looks stay on until the fade-out has finished, so the plain lined card never flashes through
-  clearTimeout(sheetLookTimer); sheetLookTimer = setTimeout(() => { if (!sheet.classList.contains('open')) sheet.classList.remove('book', 'player', 'menu'); }, 450);
+  clearTimeout(sheetLookTimer); sheetLookTimer = setTimeout(() => { if (!sheet.classList.contains('open')) sheet.classList.remove('book', 'player', 'menu', 'shelf'); }, 450);
   if (lastFocus && lastFocus.isConnected) lastFocus.focus({ preventScroll: true });
   if (SHEET_ZOOMS.includes(zoomed)) closeZoom();
 }
@@ -2154,7 +2175,36 @@ function bookItem(b) {
   const tools = readEdit ? `<span class="book-tools">${b.status === 'current' ? `<button class="btn-plain" type="button" data-book-finish="${b.id}">Mark finished</button>` : ''}<button class="btn-plain" type="button" data-book-remove="${b.id}">Remove</button></span>` : '';
   return `<li class="book"><b>${esc(b.title || 'Untitled')}</b>${b.author ? `<span>${esc(b.author)}</span>` : ''}${b.reviewUrl ? `<a href="${esc(b.reviewUrl)}" target="_blank" rel="noopener">Read my review</a>` : ''}${tools}</li>`;
 }
+// as a static site the stack is data/books.json (my Reads database in Notion): each book stands up, drawn in pencil
+// around its real cover, and opens its Goodreads page
+let SHELF = [];
+const SHELF_COLORS = ['#7a2633', '#3f6aa0', '#6f8f5a', '#c9663d', '#5a4a6e', '#b8902f'];
+function shelfArt(b) {
+  if (b.image) return `<svg viewBox="22 16 82 128" aria-hidden="true"><use href="#fav-book-back"/><image href="${esc(b.image)}" x="28" y="22" width="64" height="104" preserveAspectRatio="xMidYMid slice" filter="url(#coverPencil)"/><use href="#fav-book-front"/></svg>`;
+  // no cover found: a cloth cover with the title and author written on it
+  const color = SHELF_COLORS[[...(b.title || '')].reduce((h, c) => (h * 31 + c.charCodeAt(0)) >>> 0, 7) % SHELF_COLORS.length];
+  const words = String(b.title || '').split(/\s+/), lines = [];
+  words.forEach(w => { const l = lines[lines.length - 1]; if (l && (l + ' ' + w).length <= 11) lines[lines.length - 1] = l + ' ' + w; else lines.push(w); });
+  const ts = lines.slice(0, 5).map((l, i) => `<tspan x="66" dy="${i ? 12 : 0}">${esc(l)}</tspan>`).join('');
+  return `<svg viewBox="22 16 82 128" aria-hidden="true"><use href="#fav-book-back"/><rect x="28" y="22" width="64" height="104" rx="4" fill="${color}" filter="url(#pencil)"/>
+    <text x="66" y="${62 - lines.length * 4}" text-anchor="middle" font-family="Gaegu, cursive" font-weight="700" font-size="12" fill="#fffaf0">${ts}</text>
+    ${b.author ? `<text x="66" y="114" text-anchor="middle" font-family="Gaegu, cursive" font-size="8.5" fill="#fffaf0" opacity=".85">${esc(b.author)}</text>` : ''}<use href="#fav-book-front"/></svg>`;
+}
+function shelfBooks() {
+  if (readState === 'loading') return '<p class="empty-note">Finding the books\u2026</p>';
+  if (readState === 'error' || !SHELF.length) return '<p class="empty-note">The reading stack is out of reach right now. Try again in a little while.</p>';
+  return `<ul class="shelf-row">${SHELF.map(b => `<li><a class="shelf-book" href="${esc(safeUrl(b.url) || 'https://www.goodreads.com')}" target="_blank" rel="noopener" aria-label="${esc(b.title + (b.author ? ' by ' + b.author : ''))}">${shelfArt(b)}</a>${b.description ? `<p class="shelf-note">${esc(b.description)}</p>` : ''}</li>`).join('')}</ul>`;
+}
+if (staticSite) {
+  readState = 'loading';
+  loadData('data/books.json', 'books').then(list => {
+    readState = list ? 'ready' : 'error';
+    SHELF = (list || []).filter(b => typeof b.title === 'string' && b.title.trim()).map(b => ({ title: b.title.trim(), author: String(b.author || '').trim(), description: String(b.description || '').trim(), url: b.url, image: safeImg(b.image) }));
+    refreshReading();
+  });
+}
 function readingLists() {
+  if (staticSite) return shelfBooks();
   if (readState === 'loading') return '<p class="empty-note">Finding the books\u2026</p>';
   if (readState === 'error') return '<p class="empty-note">The reading list is out of reach right now. Try again in a moment.</p>';
   const now = books.filter(b => b.status === 'current'), past = books.filter(b => b.status !== 'current'), reviews = books.filter(b => b.reviewUrl);
@@ -2173,6 +2223,10 @@ function readForm() {
 }
 function openReading() {
   readingOpen = true;
+  if (staticSite) {
+    openSheet(`<h2 id="sheetTitle" class="sr-only" tabindex="-1">On my reading stack</h2><div id="readingLists">${readingLists()}</div>`, false, null);
+    sheet.classList.add('shelf'); return;
+  }
   openSheet(`<h2 id="sheetTitle" tabindex="-1">On my reading stack</h2>
     <div id="readingLists">${readingLists()}</div>${readForm()}`, false, null);
 }
@@ -2314,7 +2368,7 @@ sheet.addEventListener('pointerup', dishDragEnd); sheet.addEventListener('pointe
 sheet.addEventListener('click', e => { if (dishDragged && e.target.closest('.dish-grid.stack')) { e.preventDefault(); e.stopPropagation(); } }, true);
 sheet.addEventListener('keydown', e => { if (dishOrder.length && (e.key === 'ArrowLeft' || e.key === 'ArrowRight')) { e.preventDefault(); throwDish(e.key === 'ArrowRight' ? 1 : -1); } });
 dishStackMQ.addEventListener('change', stackDishes);
-sheet.addEventListener('click', e => { if ((sheet.classList.contains('menu') || sheet.classList.contains('player')) && (e.target === sheet || e.target === body || e.target.id === 'weeklyList' || e.target.classList.contains('dish-grid') || e.target.classList.contains('player-deck') || e.target.classList.contains('crate'))) closeSheet(); });
+sheet.addEventListener('click', e => { if ((sheet.classList.contains('menu') || sheet.classList.contains('player') || sheet.classList.contains('shelf')) && (e.target === sheet || e.target === body || e.target.id === 'weeklyList' || e.target.id === 'readingLists' || e.target.classList.contains('shelf-row') || e.target.classList.contains('dish-grid') || e.target.classList.contains('player-deck') || e.target.classList.contains('crate'))) closeSheet(); });
 function refreshWeekly() { const el = $('#weeklyList'); if (weeklyOpen && el && sheet.classList.contains('open')) { el.innerHTML = weeklyList(weeklyOpen); stackDishes(); } }
 async function initWeekly() {
   if (staticSite || !window.claude || !window.claude.use) { if (!staticSite) Object.values(WEEKLY).forEach(w => { w.state = 'error'; }); return; }
@@ -3018,7 +3072,7 @@ const laptop = $('#laptop'), screenEl = $('#screen'), easelEl = $('#easel');
 const VB0 = [-24, 0, 1248, 764];
 let texBase = VB0[2]; // the view width at which the pencil texture looks right
 const ZOOMS = {
-  laptop: { cx: 590, cy: 478, w: 92, h: 64, fill: .97, box: [550, 450, 630, 496], view: () => screenEl },
+  laptop: { cx: 590, cy: 478, w: 92, h: 64, fill: .97, box: [550, 450, 630, 496], view: () => screenEl, phone: { cy: 474, w: 84, h: 60, fill: 1 } },
   easel: { cx: 398, cy: 494, w: 92, h: 100, box: [360, 452, 436, 536], view: () => $('#easelView') },
   machine: { cx: 940, cy: 420, w: 260, h: 250, box: [920, 326, 984, 456], view: () => machineView },
   pan: { cx: 1513, cy: 490, w: 170, h: 90, box: [1471, 470, 1565, 510], view: () => machineView }
@@ -3066,6 +3120,7 @@ function animVB(to, ms) {
 }
 // frame an object so the whole of it is in view
 function zoomView(z) {
+  if (z.phone && mobile.matches) z = Object.assign({}, z, z.phone);
   const r = stage.getBoundingClientRect(), A = r.width / r.height, fill = z.fill || (mobile.matches ? .94 : .72);
   const w = Math.max(z.w / fill, z.h / fill * A), h = w / A;
   return [z.cx - w / 2, z.cy - h / 2, w, h];
@@ -3425,7 +3480,13 @@ function animSlide(to, ms) {
 }
 // on portrait phones and tablets the camera stops at one spot at a time
 const phone = matchMedia('(max-width: 1100px) and (orientation: portrait)'), smallScreen = matchMedia('(max-width: 760px)');
-const stopW = () => smallScreen.matches ? 360 : 640;
+// on phones the camera is as wide as it needs to be to show about 640 of the scene's 764 units of height, so wider
+// or shorter screens (a Fold, a phone with big browser bars) zoom out further and tall ones stay close; never tighter than 380
+const stopW = () => {
+  if (!smallScreen.matches) return 640;
+  const r = stage.getBoundingClientRect(), a = r.width && r.height ? r.width / r.height : .6;
+  return Math.round(Math.max(380, Math.min(720, 640 * a)));
+};
 const STOP_DEFS = [['books', ['books']], ['easel', ['easel']], ['desk & window', ['laptop', 'candle', 'win']], ['entrance', ['door', 'ticketMachine', 'crate']], ['tea bar', ['teabar'], 0, 1], ['stove', ['pan'], 0, 1]];
 let STOPS = [], stopIdx = 0, placeIdx = 0, moving = false, edgeTimer = null;
 const placeOf = x => x > 1120 ? 1 : 0; // for things inside the house

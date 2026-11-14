@@ -95,7 +95,10 @@ const DATABASES = [
     }),
     keep: (r) => r.title,
     // the Goodreads page and the real cover, found from the title and author
-    enrich: async (r) => { const b = await findBook(r.title, r.author); r.url ||= b.url; r.image = b.cover; },
+    enrich: async (r) => {
+      const b = await findBook(r.title, r.author); r.url ||= b.url;
+      r.image = (/goodreads\.com\/(en\/)?book\/show\//.test(r.url) && await goodreadsCover(r.url)) || b.cover;
+    },
     sort: (a, b) => b._created.localeCompare(a._created),
   },
 ];
@@ -150,6 +153,19 @@ async function findBook(title, author = '') {
     console.warn(`  couldn't look up "${title}" (${err.message}), linking a Goodreads search instead`);
     return { url: search, cover: '' };
   }
+}
+// the cover on a Goodreads book page (its og:image), at the full size Goodreads stores: the ._SX318_ style
+// size marker is dropped from the file name. Empty when Goodreads won't say.
+async function goodreadsCover(page) {
+  try {
+    const res = await fetch(page, { headers: { 'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0 Safari/537.36', 'Accept-Language': 'en' }, signal: AbortSignal.timeout(15000) });
+    if (!res.ok) return '';
+    const html = await res.text();
+    const m = html.match(/<meta[^>]+property=["']og:image["'][^>]+content=["']([^"']+)["']/i) || html.match(/<meta[^>]+content=["']([^"']+)["'][^>]+property=["']og:image["']/i);
+    const src = m ? m[1].replace(/&amp;/g, '&') : '';
+    if (!/^https:\/\//.test(src) || /nophoto/i.test(src)) return '';
+    return src.replace(/\._[A-Z]{2}[0-9_,A-Z]*_(?=\.(jpe?g|png|webp)$)/i, '');
+  } catch { return ''; }
 }
 // follow the ISBN link once to get the clean /book/show/ address; if Goodreads won't say, the ISBN link still works
 async function goodreadsPage(isbn) {

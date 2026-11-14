@@ -23,7 +23,7 @@ Jamie Catt-Koble's portfolio: an interactive, colored-pencil illustration of the
 |---|---|---|
 | Quotes | Quote, Author, Source, Author link, Source link | "quote" tickets |
 | Favorites | Item, Month, Year, Link, Description, Image, Art, Color | "favorite" tickets and Monthly faves |
-| Reads | Book Title, Author, Description, Goodreads (optional) | "read" tickets; Goodreads link and cover found automatically via Open Library |
+| Reads | Book Title, Author, Description, Goodreads (optional) | "read" tickets and the books in the reading stack; the cover comes from the Goodreads link (else Open Library) |
 | On The Menu | Dish, Date, Note, Image, Art | "What I'm cooking" menu cards |
 | What I'm Drinking | Drink, Date, Note, Image, Art | "What I'm drinking" tea bar cards (same cards as the menu) |
 
