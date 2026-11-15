@@ -3988,7 +3988,7 @@ async function playFetch() {
 async function pottyBreak() {
   if (!TEO.outside || TEO.busy) return; TEO.busy = true; TEO.last = Date.now();
   try {
-    await walkTo(1632, 754, 140); TEO.f = 1; placeTeo(); teoSay('Sniff, sniff\u2026 the bush is very interesting.'); await nap(1800);
+    await walkTo(phone.matches ? Math.min(1632, 1048 + stopW() - 70) : 1632, 754, 140); TEO.f = 1; placeTeo(); teoSay('Sniff, sniff\u2026 the bush is very interesting.'); await nap(1800);
     teoSay('All done. Good boy, Teo!'); hearts(1); bump('love', 4); await nap(900); await walkTo(YARD[0], YARD[1]); setPose('sit');
   } finally { TEO.busy = false; }
 }
@@ -4094,7 +4094,7 @@ function buildStops() {
 }
 // stops are measured with the rooms unslid; kitchen stops are seen with the rooms slid over
 const stopVB = i => [STOPS[i].cx - stopW() / 2, 0, stopW(), 764];
-const homeVB = () => placeIdx === 2 ? (phone.matches ? [YARD_CX - stopW() / 2, 0, stopW(), 764] : VB_OUT) : phone.matches ? stopVB(stopIdx) : VB0;
+const homeVB = () => placeIdx === 2 ? (phone.matches ? [1048, 0, stopW(), 764] : VB_OUT) : phone.matches ? stopVB(stopIdx) : VB0;
 const homeSlide = () => placeIdx === 2 || phone.matches ? 0 : PLACES[placeIdx].slide;
 function nearestStop(p) {
   const c = p === 1 ? 1350 : 900; let best = -1;
@@ -4206,6 +4206,11 @@ addEventListener('mousemove', e => {
   if (want && !edgeTimer) edgeTimer = setTimeout(() => { edgeTimer = null; stepBy(want); }, 380);
   if (!want && edgeTimer) { clearTimeout(edgeTimer); edgeTimer = null; }
 });
+// outside, tapping the house brings you back in
+stage.addEventListener('click', e => {
+  if (placeIdx !== 2 || moving || zoomed || zooming || dragged) return;
+  if (e.target.closest('#rooms, #frameBack, #frameFront')) { e.stopPropagation(); e.preventDefault(); goInside(); }
+}, true);
 // drag or swipe sideways to move, and it snaps to the next room or stop
 // the scene follows the finger from the moment it starts moving (no jump), at most once per frame,
 // and lands on whole screen pixels so the pencil grain doesn't shimmer
@@ -4243,7 +4248,7 @@ function endDrag(e) {
   dragged = true; setTimeout(() => { dragged = false; }, 60);
   // a cancelled touch (the browser took over) just settles back
   const dir = e.type !== 'pointercancel' && Math.abs(e.clientX - d.x0) > 50 ? (e.clientX < d.x0 ? 1 : -1) : 0, cur = phone.matches ? stopIdx : placeIdx, max = placeIdx === 2 ? 2 : phone.matches ? STOPS.length - 1 : PLACES.length - 1;
-  if (dir && placeIdx === 2 && phone.matches) goInside();
+  if (dir && placeIdx === 2) goInside(); // outside, a swipe either way takes you back in, on every screen
   else if (dir && cur + dir >= 0 && cur + dir <= max) stepBy(dir);
   else if (pan) panTo(homeVB()[0], 300);
   else { animVB(homeVB(), 300); animSlide(homeSlide(), 300); }
