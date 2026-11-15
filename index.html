@@ -443,7 +443,7 @@ body.playing .turntable .arm{transform:none}
 .letter-tw{position:relative;z-index:1;display:block;width:100%;height:auto;overflow:visible}
 .letter-tw.clack{animation:clack .09s ease}
 @keyframes clack{50%{transform:translateY(1.5px)}}
-#letterSend{margin-top:14px;padding:9px 22px;background:#fffaf0;border:1.5px solid var(--ink);border-radius:14px 11px 15px 10px / 11px 15px 10px 14px;font-family:var(--f-body);font-size:16px;font-weight:500;color:var(--ink);filter:url(#ink)}
+#letterSend{margin-top:14px;padding:9px 22px;background:#fffaf0;border:1.5px solid var(--ink);border-radius:14px 11px 15px 10px / 11px 15px 10px 14px;font-family:var(--f-body);font-size:16px;font-weight:500;color:var(--ink)}
 #letterSend:hover{background:#fdf1e2}
 /* the reading stack: the books stand up in a row over the house, angled like the record sleeves */
 .sheet.shelf{background:transparent;border:0;filter:none}
@@ -663,7 +663,12 @@ body:has(#screen:not([hidden])) .top .mark h1{color:var(--ink)}
 .cv-title{margin:6px 0 2px;font-family:var(--f-title);font-weight:400;font-size:30px;line-height:1.2;text-align:center;text-transform:lowercase;filter:url(#ink);outline:none}
 .cv-year{margin:0 0 14px;text-align:center;font-size:13px;color:var(--ink-soft)}
 .cv-art .shots{margin-bottom:14px}
-.menu-btn,.stub-btn,.sound,.zoom-x,.sheet-x{background:#fffaf0;border:1.5px solid var(--ink);color:var(--ink);filter:url(#ink)}
+.menu-btn,.stub-btn,.sound,.zoom-x,.sheet-x,#letterSend{background:#fffaf0;border:1.5px solid transparent;color:var(--ink);filter:none}
+.menu-btn,.sound,.sheet-x,#letterSend{position:relative}
+/* solid cream fill; the grain lives in the outline and the icon, so nothing behind shows through */
+.menu-btn::before,.stub-btn::after,.sound::before,.zoom-x::before,.sheet-x::before,#letterSend::before{content:"";position:absolute;inset:-2px;border:2.2px solid var(--ink);border-radius:inherit;pointer-events:none;filter:url(#ink)}
+.menu-btn svg,.stub-btn svg,.sound svg,.zoom-x svg,.sheet-x svg{filter:url(#ink)}
+.sheet.book .sheet-x::before{display:none}
 .sheet.book .sheet-x{filter:none}
 .sound{border-radius:999px}
 /* the logo and controls stay crisp above the dimmed scene */
@@ -1825,7 +1830,7 @@ function decorate() {
   });
 }
 
-buildOutside(); const outsideCount = world.children.length; buildShell(); buildDoor(); buildTicket(); buildWindow(); buildDesk(); buildWorkDesk(); buildDecor(); buildArch(); buildCozy(); buildKitchen(); buildTeo(); buildNight(); buildLantern(); spreadRoom(); buildRecords(); buildPlay(); buildFrameFront(); buildFrameFront('frameFrontLong', 510); piece(E('g', { id: 'longOcc', class: 'fixed' }, world), { occ: rect(1130, 190, 520, 552) }); buildSun(); buildArt();
+buildOutside(); const outsideCount = world.children.length; buildShell(); buildDoor(); buildTicket(); buildWindow(); buildDesk(); buildWorkDesk(); buildDecor(); buildArch(); buildCozy(); buildKitchen(); buildTeo(); buildNight(); buildLantern(); spreadRoom(); buildRecords(); buildPlay(); buildFrameFront(); buildFrameFront('frameFrontLong', 510); piece(E('g', { id: 'longOcc', class: 'fixed' }, world), { occ: rect(1130, 204, 520, 538) }); buildSun(); buildArt();
 // everything inside the house goes in one layer, clipped to the frame's window
 const roomClip = E('rect', { x: 80, y: 201, width: 1040, height: 487 }, E('clipPath', { id: 'roomClip', clipPathUnits: 'userSpaceOnUse' }, $('#scene defs')));
 const rooms = E('g', { id: 'rooms', 'clip-path': 'url(#roomClip)' });
