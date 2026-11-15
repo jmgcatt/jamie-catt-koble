@@ -4,7 +4,7 @@
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=La+Belle+Aurore&family=Zen+Maru+Gothic:wght@400;500;700&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=La+Belle+Aurore&family=Special+Elite&family=Zen+Maru+Gothic:wght@400;500;700&display=swap">
 <style>
 :root{--hline:url("data:image/svg+xml,%3Csvg%20xmlns%3D%27http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%27%20viewBox%3D%270%200%20400%208%27%20preserveAspectRatio%3D%27none%27%3E%3Cpath%20d%3D%27M1%2C4%20C40%2C2.6%2090%2C5.2%20140%2C3.8%20S240%2C2.4%20290%2C4.4%20S370%2C5%20399%2C3.2%27%20fill%3D%27none%27%20stroke%3D%27%2376614f%27%20stroke-width%3D%271.5%27%20stroke-linecap%3D%27round%27%20opacity%3D%27.55%27%20vector-effect%3D%27non-scaling-stroke%27%2F%3E%3C%2Fsvg%3E");--hline2:url("data:image/svg+xml,%3Csvg%20xmlns%3D%27http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%27%20viewBox%3D%270%200%20400%208%27%20preserveAspectRatio%3D%27none%27%3E%3Cpath%20d%3D%27M1%2C3.4%20C50%2C5%20110%2C2.8%20170%2C4.2%20S270%2C5.4%20330%2C3.4%20S385%2C2.8%20399%2C4.6%27%20fill%3D%27none%27%20stroke%3D%27%2376614f%27%20stroke-width%3D%271.5%27%20stroke-linecap%3D%27round%27%20opacity%3D%27.55%27%20vector-effect%3D%27non-scaling-stroke%27%2F%3E%3C%2Fsvg%3E");--modal-w:min(1000px,calc(100vw - 32px));--modal-h:min(90vh,1040px)}
 /* Layout: one pencil-drawn cutaway room on cream paper fills the screen; quiet chrome sits in the margins; reading happens on a paper sheet that slides in from the right. */
@@ -427,13 +427,19 @@ body.playing .turntable .arm{transform:none}
 @media (hover:none){.sleeve{transform:none}.crate{flex-wrap:wrap;gap:16px}.sleeve,.sleeve svg{width:min(110px,27vw);height:auto}}
 @media (prefers-reduced-motion:reduce){.turntable .rec{animation:none}.sleeve{transition:none}}
 .sheet.menu{background:transparent;border:0;filter:none}
+/* script titles everywhere carry the same inked texture as the logo */
+.fave b,.dish b,.cv-cap b,.jams b,.book b,.c-t,.posts b,.work-list b,.jb-toc .jt-t,.post h3,.post h4,.sheet h2,.sheet h3,.spin-title,.tc-name,.cv-title,.td-head h2,.jams li::before,.steps li::before,.sheet.menu h2,.sheet.shelf h2,.sheet.letter h2{filter:url(#ink)!important}
 /* send me a letter */
 .sheet.letter{background:transparent;border:0;filter:none}
 .sheet.letter .sheet-bar{display:none}
-.sheet.letter .sheet-body{min-height:100%;box-sizing:border-box;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:70px 16px 16px!important}
+.sheet.letter .sheet-body{min-height:100%;box-sizing:border-box;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:84px 16px 16px!important}
+.sheet.letter h2{position:static;margin:0 0 16px}
 .letter-wrap{display:grid;justify-items:center;width:min(440px,100%)}
-.letter-paper{display:block;width:76%;min-height:130px;box-sizing:border-box;margin:0 0 -16px;padding:18px 18px 30px;border:0;outline:0;resize:none;background:var(--paper-tex),#fffdf8;border-radius:2px 2px 0 0;font-family:var(--f-body);font-size:15px;font-weight:500;line-height:1.7;letter-spacing:.03em;color:var(--ink)}
-.letter-paper::placeholder{color:var(--ink-soft);opacity:.7}
+.letter-page{position:relative;z-index:0;width:74%;box-sizing:border-box;margin:0 0 -22px;padding:18px 18px 40px;min-height:150px;max-height:42vh;overflow-y:auto;background:var(--paper-tex),#fffdf8;border-radius:2px 2px 0 0;font-family:"Special Elite",var(--f-body);font-size:16px;line-height:1.6;color:var(--ink)}
+.letter-mirror{white-space:pre-wrap;overflow-wrap:anywhere;min-height:4.8em}
+.letter-mirror .tw-caret{display:inline-block;width:.6em;height:1.05em;margin-bottom:-.18em;background:var(--ink);opacity:.85;animation:twBlink 1s steps(1) infinite}
+@keyframes twBlink{50%{opacity:0}}
+.letter-paper{position:absolute;inset:0;width:100%;height:100%;box-sizing:border-box;margin:0;padding:18px 18px 40px;border:0;outline:0;resize:none;overflow:hidden;background:none;font:inherit;line-height:inherit;color:transparent;caret-color:transparent}
 .letter-tw{position:relative;z-index:1;display:block;width:100%;height:auto;overflow:visible}
 .letter-tw.clack{animation:clack .09s ease}
 @keyframes clack{50%{transform:translateY(1.5px)}}
@@ -2022,10 +2028,28 @@ $('#navFaves').onclick = () => { setMenu(false); openFaves(); };
 $('#navLetter').onclick = () => { setMenu(false); openLetter(); };
 // send me a letter: a typewriter with a sheet of paper in it. The page grows out of the roller as you type;
 // Send opens an email to me with what you wrote
+// typewriter sounds, made in the page: a sharp clack per key, a softer thud for the space bar, a bell at the end of a line
+let twCtx = null;
+function typeSound(kind) {
+  try {
+    const AC = window.AudioContext || window.webkitAudioContext; if (!AC) return;
+    twCtx = twCtx || new AC(); if (twCtx.state === 'suspended') twCtx.resume();
+    const ctx = twCtx, t = ctx.currentTime, out = ctx.createGain(); out.gain.value = .5; out.connect(ctx.destination);
+    if (kind === 'bell') {
+      [[2093, .12], [4186, .04]].forEach(([f, v]) => { const o = ctx.createOscillator(), g = ctx.createGain(); o.frequency.value = f; g.gain.setValueAtTime(v, t); g.gain.exponentialRampToValueAtTime(.0005, t + 1.1); o.connect(g); g.connect(out); o.start(t); o.stop(t + 1.2); });
+    }
+    const n = ctx.createBufferSource(), len = Math.floor(ctx.sampleRate * .05), buf = ctx.createBuffer(1, len, ctx.sampleRate), d = buf.getChannelData(0);
+    for (let i = 0; i < len; i++) d[i] = (Math.random() * 2 - 1) * Math.pow(1 - i / len, 3);
+    n.buffer = buf; const f = ctx.createBiquadFilter(); f.type = 'bandpass'; f.frequency.value = kind === 'space' ? 900 : 2400 + Math.random() * 900; f.Q.value = 1.1;
+    const g = ctx.createGain(); g.gain.value = kind === 'space' ? .5 : .75; n.connect(f); f.connect(g); g.connect(out); n.start(t);
+    const o = ctx.createOscillator(), og = ctx.createGain(); o.type = 'triangle'; o.frequency.setValueAtTime(kind === 'space' ? 120 : 190, t); o.frequency.exponentialRampToValueAtTime(70, t + .05);
+    og.gain.setValueAtTime(.3, t); og.gain.exponentialRampToValueAtTime(.0005, t + .07); o.connect(og); og.connect(out); o.start(t); o.stop(t + .09);
+  } catch (e) { }
+}
 function openLetter() {
   openSheet(`<h2 id="sheetTitle" tabindex="-1">send me a letter</h2><div class="letter-wrap">
-    <textarea class="letter-paper" id="letterText" rows="4" placeholder="dear jamie," aria-label="Your letter"></textarea>
-    <svg class="letter-tw" id="letterTw" viewBox="0 0 320 150" aria-hidden="true"></svg>
+    <div class="letter-page" id="letterPage"><div class="letter-mirror" id="letterMirror" aria-hidden="true"></div><textarea class="letter-paper" id="letterText" aria-label="Your letter" spellcheck="false"></textarea></div>
+    <svg class="letter-tw" id="letterTw" viewBox="0 30 320 120" aria-hidden="true"></svg>
     <button class="btn-ink" id="letterSend" type="button">Send</button></div>`, false, null);
   sheet.classList.add('letter');
   const g = E('g', {}, $('#letterTw')), ta = $('#letterText');
@@ -2033,10 +2057,14 @@ function openLetter() {
   let keys = '';
   [[92, 11, 66], [106, 10, 76], [120, 9, 86]].forEach(([y, n, x0]) => { for (let i = 0; i < n; i++) keys += ell(x0 + i * 19, y, 6.2); });
   piece(g, { occ: body + roller, fill: [[roller, '#3d3a3c', .95], [ell(14, 52, 7, 9) + ell(306, 52, 7, 9), '#2b2829', 1], [body, '#7f9a8c', .95], [panel, '#5f7a6c', .9]], line: [roller, ell(14, 52, 7, 9), ell(306, 52, 7, 9), body, panel] });
+  piece(g, { line: [{ d: 'M58,40H262', 'stroke-width': 3, stroke: '#8f949c' }, 'M70,36V46M250,36V46'], lw: 1.6 });
   piece(g, { fill: [[keys, '#f6f1e6', 1], [rr(112, 126, 96, 7, 3.5), '#f6f1e6', 1]], line: [keys, rr(112, 126, 96, 7, 3.5)], lw: 1.4 });
-  const fit = () => { ta.style.height = 'auto'; ta.style.height = Math.min(ta.scrollHeight, innerHeight * .46) + 'px'; };
-  ta.addEventListener('input', () => { fit(); const tw = $('#letterTw'); tw.classList.remove('clack'); void tw.getBoundingClientRect(); tw.classList.add('clack'); });
-  fit(); setTimeout(() => ta.focus({ preventScroll: true }), 350);
+  const mirror = $('#letterMirror'), page = $('#letterPage');
+  // the page shows what's typed with a block cursor where the next letter lands
+  const show = () => { const i = ta.selectionStart, v = ta.value; mirror.innerHTML = esc(v.slice(0, i)) + '<span class="tw-caret"></span>' + esc(v.slice(i)) + '\n'; const c = mirror.querySelector('.tw-caret'); if (c.offsetTop + c.offsetHeight > page.scrollTop + page.clientHeight - 30) page.scrollTop = c.offsetTop - page.clientHeight + 60; };
+  ta.addEventListener('input', e => { show(); typeSound(e.inputType === 'insertLineBreak' ? 'bell' : e.data === ' ' ? 'space' : 'key'); const tw = $('#letterTw'); tw.classList.remove('clack'); void tw.getBoundingClientRect(); tw.classList.add('clack'); });
+  ['keyup', 'click', 'select', 'focus'].forEach(k => ta.addEventListener(k, show));
+  show(); setTimeout(() => ta.focus({ preventScroll: true }), 350);
   $('#letterSend').onclick = () => {
     const t = ta.value.trim(); if (!t) { ta.focus(); return; }
     location.href = 'mailto:jmgcatt@gmail.com?subject=' + encodeURIComponent('a letter for you') + '&body=' + encodeURIComponent(t);
