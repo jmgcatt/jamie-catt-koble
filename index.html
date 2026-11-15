@@ -4,7 +4,7 @@
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=La+Belle+Aurore&family=Special+Elite&family=Zen+Maru+Gothic:wght@400;500;700&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=La+Belle+Aurore&family=Zen+Maru+Gothic:wght@400;500;700&display=swap">
 <style>
 :root{--hline:url("data:image/svg+xml,%3Csvg%20xmlns%3D%27http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%27%20viewBox%3D%270%200%20400%208%27%20preserveAspectRatio%3D%27none%27%3E%3Cpath%20d%3D%27M1%2C4%20C40%2C2.6%2090%2C5.2%20140%2C3.8%20S240%2C2.4%20290%2C4.4%20S370%2C5%20399%2C3.2%27%20fill%3D%27none%27%20stroke%3D%27%2376614f%27%20stroke-width%3D%271.5%27%20stroke-linecap%3D%27round%27%20opacity%3D%27.55%27%20vector-effect%3D%27non-scaling-stroke%27%2F%3E%3C%2Fsvg%3E");--hline2:url("data:image/svg+xml,%3Csvg%20xmlns%3D%27http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%27%20viewBox%3D%270%200%20400%208%27%20preserveAspectRatio%3D%27none%27%3E%3Cpath%20d%3D%27M1%2C3.4%20C50%2C5%20110%2C2.8%20170%2C4.2%20S270%2C5.4%20330%2C3.4%20S385%2C2.8%20399%2C4.6%27%20fill%3D%27none%27%20stroke%3D%27%2376614f%27%20stroke-width%3D%271.5%27%20stroke-linecap%3D%27round%27%20opacity%3D%27.55%27%20vector-effect%3D%27non-scaling-stroke%27%2F%3E%3C%2Fsvg%3E");--modal-w:min(1000px,calc(100vw - 32px));--modal-h:min(90vh,1040px)}
 /* Layout: one pencil-drawn cutaway room on cream paper fills the screen; quiet chrome sits in the margins; reading happens on a paper sheet that slides in from the right. */
@@ -204,8 +204,6 @@ body.playing .notes .note:nth-child(2){animation-delay:-1.8s}
 .sheet.menu .dish-grid.stack .dish[data-p="2"]{z-index:3;transform:translate(-7px,15px) rotate(-4deg)}
 .sheet.menu .dish-grid.stack .dish[data-p="far"]{z-index:1;opacity:0;transform:translate(0,18px) rotate(1deg)}
 .sheet.menu .dish-grid.stack .dish.held{transition:none}
-/* every all-caps eyebrow label is 14px */
-.t-date,.t-kick,.kick,.meta dt,.stub-top span,.t-cite,.t-by,.stub-by,.stub-c,.exp .when{font-size:14px!important;letter-spacing:.1em}
 .screen.viewing .screen-bar{padding-bottom:0}
 .screen-project{flex:1;overflow-y:auto;padding:14px 22px 6px}
 .screen-project .sp-back{margin:0 0 10px;font-size:16px}
@@ -474,7 +472,7 @@ body.playing .turntable .arm{transform:none}
 .env-svg{display:block;width:100%;height:auto;overflow:visible}
 .env-flap{transform-box:fill-box;transform-origin:center top;transform:scaleY(-1)}
 .env-seal{transform-box:fill-box;transform-origin:center;opacity:0}
-.letter-page{position:relative;z-index:0;width:74%;box-sizing:border-box;margin:0 0 -22px;padding:18px 18px 40px;min-height:150px;max-height:42vh;overflow-y:auto;background:var(--paper-tex),#fffdf8;border-radius:2px 2px 0 0;font-family:"Special Elite",var(--f-body);font-size:16px;line-height:1.6;color:var(--ink)}
+.letter-page{position:relative;z-index:0;width:74%;box-sizing:border-box;margin:0 0 -22px;padding:18px 18px 40px;min-height:150px;max-height:42vh;overflow-y:auto;background:var(--paper-tex),#fffdf8;border-radius:2px 2px 0 0;font-family:var(--f-body);font-size:16px;line-height:1.6;color:var(--ink)}
 .letter-page:not(.typing) .tw-caret{visibility:hidden;animation:none}
 .letter-mirror{white-space:pre-wrap;overflow-wrap:anywhere;min-height:4.8em}
 .letter-mirror .tw-caret{display:inline-block;width:.46em;height:1.1em;margin:0 .04em -.2em;background:linear-gradient(var(--ink),var(--ink)) center/1.6px 100% no-repeat,linear-gradient(var(--ink),var(--ink)) top/100% 1.6px no-repeat,linear-gradient(var(--ink),var(--ink)) bottom/100% 1.6px no-repeat;filter:url(#ink);animation:twBlink 1.1s steps(1) infinite}
@@ -845,11 +843,10 @@ body:has(.sheet.book.open) .top{z-index:5}
 @media (max-width:1100px) and (orientation:portrait){
   /* the house fills the whole screen; the bar floats over it, with a soft dark fade at the top and bottom so the white controls read */
   .scroller{bottom:0}
-  .scroller::before,.scroller::after{content:"";position:absolute;left:0;right:0;z-index:3;pointer-events:none}
+  .scroller::before,.scroller::after{display:none!important;content:"";position:absolute;left:0;right:0;z-index:3;pointer-events:none}
   .scroller::before{top:0;height:calc(62px + env(safe-area-inset-top,0px));background:linear-gradient(rgba(34,24,18,.3),rgba(34,24,18,.25) 20%,rgba(34,24,18,.17) 40%,rgba(34,24,18,.1) 60%,rgba(34,24,18,.04) 80%,rgba(34,24,18,0))}
   .scroller::after{bottom:0;height:calc(58px + env(safe-area-inset-bottom,0px));background:linear-gradient(0deg,rgba(34,24,18,.3),rgba(34,24,18,.25) 20%,rgba(34,24,18,.17) 40%,rgba(34,24,18,.1) 60%,rgba(34,24,18,.04) 80%,rgba(34,24,18,0))}
   .navbar{position:fixed;inset:auto 0 0;z-index:6;display:grid;gap:6px;padding:8px max(12px,env(safe-area-inset-right,0px)) calc(8px + env(safe-area-inset-bottom,0px)) max(12px,env(safe-area-inset-left,0px));background:none;border:0;color:#fffaf0}
-  .top,.top .mark h1,.top .mark p{color:#fffaf0}
   .navbar{display:flex!important;align-items:center;justify-content:space-between;pointer-events:none}
   .nav-row{display:contents}
   .nav-left{display:none}
@@ -871,8 +868,6 @@ body:has(.sheet.book.open) .top{z-index:5}
   .menu-btn svg,.stub-btn svg,.navbar .snd-btn svg{width:31px;height:31px}
   .zoom-x svg{width:27px;height:27px}
   .navbar .nav-name{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
-  .navbar .dots i{border-color:#fffaf0}
-  .navbar .dots i.on{background:#fffaf0}
   .edge-tab{display:none!important}
   .ticket-wrap{inset:12px 0 calc(var(--nav-h,92px) + 10px);max-height:calc(100vh - var(--nav-h,92px) - 22px);max-height:calc(100dvh - var(--nav-h,92px) - 22px);overflow-y:auto;overscroll-behavior:contain}
 }
@@ -913,6 +908,20 @@ body:has(.sheet.book.open) .top{z-index:5}
   .steam path{opacity:.6}
   .tap-spark{opacity:1}
 }
+
+/* ================= type system: two fonts, five groups (desktop / phone) =================
+   1 titles 28/24 script   2 card titles 24/20 script   3 quotes 20/18 sans
+   4 body 18/16 sans regular   5 metadata 16/14 sans all caps   6 buttons and inputs 18/16 sans small caps medium */
+:root{--t-title:28px;--t-card:24px;--t-quote:20px;--t-body:18px;--t-meta:16px;--t-btn:18px}
+@media (max-width:760px),(max-width:1100px) and (orientation:portrait){:root{--t-title:24px;--t-card:20px;--t-quote:18px;--t-body:16px;--t-meta:14px;--t-btn:16px}}
+html .sheet h2,html .sheet .jb-flow h2,html .sheet .bar-title h2,html .sp-head h3,html .cv-title,html .td-head h2,html .sheet.menu h2,html .sheet.shelf h2,html .sheet.letter h2,html .screen-bar h2{font-family:var(--f-title)!important;font-size:var(--t-title)!important;font-weight:400!important;line-height:1.25!important;text-transform:lowercase}
+html .c-t,html .screen .c-t,html .cv-grid .c-t,html .dish b,html .fave b,html li.book b,html .jams b,html .posts b,html .work-list b,html .cv-cap b,html .jb-toc .jt-t,html .sheet h3,html .post h3,html .post h4,html .spin-title,html .t-no,html .stub-top b{font-family:var(--f-title)!important;font-size:var(--t-card)!important;font-weight:400!important;line-height:1.25!important}
+html .t-quote,html .stub-q,html blockquote,html .post blockquote{font-family:var(--f-body)!important;font-size:var(--t-quote)!important;font-weight:400!important;line-height:1.5!important;filter:none!important}
+html body,html .sheet-body,html .body-p,html .post,html .post.jb-flow,html .lede,html .exp p,html .exp b,html .t-desc,html .stub-d,html .fave span,html .shelf-note,html .empty-note,html .meta dd,html .td-empty,html .about-tag,html .post figcaption,html .screen-project,html .cv-art,html .letter-page,html .hint p,html .note,html .cv-empty,html .tc-say{font-family:var(--f-body)!important;font-size:var(--t-body)!important}
+html .body-p,html .post,html .lede,html .exp p,html .t-desc,html .stub-d,html .fave span,html .shelf-note,html .meta dd,html .about-tag,html .letter-page{font-weight:400!important}
+html .exp b{font-weight:500!important}
+html .c-m,html .bt-year,html .cv-year,html .jb-flow .jb-date,html .jb-toc .jt-d,html .t-date,html .t-kick,html .kick,html .meta dt,html .stub-top span,html .t-cite,html .t-by,html .stub-by,html .stub-c,html .exp .when,html .year,html .jb-no,html .dish span,html .jams small,html .posts small,html li.book span,html .work-list span,html .cv-cap{font-family:var(--f-body)!important;font-size:var(--t-meta)!important;font-weight:400!important;text-transform:uppercase!important;letter-spacing:.08em!important;font-style:normal!important}
+html .btn-ink,html .btn-plain,html .bub,html .cmd,html .chip,html .tab,html .seg button,html .link,html .menu-list .link,html .read-on,html #letterSend,html .letter-field input,html .rf-grid input,html .rf-grid select,html .cv-form input,html input::placeholder{font-family:var(--f-body)!important;font-size:var(--t-btn)!important;font-weight:500!important;font-variant-caps:small-caps;letter-spacing:.03em}
 </style>
 
 <div class="app" id="app">
@@ -977,7 +986,6 @@ body:has(.sheet.book.open) .top{z-index:5}
         <button class="bub" type="button" data-teo="treat">Treat</button>
         <button class="bub" type="button" data-teo="train" aria-controls="teoCard">Train</button>
         <button class="bub" type="button" data-teo="potty">Potty</button>
-        <button class="bub" type="button" data-teo="fetch">Fetch</button>
       </div>
       <div class="ticket-wrap" id="ticket" role="dialog" aria-label="Your ticket" tabindex="-1" hidden>
         <div class="ticket" id="ticketCard">
@@ -1029,7 +1037,7 @@ body:has(.sheet.book.open) .top{z-index:5}
       <div class="meter"><span>smarts</span><i><b id="mSmarts"></b></i></div>
     </div>
     <div class="tc-cmds" id="tcCmds">
-      <div class="cmd-grid"><button class="cmd" type="button" data-cmd="sit">Sit</button><button class="cmd" type="button" data-cmd="down">Down</button><button class="cmd" type="button" data-cmd="stand">Stand</button><button class="cmd" type="button" data-cmd="chin">Chin</button><button class="cmd" type="button" data-cmd="boop">Boop</button><button class="cmd" type="button" data-cmd="cave">Go to cave</button><button class="cmd" type="button" data-cmd="spin">Spin</button><button class="cmd" type="button" data-cmd="paw">Paw</button><button class="cmd" type="button" data-cmd="five">High five</button><button class="cmd" type="button" data-cmd="come">Come</button><button class="cmd" type="button" data-cmd="drop">Drop</button></div>
+      <div class="cmd-grid"><button class="cmd" type="button" data-cmd="sit">Sit</button><button class="cmd" type="button" data-cmd="down">Down</button><button class="cmd" type="button" data-cmd="stand">Stand</button><button class="cmd" type="button" data-cmd="chin">Chin</button><button class="cmd" type="button" data-cmd="boop">Boop</button><button class="cmd" type="button" data-cmd="cave">Go to cave</button><button class="cmd" type="button" data-cmd="spin">Spin</button><button class="cmd" type="button" data-cmd="paw">Paw</button><button class="cmd" type="button" data-cmd="five">High five</button><button class="cmd" type="button" data-cmd="come">Come</button><button class="cmd" type="button" data-cmd="fetch">Fetch</button><button class="cmd" type="button" data-cmd="drop">Drop</button></div>
     </div>
     <p class="tc-say" id="tcSay" aria-live="polite"></p>
   </section>
@@ -2186,18 +2194,18 @@ function typeSound(kind) {
 }
 // the typed page as a picture: typewriter face on grainy paper, the date at the top and the name at the foot
 async function letterImage(text, name) {
-  try { await document.fonts.load('34px "Special Elite"'); } catch (e) { }
+  try { await document.fonts.load('34px "Zen Maru Gothic"'); } catch (e) { }
   const W = 1200, pad = 110, fs = 34, lh = 56, c = document.createElement('canvas'), x = c.getContext('2d');
-  x.font = `${fs}px "Special Elite", monospace`;
+  x.font = `${fs}px "Zen Maru Gothic", sans-serif`;
   const lines = [];
   text.split('\n').forEach(par => { let line = ''; par.split(' ').forEach(w => { const t = line ? line + ' ' + w : w; if (x.measureText(t).width > W - 2 * pad && line) { lines.push(line); line = w; } else line = t; }); lines.push(line); });
   const H = Math.max(900, pad * 2 + 120 + lines.length * lh + (name ? 110 : 0));
   c.width = W; c.height = H;
   x.fillStyle = '#fffdf8'; x.fillRect(0, 0, W, H);
   for (let i = 0; i < W * H / 260; i++) { x.fillStyle = Math.random() < .5 ? 'rgba(158,140,117,.16)' : 'rgba(237,230,214,.5)'; x.fillRect(Math.random() * W, Math.random() * H, 1.6 + Math.random() * 1.6, 1.6 + Math.random() * 1.6); }
-  x.fillStyle = '#76614f'; x.font = `26px "Special Elite", monospace`;
+  x.fillStyle = '#76614f'; x.font = `26px "Zen Maru Gothic", sans-serif`;
   x.fillText(new Date().toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' }).toLowerCase(), pad, pad);
-  x.fillStyle = '#3b2e25'; x.font = `${fs}px "Special Elite", monospace`;
+  x.fillStyle = '#3b2e25'; x.font = `${fs}px "Zen Maru Gothic", sans-serif`;
   lines.forEach((l, i) => x.fillText(l, pad, pad + 110 + i * lh));
   if (name) x.fillText(name, pad, pad + 110 + lines.length * lh + 70);
   return new Promise((res, rej) => c.toBlob(b => b ? res(b) : rej(new Error('no image')), 'image/png'));
@@ -3589,7 +3597,7 @@ const VB0 = [-24, 0, 1248, 764];
 let texBase = VB0[2]; // the view width at which the pencil texture looks right
 const ZOOMS = {
   laptop: { cx: 590, cy: 478, w: 92, h: 64, fill: .97, box: [550, 450, 630, 496], view: () => screenEl, phone: { cy: 474, w: 84, h: 60, fill: 1 } },
-  easel: { cx: 398, cy: 492, w: 92, h: 104, fill: .98, box: [360, 452, 436, 536], view: () => $('#easelView'), phone: { cy: 484, w: 82, h: 96, fill: 1 } },
+  easel: { cx: 398, cy: 493, w: 92, h: 90, fill: 1, box: [360, 452, 436, 536], view: () => $('#easelView'), phone: { cy: 484, w: 82, h: 96, fill: 1 } },
   machine: { cx: 940, cy: 420, w: 260, h: 250, box: [920, 326, 984, 456], view: () => machineView },
   pan: { cx: 1513, cy: 490, w: 170, h: 90, box: [1471, 470, 1565, 510], view: () => machineView }
 };
@@ -3923,6 +3931,14 @@ const CMD = {
     setPose('sit'); teo.classList.add('fiving'); await nap(350); const [px, py] = local(46, 6); sparkle(px, py); hearts(1); teoSay('High five!'); await nap(1600); teo.classList.remove('fiving');
   },
   come: async () => { const [x, y] = TEO.outside ? YARD : [602, 664]; await walkTo(x, y); setPose('sit'); teoSay('Teo comes right over and sits.'); },
+  fetch: async () => {
+    if (TEO.carrying) { setPose('sit'); teoSay('Teo already has the ball. Say drop.'); return; }
+    const back = [TEO.x, TEO.y];
+    teoSay('Teo trots off for the ball.');
+    await walkTo(toy.x + 12, TEO.outside ? 754 : Math.max(640, Math.min(684, toy.y - 8)), 200); pickToy(); await nap(250);
+    await walkTo(back[0], back[1], 200); TEO.f = 1; setPose('sit'); placeToy();
+    teoSay('Teo is back with the ball, holding it. Say drop, or tap anywhere.'); hearts(1);
+  },
   drop: async () => {
     if (TEO.carrying) { dropToy(); setPose('sit'); teoSay('Teo drops the ball at your feet.'); return; }
     teo.classList.add('tilt'); teoSay('His mouth is empty. Teo tilts his head at you.'); await nap(1300); teo.classList.remove('tilt');
@@ -3997,19 +4013,21 @@ function closeTeoCard() { card.hidden = true; teo.setAttribute('aria-expanded', 
 $('#tcClose').onclick = () => { closeTeoCard(); teo.focus({ preventScroll: true }); };
 card.addEventListener('click', e => { const c = e.target.closest('[data-cmd]'); if (c) command(c.dataset.cmd); });
 bubbles.addEventListener('click', e => {
-  const c = e.target.closest('[data-cmd]'); if (c) { TEO.last = Date.now(); return command(c.dataset.cmd); }
+  const c = e.target.closest('[data-cmd]'); if (c) { e.stopPropagation(); TEO.last = Date.now(); return waitIdle().then(() => command(c.dataset.cmd)); }
   const b = e.target.closest('[data-teo]'); if (!b) return;
   const k = b.dataset.teo;
   if (k === 'train') { e.stopPropagation(); bubbles.innerHTML = BUB_TRAIN; placeBubbles(); bubbles.querySelector('.bub').focus({ preventScroll: true }); return; }
   closeBubbles();
   // potty and fetch happen in the yard: step outside with Teo first if you're still indoors
-  if (k === 'fetch' || k === 'potty') return (async () => {
+  if (k === 'potty') return (async () => {
     if (placeIdx !== 2) { await goOutside(); await new Promise(r => setTimeout(r, 400)); }
-    await waitIdle(); if (TEO.outside) (k === 'fetch' ? playFetch : pottyBreak)();
+    await waitIdle(); if (TEO.outside) pottyBreak();
   })();
   ({ pet: petTeo, treat: giveTreat })[k]();
 });
 document.addEventListener('click', e => { if (!bubbles.hidden && !e.target.closest('#teoBubbles, #teo')) closeBubbles(); });
+// while Teo holds the ball, a tap anywhere else in the scene makes him drop it
+stage.addEventListener('click', e => { if (TEO.carrying && !TEO.busy && !e.target.closest('#teo, #teoBubbles')) command('drop'); });
 addEventListener('resize', placeBubbles);
 // now and then Teo wanders around the house
 const SPOTS = [[392, 668], [470, 672], [760, 668], [860, 664], [990, 674], [560, 678]];
