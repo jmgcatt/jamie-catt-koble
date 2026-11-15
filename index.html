@@ -117,9 +117,9 @@ button{font:inherit;color:inherit}
 .menu{position:relative}
 .menu-btn{width:42px;height:42px;background:var(--paper);border:1.5px solid var(--ink);border-radius:14px 11px 15px 10px / 11px 15px 10px 14px}
 .menu-list{position:absolute;top:calc(100% + 10px);right:0;z-index:7;width:210px;margin:0;padding:12px 18px 14px 26px;list-style:none;display:grid;gap:0;
-  background:#fffdf6 repeating-linear-gradient(#fffdf6 0 31px,#cfe0ea 31px 32px);background-position:0 10px;border:2px solid var(--ink);border-radius:6px 9px 5px 8px / 8px 5px 9px 6px;
-  box-shadow:inset 0 8px 0 #fffdf6,inset 0 10px 0 #e3a093;transform:rotate(-1.6deg);filter:drop-shadow(3px 5px 0 rgba(74,58,46,.14));animation:pop .25s ease}
-.menu-list::before{content:"";position:absolute;top:0;bottom:0;left:16px;border-left:1.5px solid #e3a093}
+  background:var(--paper-tex),#fffdf8;border:2px solid var(--ink);border-radius:6px 9px 5px 8px / 8px 5px 9px 6px;
+  box-shadow:none;transform:rotate(-1.6deg);filter:drop-shadow(3px 5px 0 rgba(74,58,46,.14));animation:pop .25s ease}
+.menu-list::before{display:none}
 .menu-list li{height:32px;display:flex;align-items:flex-end;padding-bottom:3px}
 .menu-list .link{color:var(--ink)}
 .link{background:none;border:0;padding:2px 0;cursor:pointer;font-family:var(--f-hand);font-size:16px;color:var(--ink-soft);
@@ -581,10 +581,10 @@ body:has(.sheet.menu.open) .scrim,body:has(.sheet.shelf.open) .scrim,body:has(.s
 /* sheet */
 .scrim{position:fixed;inset:0;z-index:19;background:rgba(74,58,46,.22);opacity:0;visibility:hidden;transition:opacity .35s,visibility 0s .35s}
 .scrim.open{opacity:1;visibility:visible;transition:opacity .35s}
-.sheet{position:fixed;top:50%;left:50%;z-index:20;width:var(--modal-w);height:var(--modal-h);box-sizing:border-box;overflow-y:auto;background:#fffdf6;background-image:linear-gradient(90deg,transparent 30px,#e9aa9c 30px,#e9aa9c 31.5px,transparent 31.5px),repeating-linear-gradient(180deg,transparent 0 31px,#d6e4ec 31px 32px);background-attachment:local;border:2px solid var(--ink);border-radius:6px 9px 5px 8px / 8px 5px 9px 6px;
+.sheet{position:fixed;top:50%;left:50%;z-index:20;width:var(--modal-w);height:var(--modal-h);box-sizing:border-box;overflow-y:auto;background:var(--paper-tex),#fffdf8;background-attachment:local;border:2px solid var(--ink);border-radius:6px 9px 5px 8px / 8px 5px 9px 6px;
   filter:drop-shadow(4px 6px 0 rgba(74,58,46,.14));opacity:0;visibility:hidden;transform:translate(-50%,-47%) scale(.97);transition:opacity .3s,transform .4s cubic-bezier(.2,.8,.2,1),visibility 0s .4s}
 .sheet.open{opacity:1;visibility:visible;transform:translate(-50%,-50%);transition:opacity .3s,transform .4s cubic-bezier(.2,.8,.2,1)}
-.sheet-bar{position:sticky;top:0;z-index:1;display:flex;justify-content:space-between;gap:12px;align-items:center;background:#fffdf6;border-bottom:2px solid #e9aa9c;
+.sheet-bar{position:sticky;top:0;z-index:1;display:flex;justify-content:space-between;gap:12px;align-items:center;background:linear-gradient(#fffdf8 72%,rgba(255,253,248,0));border-bottom:0;
   padding-block:12px;padding-left:max(28px,env(safe-area-inset-left,0px));padding-right:max(28px,env(safe-area-inset-right,0px))}
 .bar-left{display:flex;align-items:baseline;gap:20px}
 .bar-title{display:flex;align-items:baseline;gap:14px;min-width:0}
@@ -609,7 +609,7 @@ body:has(.sheet.menu.open) .scrim,body:has(.sheet.shelf.open) .scrim,body:has(.s
 .lede{margin:12px 0 22px;font-size:18px;line-height:1.55}
 .art{margin:0 0 22px;border:2px solid var(--ink);border-radius:var(--wobble);overflow:hidden;background:#fffdf7}
 .art svg{display:block;width:100%;height:auto;aspect-ratio:2/1}
-.meta{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px 20px;margin:0 0 30px;padding:16px 0;background:var(--hline) left top/100% 7px no-repeat,var(--hline2) left bottom/100% 7px no-repeat}
+.meta{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px 20px;margin:0 0 30px;padding:0}
 .meta dt{font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:var(--ink-soft)}
 .meta dd{margin:2px 0 0;font-size:14px}
 .sheet h3{margin:0 0 8px;font-family:var(--f-title);font-weight:400;font-size:30px;line-height:1.2;filter:url(#ink)}
@@ -643,6 +643,12 @@ blockquote{margin:0 0 28px;padding:0;font-family:var(--f-title);font-size:28px;l
 .sound:not(.open) #sndVol{width:0;opacity:0;margin:0;pointer-events:none}
 .fs-x{display:none}
 .menu-btn{transition:opacity .25s ease,transform .3s ease}
+.inline-link{padding:0;background:none;border:0;font:inherit;color:var(--link);text-decoration:underline;text-underline-offset:3px;cursor:pointer}
+.soc-row{display:flex;gap:10px;margin:0 0 24px}
+.soc-btn{position:relative;display:grid;place-items:center;width:44px;height:44px;background:#fffaf0;border:1.5px solid transparent;border-radius:14px 11px 15px 10px / 11px 15px 10px 14px;color:var(--ink)}
+.soc-btn::before{content:"";position:absolute;inset:-2px;border:2.2px solid var(--ink);border-radius:inherit;pointer-events:none;filter:url(#ink)}
+.soc-btn svg{width:26px;height:26px;filter:url(#ink)}
+.soc-btn:hover{background:#fdf1e2}
 .zoom-x{display:grid;position:fixed;top:28px;right:max(20px,env(safe-area-inset-right,0px));z-index:30;opacity:0;pointer-events:none;transform:rotate(-90deg) scale(.6);transition:opacity .25s ease,transform .3s ease}
 body.zoomed .menu-btn{opacity:0;pointer-events:none;transform:rotate(90deg) scale(.6)}
 body.zoomed .zoom-x{opacity:1;pointer-events:auto;transform:none}
@@ -742,6 +748,8 @@ body:has(.sheet.book.open) .top{z-index:5}
   body.playing .notes .note{animation-duration:6s}
   .sheet{top:0;left:0;width:100vw;height:100vh;height:100dvh;max-height:none;border:0;border-radius:0;transform:translateY(4%)}
   .sheet.open{transform:none}
+  .sheet:not(.book):not(.menu):not(.shelf):not(.player):not(.letter){top:auto;bottom:0;height:88vh;height:88dvh;border-radius:18px 18px 0 0;transform:translateY(8%)}
+  .sheet.open:not(.book):not(.menu):not(.shelf):not(.player):not(.letter){transform:none}
   .sheet.book{border-radius:0}
   .fave-grid{grid-template-columns:1fr}
   .fave .fav-art,.fave .fav-img{width:78px}
@@ -765,7 +773,7 @@ body:has(.sheet.book.open) .top{z-index:5}
   .ticket-wrap{max-height:calc(100vh - 32px);max-height:calc(100dvh - 32px);overflow-y:auto}
   .menu-list{position:fixed;top:auto;left:0;right:0;bottom:0;width:auto;height:80vh;height:80dvh;z-index:22;box-sizing:border-box;align-content:start;overflow-y:auto;
     padding:34px max(18px,env(safe-area-inset-right,0px)) calc(26px + env(safe-area-inset-bottom,0px)) 46px;
-    background:#fffdf6;background-image:linear-gradient(90deg,transparent 30px,#e9aa9c 30px,#e9aa9c 31.5px,transparent 31.5px),repeating-linear-gradient(180deg,transparent 0 47px,#d6e4ec 47px 48px);background-position:0 0,0 34px;background-attachment:local;
+    background:var(--paper-tex),#fffdf8;
     border:0;border-radius:18px 18px 0 0;box-shadow:none;transform:none;filter:none;animation:sheetUp .35s cubic-bezier(.2,.8,.2,1)}
   .menu-list::before{display:none}
   .menu-list li{height:48px;padding-bottom:6px}
@@ -2041,8 +2049,8 @@ function openAbout() {
     <p class="body-p">I thrive in spaces that move with momentum \u2014 where fast learning, exploration, and creative thinking matter. I balance structure with playfulness, and find joy in crafting experiences that feel approachable and delightful.</p>
     <p class="body-p">With over 5 years across startups and global design agencies, I\u2019ve helped shape digital products for industry-leading clients in health, finance, automotive, e-commerce, and marketing \u2014 from mobile and web apps to large-scale design systems.</p>
     <section><h3>Experience</h3><ul class="exp">${jobs.map(([co, role, when, t]) => `<li><b>${esc(co)}</b><span class="when">${esc(role)} \u00B7 ${when}</span><p>${esc(t)}</p></li>`).join('')}</ul></section>
-    <section><h3>Say hello</h3><p class="body-p">Wanna chat for fun or work with Laro Design?</p>
-    <dl class="meta"><div><dt>E-mail</dt><dd>laro@laro.design<br>jmgcatt@gmail.com</dd></div><div><dt>Socials</dt><dd><a href="https://www.linkedin.com/in/jamiecatt/" target="_blank" rel="noopener">LinkedIn</a> \u00B7 <a href="https://www.instagram.com/jamiecatt" target="_blank" rel="noopener">Instagram</a></dd></div></dl></section>`, false);
+    <section><h3>Say hello</h3><p class="body-p">Wanna <button class="inline-link" type="button" data-letter>chat for fun</button> or <a href="mailto:laro@laro.design">work with Laro Design</a>?</p>
+    <p class="soc-row"><a class="soc-btn" href="https://www.linkedin.com/in/jamiecatt/" target="_blank" rel="noopener" aria-label="LinkedIn"><svg viewBox="0 0 28 28" aria-hidden="true"><g fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round"><path d="M8 12.4 Q8.3 16.6 8 20.4"/><path d="M12.6 20.4 Q12.4 16.2 12.7 12.6 M12.7 15.6 Q13.4 12.4 16.6 12.5 Q19.8 12.7 19.9 16 Q20.1 18.4 19.9 20.4"/></g><circle cx="8" cy="8.2" r="1.6" fill="currentColor"/></svg></a><a class="soc-btn" href="https://www.instagram.com/jamiecatt" target="_blank" rel="noopener" aria-label="Instagram"><svg viewBox="0 0 28 28" aria-hidden="true"><g fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9.6 6.4 Q14 5.8 18.6 6.4 Q21.4 6.9 21.7 9.6 Q22.2 14 21.6 18.6 Q21.2 21.3 18.4 21.7 Q14 22.2 9.5 21.6 Q6.8 21.2 6.4 18.4 Q5.8 14 6.4 9.5 Q6.9 6.8 9.6 6.4Z"/><circle cx="14" cy="14" r="3.7"/></g><circle cx="18.6" cy="9.5" r="1.1" fill="currentColor"/></svg></a></p></section>`, false);
 }
 document.addEventListener('click', e => {
   const o = e.target.closest('[data-open]');
@@ -2067,7 +2075,15 @@ $('#zoomX').onclick = () => {
   closeZoom();
 };
 $('#navFaves').onclick = () => { setMenu(false); openFaves(); };
-$('#navLetter').onclick = () => { setMenu(false); openLetter(); };
+async function goLetter() {
+  if (sheet.classList.contains('open')) { closeSheet(); await new Promise(r => setTimeout(r, 500)); }
+  if (zoomed) { closeZoom(); await new Promise(r => setTimeout(r, 1400)); }
+  if (placeIdx === 2) { await goInside(); }
+  if (phone.matches) { const st = STOPS.findIndex(x => x.name.includes('books')); if (st >= 0 && st !== stopIdx) await moveTo(st, 400); } else if (placeIdx !== 0) await moveTo(0);
+  actions.typewriter();
+}
+$('#navLetter').onclick = () => { setMenu(false); goLetter(); };
+document.addEventListener('click', e => { if (e.target.closest('[data-letter]')) goLetter(); });
 // send me a letter: a typewriter with a sheet of paper in it. The page grows out of the roller as you type;
 // Send opens an email to me with what you wrote
 // typewriter sounds, made in the page: a sharp clack per key, a softer thud for the space bar, a bell at the end of a line
