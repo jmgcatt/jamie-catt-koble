@@ -57,7 +57,7 @@ button{font:inherit;color:inherit}
 .td-x{position:static}
 .td-head{margin-bottom:14px}
 .stubs{list-style:none;margin:0;padding:26px 0 40px;display:grid;justify-content:center;grid-template-columns:min(340px,82%)}
-.stubs .stub{grid-area:1/1;margin:0;align-self:start;touch-action:pan-y;user-select:none;-webkit-user-select:none;cursor:grab;transition:transform .5s cubic-bezier(.2,.8,.2,1),opacity .35s ease}
+.stubs .stub{grid-area:1/1;margin:0;align-self:start;touch-action:pan-y;user-select:none;-webkit-user-select:none;cursor:grab;transition:transform .55s cubic-bezier(.34,1.5,.64,1),opacity .3s ease}
 .stubs .stub[data-p="0"]{z-index:5;transform:rotate(-1deg)}
 .stubs .stub[data-p="1"]{z-index:4;transform:translate(8px,10px) rotate(3deg)}
 .stubs .stub[data-p="2"]{z-index:3;transform:translate(-8px,17px) rotate(-4deg)}
@@ -197,7 +197,7 @@ body.playing .notes .note:nth-child(2){animation-delay:-1.8s}
 }
 /* dish and drink cards in one swipeable stack (phones and tablets; the script decides when) */
 .sheet.menu .dish-grid.stack{display:grid;grid-template-columns:min(270px,68vw);justify-content:center;justify-items:center;gap:0;padding:24px 0 40px}
-.sheet.menu .dish-grid.stack .dish{grid-area:1/1;width:min(270px,68vw);touch-action:pan-y;user-select:none;-webkit-user-select:none;transition:transform .5s cubic-bezier(.2,.8,.2,1),opacity .35s ease}
+.sheet.menu .dish-grid.stack .dish{grid-area:1/1;width:min(270px,68vw);touch-action:pan-y;user-select:none;-webkit-user-select:none;transition:transform .55s cubic-bezier(.34,1.5,.64,1),opacity .3s ease}
 .sheet.menu .dish-grid.stack .dish img{-webkit-user-drag:none;pointer-events:none}
 .sheet.menu .dish-grid.stack .dish[data-p="0"]{z-index:5;transform:rotate(-1deg)}
 .sheet.menu .dish-grid.stack .dish[data-p="1"]{z-index:4;transform:translate(7px,9px) rotate(3deg)}
@@ -822,7 +822,7 @@ body:has(.sheet.book.open) .top{z-index:5}
   .jb-no-r{bottom:26px;font-size:13px;color:var(--ink-soft)}
   /* the menu on phones: one dish card on top of a little stack; swipe it away and it tucks back in at the bottom */
   .sheet.menu .dish-grid.stack{display:grid;grid-template-columns:min(250px,68vw);justify-content:center;justify-items:center;gap:0;padding:24px 0 40px}
-  .sheet.menu .dish-grid.stack .dish{grid-area:1/1;width:min(250px,68vw);touch-action:pan-y;user-select:none;-webkit-user-select:none;transition:transform .5s cubic-bezier(.2,.8,.2,1),opacity .35s ease}
+  .sheet.menu .dish-grid.stack .dish{grid-area:1/1;width:min(250px,68vw);touch-action:pan-y;user-select:none;-webkit-user-select:none;transition:transform .55s cubic-bezier(.34,1.5,.64,1),opacity .3s ease}
   .sheet.menu .dish-grid.stack .dish img{-webkit-user-drag:none;pointer-events:none}
   .sheet.menu .dish-grid.stack .dish[data-p="0"]{z-index:5;transform:rotate(-1deg)}
   .sheet.menu .dish-grid.stack .dish[data-p="1"]{z-index:4;transform:translate(7px,9px) rotate(3deg)}
@@ -2806,15 +2806,17 @@ function stackDishes() {
 function placeDishes() {
   dishOrder.forEach((c, i) => { c.dataset.p = i < 3 ? i : 'far'; c.setAttribute('aria-hidden', i ? 'true' : 'false'); c.inert = i > 0; });
 }
+// a swiped card slides a little way to the side, drops behind the stack and springs back in underneath with a small bounce
+function sendBack(c, dir, dy, done) {
+  c.dataset.flying = '1'; c.classList.remove('held');
+  c.style.transition = 'transform .2s ease-out'; c.style.transform = `translate(${dir * c.offsetWidth * .46}px,${dy}px) rotate(${dir * 7}deg)`;
+  setTimeout(() => { done(); c.style.transition = ''; c.style.transform = ''; delete c.dataset.flying; }, 200);
+}
+// while held, a card follows the finger but never leaves the stack by more than most of its own width
+const cardPull = (c, dx) => { const lim = c.offsetWidth * .5; return Math.max(-lim, Math.min(lim, dx * .8)); };
 function throwDish(dir, dy = 0) {
   const c = dishOrder[0]; if (!c || c.dataset.flying) return;
-  c.dataset.flying = '1'; c.classList.remove('held');
-  c.style.transform = `translate(${dir * 120}vw,${dy}px) rotate(${dir * 22}deg)`;
-  setTimeout(() => {
-    // to the bottom of the stack: it slides back in underneath the others
-    dishOrder.push(dishOrder.shift()); placeDishes();
-    c.style.transform = ''; delete c.dataset.flying;
-  }, 260);
+  sendBack(c, dir, dy, () => { dishOrder.push(dishOrder.shift()); placeDishes(); });
 }
 let dishDrag = null, dishDragged = false;
 sheet.addEventListener('pointerdown', e => {
@@ -2827,7 +2829,7 @@ sheet.addEventListener('pointermove', e => {
   const dx = e.clientX - d.x, dy = e.clientY - d.y, now = performance.now();
   if (!d.on) { if (Math.abs(dx) < 8 || Math.abs(dx) < Math.abs(dy)) return; d.on = true; d.c.classList.add('held'); try { d.c.setPointerCapture(e.pointerId); } catch (err) { } }
   if (now > d.lt) { d.vx = .7 * d.vx + .3 * (e.clientX - d.lx) / (now - d.lt); d.lx = e.clientX; d.lt = now; }
-  d.c.style.transform = `translate(${dx}px,${dy * .25}px) rotate(${-1 + dx * .06}deg)`;
+  const px = cardPull(d.c, dx); d.c.style.transform = `translate(${px}px,${dy * .15}px) rotate(${-1 + px * .04}deg)`;
 });
 function dishDragEnd(e) {
   const d = dishDrag; if (!d || e.pointerId !== d.id) return; dishDrag = null;
@@ -3418,8 +3420,7 @@ let stubOrder = [], stubDrag = null;
 function placeStubs() { stubOrder.forEach((c, i) => { c.dataset.p = i < 3 ? i : 'far'; c.style.transform = ''; }); }
 function throwStub(dir) {
   const c = stubOrder[0]; if (!c || stubOrder.length < 2 || c.dataset.flying) return;
-  c.dataset.flying = '1'; c.classList.remove('held'); c.style.transform = `translate(${dir * 130}%,0) rotate(${dir * 18}deg)`;
-  setTimeout(() => { stubOrder.push(stubOrder.shift()); delete c.dataset.flying; placeStubs(); }, 260);
+  sendBack(c, dir, 0, () => { stubOrder.push(stubOrder.shift()); placeStubs(); });
 }
 $('#stubs').addEventListener('pointerdown', e => {
   const c = e.target.closest('.stub'); if (!c || c !== stubOrder[0] || e.target.closest('a') || !e.isPrimary || e.button > 0) return;
@@ -3429,7 +3430,7 @@ $('#stubs').addEventListener('pointermove', e => {
   const d = stubDrag; if (!d || e.pointerId !== d.id) return;
   const dx = e.clientX - d.x, dy = e.clientY - d.y;
   if (!d.on) { if (Math.abs(dx) < 8 || Math.abs(dx) < Math.abs(dy)) return; d.on = true; d.c.classList.add('held'); try { d.c.setPointerCapture(e.pointerId); } catch (err) { } }
-  d.c.style.transform = `translate(${dx}px,${dy * .2}px) rotate(${-1 + dx * .05}deg)`;
+  const px = cardPull(d.c, dx); d.c.style.transform = `translate(${px}px,${dy * .15}px) rotate(${-1 + px * .04}deg)`;
 });
 const stubEnd = e => {
   const d = stubDrag; if (!d || e.pointerId !== d.id) return; stubDrag = null;
