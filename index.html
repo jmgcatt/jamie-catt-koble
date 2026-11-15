@@ -646,10 +646,19 @@ body.zoomed .zoom-x{opacity:1;pointer-events:auto;transform:none}
 body:has(.sheet.book.open) .zoom-x{opacity:0!important;pointer-events:none!important}
 body.zoomed .canvas-view .fs-x{display:none!important}
 /* the laptop: its screen fills the whole view, with the dark edge of the lid around it and the keyboard along the bottom */
-.screen{position:fixed!important;inset:0!important;width:auto!important;height:auto!important;z-index:18;box-sizing:border-box;border:12px solid #3b3739;border-bottom:0;border-radius:20px 20px 0 0}
-.screen .screen-bar{padding-top:86px;background:none}
+.screen{position:fixed!important;inset:0!important;width:auto!important;height:auto!important;z-index:18;box-sizing:border-box;border:0;padding:12px 12px 0;background:#4b4749;border-radius:20px 20px 0 0}
+.screen>.screen-bar,.screen>.cards,.screen>.screen-project{background-color:#fdf6e6}
+/* the lid's edge is pencilled in: a darker grainy layer over the base tone, with a thin inked inner line */
+.screen::before{content:"";position:absolute;inset:0;z-index:2;pointer-events:none;border:12px solid #2b2829;border-bottom:0;border-radius:inherit;filter:url(#pencil)}
+.screen::after{content:"";position:absolute;inset:11px 11px 0;z-index:2;pointer-events:none;border:1.6px solid #1f1c1d;border-bottom:0;border-radius:6px 6px 0 0;filter:url(#ink)}
+/* cards and the filter on the laptop and easel: white, no outlines, on every screen */
+.screen .card,.cv-grid .card{border:0;background:#fff}
+.card svg,.work-list svg,.card img{border-radius:2px!important}
+.screen-bar .seg{padding:0;border:0;background:#fff}
+.screen-bar .seg button{padding:7px 12px;line-height:1.15}
+.screen .screen-bar{padding-top:86px;background:#fdf6e6}
 .screen-bar .seg button{min-height:0}
-.lap-kb{flex:none;height:clamp(54px,11vh,112px);margin:0 -12px;background:#c5cad2;border-top:7px solid #2d2a2b}
+.lap-kb{position:relative;z-index:3;flex:none;height:clamp(60px,13vh,128px);margin:0 -12px;background:#8d939c;border-top:6px solid #2d2a2b}
 .lap-kb svg{display:block;width:100%;height:100%}
 body:has(#screen:not([hidden])) .top .mark h1{color:var(--ink)}
 @media (min-width:1200px) and (orientation:landscape){.screen .cards{grid-template-columns:repeat(4,minmax(0,1fr))}}
@@ -4163,9 +4172,17 @@ async function openCooking() {
   $('#pan').classList.add('cooking'); await zoomThen('pan', () => openWeekly('menu'));
 }
 (() => {
+  // the keyboard deck seen from the front: it narrows toward the hinge, and the rows get smaller as they recede
   let keys = '';
-  for (let r = 0; r < 4; r++) for (let c = 0; c < 15; c++) { const x = 34 + c * 62.5 + (r % 2) * 10, w = 52; if (r === 3 && c > 3 && c < 10) { if (c === 4) keys += `<rect x="${x}" y="${12 + r * 22}" width="${6 * 62.5 - 10}" height="16" rx="4"/>`; continue; } keys += `<rect x="${x}" y="${12 + r * 22}" width="${w}" height="16" rx="4"/>`; }
-  $('#lapKb').innerHTML = `<svg viewBox="0 0 1000 104" preserveAspectRatio="none"><g fill="#8a8f98" filter="url(#pencil)">${keys}</g></svg>`;
+  const rows = [[9, 12], [28, 14], [50, 17], [75, 20]];
+  rows.forEach(([y, h], r) => {
+    const inset = 70 * (1 - (y + h / 2) / 104) + 34, w = (1000 - 2 * inset) / 14, gap = 3 + r;
+    for (let c = 0; c < 14; c++) {
+      if (r === 3 && c > 3 && c < 10) { if (c === 4) keys += `<rect x="${(inset + c * w + gap / 2).toFixed(1)}" y="${y}" width="${(6 * w - gap).toFixed(1)}" height="${h}" rx="4"/>`; continue; }
+      keys += `<rect x="${(inset + c * w + gap / 2).toFixed(1)}" y="${y}" width="${(w - gap).toFixed(1)}" height="${h}" rx="${3 + r * .5}"/>`;
+    }
+  });
+  $('#lapKb').innerHTML = `<svg viewBox="0 0 1000 104" preserveAspectRatio="none"><path d="M70,0 H930 L1000,104 H0Z" fill="#c5cad2"/><g filter="url(#pencil)"><path d="M70,0 H930 L1000,104 H0Z" fill="#d3d7de"/><g fill="#7e848d">${keys}</g></g></svg>`;
 })();
 $('#screenX').onclick = () => closeLaptop(); $('#easelX').onclick = () => closeEasel();
 // left and right arrows move between rooms, or stops on phones
