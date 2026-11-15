@@ -68,7 +68,7 @@ button{font:inherit;color:inherit}
 .stub:nth-child(odd){transform:rotate(-.7deg)}
 .stub:nth-child(even){transform:rotate(.6deg)}
 .stub{-webkit-mask:radial-gradient(circle 8px at left center,#0000 7.5px,#000 8px) left/51% 100% no-repeat,radial-gradient(circle 8px at right center,#0000 7.5px,#000 8px) right/51% 100% no-repeat;mask:radial-gradient(circle 8px at left center,#0000 7.5px,#000 8px) left/51% 100% no-repeat,radial-gradient(circle 8px at right center,#0000 7.5px,#000 8px) right/51% 100% no-repeat}
-.stub-top{display:flex;justify-content:space-between;align-items:baseline;padding-bottom:8px;background:var(--hline) left bottom/100% 7px no-repeat}
+.stub-top{display:flex;justify-content:space-between;align-items:baseline;padding-bottom:4px}
 .stub-top b{text-transform:lowercase;filter:url(#ink);font-family:var(--f-title);font-size:22px;color:var(--persimmon);font-variant-numeric:tabular-nums;font-weight:400}
 .stub-top span{font-size:12px;letter-spacing:.12em;text-transform:uppercase;color:var(--ink-soft)}
 .stub-q{margin:8px 0 4px;font-family:var(--f-hand);font-size:16px;line-height:1.25}
@@ -314,7 +314,7 @@ body.zoomed .edge-tab,.edge-tab[hidden]{display:none}
 .ticket-wrap{position:fixed;inset:0;z-index:9;width:min(440px,calc(100vw - 32px));height:fit-content;margin:auto;animation:pop .35s cubic-bezier(.2,.8,.2,1)}
 .ticket{position:relative;background:#fffaf0;border-radius:var(--wobble);padding:20px 28px 22px}
 .ticket{-webkit-mask:radial-gradient(circle 10px at left center,#0000 9.5px,#000 10px) left/51% 100% no-repeat,radial-gradient(circle 10px at right center,#0000 9.5px,#000 10px) right/51% 100% no-repeat;mask:radial-gradient(circle 10px at left center,#0000 9.5px,#000 10px) left/51% 100% no-repeat,radial-gradient(circle 10px at right center,#0000 9.5px,#000 10px) right/51% 100% no-repeat}
-.t-top{display:flex;justify-content:space-between;align-items:baseline;background:var(--hline2) left bottom/100% 7px no-repeat;padding-bottom:10px}
+.t-top{display:flex;justify-content:space-between;align-items:baseline;padding-bottom:6px}
 .t-no{font-family:var(--f-title);font-weight:400;font-size:34px;line-height:1.1;text-transform:lowercase;color:var(--persimmon);filter:url(#ink)}
 .t-date{font-size:12px;letter-spacing:.12em;text-transform:uppercase;color:var(--ink-soft)}
 .t-kick{margin:12px 0 6px;font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:var(--ink-soft)}
@@ -443,7 +443,8 @@ body.playing .turntable .arm{transform:none}
 .letter-tw{position:relative;z-index:1;display:block;width:100%;height:auto;overflow:visible}
 .letter-tw.clack{animation:clack .09s ease}
 @keyframes clack{50%{transform:translateY(1.5px)}}
-#letterSend{margin-top:14px}
+#letterSend{margin-top:14px;padding:9px 22px;background:#fffaf0;border:1.5px solid var(--ink);border-radius:14px 11px 15px 10px / 11px 15px 10px 14px;font-family:var(--f-body);font-size:16px;font-weight:500;color:var(--ink);filter:url(#ink)}
+#letterSend:hover{background:#fdf1e2}
 /* the reading stack: the books stand up in a row over the house, angled like the record sleeves */
 .sheet.shelf{background:transparent;border:0;filter:none}
 .sheet.shelf .sheet-bar{display:none}
@@ -4046,6 +4047,10 @@ function setMode() {
   texBase = phone.matches ? stopW() : VB0[2];
   svg.setAttribute('preserveAspectRatio', phone.matches ? 'xMidYMax slice' : 'xMidYMid meet');
   setLong(phone.matches && placeIdx !== 2);
+  // small screens: a gentler pencil grain, so the drawing reads cleaner
+  const soft = smallScreen.matches;
+  document.querySelector('#pencil feColorMatrix').setAttribute('values', `0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  ${soft ? '-1.5 0 0 0 1.62' : '-2.4 0 0 0 1.95'}`);
+  document.querySelector('#crayon feColorMatrix').setAttribute('values', `0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  ${soft ? '-1.9 0 0 0 1.78' : '-3 0 0 0 2.15'}`);
   placeControls();
   if (!zoomed && !zooming) { setVB(homeVB()); setSlide(homeSlide()); }
   updateNav(); requestAnimationFrame(addHitAreas);
