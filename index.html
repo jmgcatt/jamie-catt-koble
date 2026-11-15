@@ -450,7 +450,11 @@ body.playing .turntable .arm{transform:none}
 .sheet.letter{background:transparent;border:0;filter:none}
 .sheet.letter .sheet-bar{display:none}
 .sheet.letter .sheet-body{min-height:100%;box-sizing:border-box;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:84px 16px 16px!important}
-.letter-wrap{display:grid;justify-items:center;width:min(440px,100%)}
+.letter-wrap{position:relative;display:grid;justify-items:center;width:min(440px,100%)}
+.env-holder{position:absolute;left:50%;z-index:2;width:66%;opacity:0;transform:translate(-50%,-50%);pointer-events:none}
+.env-svg{display:block;width:100%;height:auto;overflow:visible}
+.env-flap{transform-box:fill-box;transform-origin:center top;transform:scaleY(-1)}
+.env-seal{transform-box:fill-box;transform-origin:center;opacity:0}
 .letter-page{position:relative;z-index:0;width:74%;box-sizing:border-box;margin:0 0 -22px;padding:18px 18px 40px;min-height:150px;max-height:42vh;overflow-y:auto;background:var(--paper-tex),#fffdf8;border-radius:2px 2px 0 0;font-family:"Special Elite",var(--f-body);font-size:16px;line-height:1.6;color:var(--ink)}
 .letter-mirror{white-space:pre-wrap;overflow-wrap:anywhere;min-height:4.8em}
 .letter-mirror .tw-caret{display:inline-block;width:.46em;height:1.1em;margin:0 .04em -.2em;background:linear-gradient(var(--ink),var(--ink)) center/1.6px 100% no-repeat,linear-gradient(var(--ink),var(--ink)) top/100% 1.6px no-repeat,linear-gradient(var(--ink),var(--ink)) bottom/100% 1.6px no-repeat;filter:url(#ink);animation:twBlink 1.1s steps(1) infinite}
@@ -2140,6 +2144,33 @@ function typeSound(kind) {
     og.gain.setValueAtTime(.3, t); og.gain.exponentialRampToValueAtTime(.0005, t + .07); o.connect(og); og.connect(out); o.start(t); o.stop(t + .09);
   } catch (e) { }
 }
+// the page rolls up out of the typewriter, folds into an envelope, the flap closes and a red wax seal is pressed on
+async function letterAway(page) {
+  if (reduceMotion.matches) return;
+  const wrap = page.parentNode, up = Math.min(70, page.offsetHeight * .3);
+  typeSound('bell');
+  await page.animate([{ transform: 'none' }, { transform: `translateY(${-up}px)` }], { duration: 700, easing: 'cubic-bezier(.3,.7,.3,1)', fill: 'forwards' }).finished;
+  const env = E('svg', { viewBox: '0 0 200 150', class: 'env-svg', 'aria-hidden': 'true' }), g = E('g', {}, env);
+  const body = rr(12, 44, 176, 98, 5), flapD = 'M12,46 L100,104 L188,46Z';
+  piece(g, { occ: body, fill: [[body, '#f6eedd', 1]], line: [body, 'M12,142 L84,92M188,142 L116,92'] });
+  const flap = E('g', { class: 'env-flap' }, g);
+  piece(flap, { occ: flapD, fill: [[flapD, '#efe4cd', 1]], line: [flapD] });
+  const seal = E('g', { class: 'env-seal' }, g), wax = fluff(100, 100, 15, 14, 10, 2.2, 912);
+  piece(seal, { occ: wax, fill: [[wax, '#9c2f2a', 1], [ell(100, 100, 9.5), '#b23a33', 1]], line: [wax, { d: ell(100, 100, 9.5), stroke: '#7a211d', 'stroke-width': 1.2 }], color: '#6e1d1a', lw: 1.6 });
+  E('text', { x: 100, y: 106, 'text-anchor': 'middle', 'font-family': 'La Belle Aurore, cursive', 'font-size': 17, fill: '#f6d9d2' }, seal).textContent = 'j';
+  const holder = document.createElement('div'); holder.className = 'env-holder'; holder.appendChild(env);
+  holder.style.top = page.offsetTop - up + page.offsetHeight / 2 + 'px'; wrap.appendChild(holder);
+  await Promise.all([
+    page.animate([{ transform: `translateY(${-up}px) scale(1)`, opacity: 1 }, { transform: `translateY(${-up}px) scale(.8,.34)`, opacity: 0 }], { duration: 480, easing: 'ease-in', fill: 'forwards' }).finished,
+    holder.animate([{ opacity: 0, transform: 'translate(-50%,-50%) scale(.86)' }, { opacity: 1, transform: 'translate(-50%,-50%) scale(1)' }], { duration: 480, easing: 'ease-out', fill: 'forwards' }).finished
+  ]);
+  await flap.animate([{ transform: 'scaleY(-1)' }, { transform: 'scaleY(1)' }], { duration: 460, easing: 'ease-in-out', fill: 'forwards' }).finished;
+  await seal.animate([{ transform: 'scale(0)', opacity: 0 }, { transform: 'scale(1.3)', opacity: 1, offset: .65 }, { transform: 'scale(1)', opacity: 1 }], { duration: 420, easing: 'ease-out', fill: 'forwards' }).finished;
+  typeSound('space');
+  await new Promise(r => setTimeout(r, 900));
+  await holder.animate([{ opacity: 1, transform: 'translate(-50%,-50%)' }, { opacity: 0, transform: 'translate(-50%,-130%) rotate(-5deg)' }], { duration: 520, easing: 'ease-in', fill: 'forwards' }).finished;
+  holder.remove(); page.getAnimations().forEach(a => a.cancel());
+}
 function openLetter() {
   openSheet(`<h2 id="sheetTitle" tabindex="-1">send me a letter</h2><div class="letter-wrap">
     <div class="letter-page" id="letterPage"><div class="letter-mirror" id="letterMirror" aria-hidden="true"></div><textarea class="letter-paper" id="letterText" aria-label="Your letter" spellcheck="false"></textarea></div>
@@ -2159,8 +2190,12 @@ function openLetter() {
   ta.addEventListener('input', e => { show(); typeSound(e.inputType === 'insertLineBreak' ? 'bell' : e.data === ' ' ? 'space' : 'key'); const tw = $('#letterTw'); tw.classList.remove('clack'); void tw.getBoundingClientRect(); tw.classList.add('clack'); });
   ['keyup', 'click', 'select', 'focus'].forEach(k => ta.addEventListener(k, show));
   show(); setTimeout(() => ta.focus({ preventScroll: true }), 350);
-  $('#letterSend').onclick = () => {
+  let sending = false;
+  $('#letterSend').onclick = async () => {
     const t = ta.value.trim(); if (!t) { ta.focus(); return; }
+    if (sending) return; sending = true; ta.blur();
+    await letterAway(page);
+    ta.value = ''; show(); sending = false;
     location.href = 'mailto:jmgcatt@gmail.com?subject=' + encodeURIComponent('a letter for you') + '&body=' + encodeURIComponent(t);
   };
 }
