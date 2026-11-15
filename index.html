@@ -2166,6 +2166,24 @@ function typeSound(kind) {
     og.gain.setValueAtTime(.3, t); og.gain.exponentialRampToValueAtTime(.0005, t + .07); o.connect(og); og.connect(out); o.start(t); o.stop(t + .09);
   } catch (e) { }
 }
+// the typed page as a picture: typewriter face on grainy paper, the date at the top and the name at the foot
+async function letterImage(text, name) {
+  try { await document.fonts.load('34px "Special Elite"'); } catch (e) { }
+  const W = 1200, pad = 110, fs = 34, lh = 56, c = document.createElement('canvas'), x = c.getContext('2d');
+  x.font = `${fs}px "Special Elite", monospace`;
+  const lines = [];
+  text.split('\n').forEach(par => { let line = ''; par.split(' ').forEach(w => { const t = line ? line + ' ' + w : w; if (x.measureText(t).width > W - 2 * pad && line) { lines.push(line); line = w; } else line = t; }); lines.push(line); });
+  const H = Math.max(900, pad * 2 + 120 + lines.length * lh + (name ? 110 : 0));
+  c.width = W; c.height = H;
+  x.fillStyle = '#fffdf8'; x.fillRect(0, 0, W, H);
+  for (let i = 0; i < W * H / 260; i++) { x.fillStyle = Math.random() < .5 ? 'rgba(158,140,117,.16)' : 'rgba(237,230,214,.5)'; x.fillRect(Math.random() * W, Math.random() * H, 1.6 + Math.random() * 1.6, 1.6 + Math.random() * 1.6); }
+  x.fillStyle = '#76614f'; x.font = `26px "Special Elite", monospace`;
+  x.fillText(new Date().toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' }).toLowerCase(), pad, pad);
+  x.fillStyle = '#3b2e25'; x.font = `${fs}px "Special Elite", monospace`;
+  lines.forEach((l, i) => x.fillText(l, pad, pad + 110 + i * lh));
+  if (name) x.fillText(name, pad, pad + 110 + lines.length * lh + 70);
+  return new Promise((res, rej) => c.toBlob(b => b ? res(b) : rej(new Error('no image')), 'image/png'));
+}
 // the page rolls up out of the typewriter, folds into an envelope, the flap closes and a red wax seal is pressed on
 async function letterAway(page) {
   if (reduceMotion.matches) return;
@@ -2226,7 +2244,17 @@ function openLetter() {
     // the letter goes straight to my inbox through a form-to-email service; the visitor never leaves the page
     const data = { name: name || 'a visitor', message: t, _subject: 'a letter from your site' + (name ? ' \u2014 ' + name : ''), _template: 'box' };
     if (email) data.email = email;
-    fetch(LETTERS_URL || 'https://formsubmit.co/ajax/jmgcatt@gmail.com', { method: 'POST', headers: { 'Content-Type': 'application/json', Accept: 'application/json' }, body: JSON.stringify(data) }).catch(() => { });
+    const to = LETTERS_URL || 'https://formsubmit.co/ajax/jmgcatt@gmail.com';
+    const plain = () => fetch(to, { method: 'POST', headers: { 'Content-Type': 'application/json', Accept: 'application/json' }, body: JSON.stringify(data) }).catch(() => { });
+    // first try sending it with a picture of the typed page attached; if that isn't accepted, send the plain letter
+    (async () => {
+      try {
+        const img = await letterImage(t, name);
+        const fd = new FormData(); Object.entries(data).forEach(([k, v]) => fd.append(k, v)); fd.append('attachment', img, 'letter.png');
+        const r = await fetch(to, { method: 'POST', headers: { Accept: 'application/json' }, body: fd }), j = r.ok ? await r.json() : null;
+        if (!j || String(j.success) !== 'true') await plain();
+      } catch (e) { await plain(); }
+    })();
     await letterAway(page);
     sending = false; ta.value = ''; show();
   };
