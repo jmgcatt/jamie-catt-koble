@@ -1067,17 +1067,17 @@ function buildShell() {
   piece(rb, { fill: [[ell(790, 268, 130, 120), '#fbd98e', .3]] });
 }
 // the front of the frame: side walls, corner trim, baseboard and skirting, drawn over the rooms
-function buildFrameFront() {
-  const ff = E('g', { id: 'frameFront', class: 'fixed', 'pointer-events': 'none' }, world);
+function buildFrameFront(id = 'frameFront', X = 0) {
+  const ff = E('g', { id, class: 'fixed', 'pointer-events': 'none' }, world), R = 1140 + X;
   // stone foundation: rough granite blocks in two courses
-  let stones = 'M60,718H1140';
-  for (let x = 60, i = 0; x < 1140; x += 54 + (i * 37) % 30, i++) stones += `M${x},694V718`;
-  for (let x = 84, i = 0; x < 1140; x += 60 + (i * 23) % 26, i++) stones += `M${x},718V742`;
-  piece(ff, { occ: rect(60, 688, 1080, 54), fill: [[rect(66, 688, 1068, 8), '#8a5a38', .9], [rect(60, 694, 1080, 48), '#cfc8b8', .8]], line: ['M66,688H1134M66,696H1134', rect(60, 694, 1080, 48), { d: stones, 'stroke-width': 1.3, stroke: '#7d776a' }] });
-  const posts = 'M73,190V694M1127,190V694';
+  let stones = `M60,718H${R}`;
+  for (let x = 60, i = 0; x < R; x += 54 + (i * 37) % 30, i++) stones += `M${x},694V718`;
+  for (let x = 84, i = 0; x < R; x += 60 + (i * 23) % 26, i++) stones += `M${x},718V742`;
+  piece(ff, { occ: rect(60, 688, 1080 + X, 54), fill: [[rect(66, 688, 1068 + X, 8), '#8a5a38', .9], [rect(60, 694, 1080 + X, 48), '#cfc8b8', .8]], line: [`M66,688H${R - 6}M66,696H${R - 6}`, rect(60, 694, 1080 + X, 48), { d: stones, 'stroke-width': 1.3, stroke: '#7d776a' }] });
+  const posts = `M73,190V694M${1127 + X},190V694`;
   piece(ff, { line: [{ d: posts, 'stroke-width': 26, 'stroke-linecap': 'butt' }] });
   piece(ff, { line: [{ d: posts, stroke: '#a8743f', 'stroke-width': 20, 'stroke-linecap': 'butt' }] });
-  piece(ff, { line: [{ d: 'M70,196V688M1124,196V688', stroke: '#c99a68', 'stroke-width': 3 }] });
+  piece(ff, { line: [{ d: `M70,196V688M${1124 + X},196V688`, stroke: '#c99a68', 'stroke-width': 3 }] });
 }
 
 /* ---------- entrance with curtain ---------- */
@@ -1798,14 +1798,28 @@ function decorate() {
   });
 }
 
-buildOutside(); const outsideCount = world.children.length; buildShell(); buildDoor(); buildTicket(); buildWindow(); buildDesk(); buildWorkDesk(); buildDecor(); buildArch(); buildCozy(); buildKitchen(); buildTeo(); buildNight(); buildLantern(); spreadRoom(); buildRecords(); buildPlay(); buildFrameFront(); buildSun(); buildArt();
+buildOutside(); const outsideCount = world.children.length; buildShell(); buildDoor(); buildTicket(); buildWindow(); buildDesk(); buildWorkDesk(); buildDecor(); buildArch(); buildCozy(); buildKitchen(); buildTeo(); buildNight(); buildLantern(); spreadRoom(); buildRecords(); buildPlay(); buildFrameFront(); buildFrameFront('frameFrontLong', 510); piece(E('g', { id: 'longOcc', class: 'fixed' }, world), { occ: rect(1130, 190, 520, 552) }); buildSun(); buildArt();
 // everything inside the house goes in one layer, clipped to the frame's window
 const roomClip = E('rect', { x: 80, y: 201, width: 1040, height: 487 }, E('clipPath', { id: 'roomClip', clipPathUnits: 'userSpaceOnUse' }, $('#scene defs')));
 const rooms = E('g', { id: 'rooms', 'clip-path': 'url(#roomClip)' });
 world.insertBefore(rooms, $('#frameBack').nextSibling);
-[...world.children].slice(outsideCount).forEach(el => { if (el !== rooms && !['frameBack', 'frameFront', 'sun', 'fx'].includes(el.id) && !el.classList.contains('night-only')) rooms.appendChild(el); });
+[...world.children].slice(outsideCount).forEach(el => { if (el !== rooms && !['frameBack', 'frameFront', 'frameFrontLong', 'longOcc', 'sun', 'fx'].includes(el.id) && !el.classList.contains('night-only')) rooms.appendChild(el); });
 rooms.appendChild($('#nightGlass'));
-world.insertBefore($('#frameFront'), rooms.nextSibling);
+world.insertBefore($('#frameFront'), rooms.nextSibling); world.insertBefore($('#frameFrontLong'), rooms.nextSibling); world.insertBefore($('#longOcc'), rooms);
+// phones: the house is drawn at its full length (living room, then tea bar and stove), with its far wall at the end of
+// the kitchen, so walking through it is one steady pan instead of rooms sliding inside the frame
+let LONG = null;
+function setLong(on) {
+  if (LONG === on) return; LONG = on;
+  const w = on ? 1550 : 1040;
+  roomClip.setAttribute('width', w);
+  $('#frameBack').setAttribute('transform', on ? `translate(-10,0) scale(${1730 / 1220},1) translate(10,0)` : '');
+  $('#frameFront').style.display = on ? 'none' : ''; $('#frameFrontLong').style.display = on ? '' : 'none'; $('#longOcc').style.display = on ? '' : 'none';
+  const nf = document.querySelectorAll('#nightFrame > path');
+  if (nf[0]) nf[0].setAttribute('d', 'M-3000,-3000H4200V4200H-3000Z' + rect(80, 202, w, 486));
+  if (nf[1]) nf[1].setAttribute('d', rect(80, 202, w, 486));
+}
+setLong(false);
 decorate();
 
 // paper grain
@@ -3769,9 +3783,9 @@ function buildStops() {
   $('#dots').innerHTML = STOPS.map(() => '<i></i>').join('');
 }
 // stops are measured with the rooms unslid; kitchen stops are seen with the rooms slid over
-const stopVB = i => [STOPS[i].cx - (STOPS[i].place === 1 ? SLIDE_MAX : 0) - stopW() / 2, 0, stopW(), 764];
+const stopVB = i => [STOPS[i].cx - stopW() / 2, 0, stopW(), 764];
 const homeVB = () => placeIdx === 2 ? (phone.matches ? [YARD_CX - stopW() / 2, 0, stopW(), 764] : VB_OUT) : phone.matches ? stopVB(stopIdx) : VB0;
-const homeSlide = () => placeIdx === 2 ? 0 : phone.matches ? (STOPS[stopIdx].place === 1 ? SLIDE_MAX : 0) : PLACES[placeIdx].slide;
+const homeSlide = () => placeIdx === 2 || phone.matches ? 0 : PLACES[placeIdx].slide;
 function nearestStop(p) {
   const c = p === 1 ? 1350 : 900; let best = -1;
   STOPS.forEach((st, i) => { if (st.place === p && (best < 0 || Math.abs(st.cx - c) < Math.abs(STOPS[best].cx - c))) best = i; });
@@ -3854,18 +3868,23 @@ async function moveTo(i, ms) {
   else if (phone.matches) say(STOPS[stopIdx].name);
 }
 const stepBy = d => placeIdx === 2 ? (d < 0 ? goInside() : null) : moveTo((phone.matches ? stopIdx : placeIdx) + d);
+async function softCut(long) {
+  stage.style.transition = 'opacity .28s ease'; stage.style.opacity = 0; await pause(300);
+  setLong(long); setSlide(0); setVB(homeVB());
+  stage.style.opacity = 1; await pause(300); stage.style.transition = '';
+}
 // the front door: out to the yard with Teo, and back in again
 async function goOutside() {
   if (placeIdx === 2 || moving || zoomed || zooming) return;
   if (!$('#ticket').hidden) closeTicket(false);
   placeIdx = 2; updateNav(); teoOut(); collapsePan();
-  moving = true; await Promise.all([animVB(homeVB(), 1500), animSlide(0, 1500)]); moving = false;
+  moving = true; if (phone.matches) await softCut(false); else await Promise.all([animVB(homeVB(), 1500), animSlide(0, 1500)]); moving = false;
   sparkleInView(); say('You stepped outside. Teo is right behind you.');
 }
 async function goInside() {
   if (placeIdx !== 2 || moving || zoomed || zooming) return;
   placeIdx = 0; stopIdx = Math.max(0, STOPS.findIndex(st => st.name.includes('entrance'))); updateNav(); teoIn(); collapsePan();
-  moving = true; await Promise.all([animVB(homeVB(), 1500), animSlide(0, 1500)]); moving = false;
+  moving = true; if (phone.matches) await softCut(true); else await Promise.all([animVB(homeVB(), 1500), animSlide(0, 1500)]); moving = false;
   sparkleInView(); say('Back inside the house.');
 }
 $('#goOut').onclick = () => stepBy(1); $('#goIn').onclick = () => stepBy(-1);
@@ -3955,6 +3974,7 @@ function placeControls() {
 function setMode() {
   texBase = phone.matches ? stopW() : VB0[2];
   svg.setAttribute('preserveAspectRatio', phone.matches ? 'xMidYMax slice' : 'xMidYMid meet');
+  setLong(phone.matches && placeIdx !== 2);
   placeControls();
   if (!zoomed && !zooming) { setVB(homeVB()); setSlide(homeSlide()); }
   updateNav(); requestAnimationFrame(addHitAreas);
