@@ -447,7 +447,8 @@ body.playing .turntable .arm{transform:none}
 .sheet.menu .sheet-body{min-height:100%;box-sizing:border-box;display:flex;flex-direction:column;align-items:center;justify-content:center;padding-top:0}
 /* the cards sit dead centre on the screen: no notebook margin on one side */
 .sheet.menu .sheet-body,.sheet.shelf .sheet-body,.sheet.player .sheet-body{padding-left:16px!important;padding-right:16px!important}
-.sheet.menu h2{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+.sheet.menu h2,.sheet.shelf h2{position:absolute;top:14px;left:0;right:0;margin:0;text-align:center;font-size:40px;line-height:1.2;color:#fffaf0;filter:none;pointer-events:none}
+body:has(.sheet.menu.open) .scrim,body:has(.sheet.shelf.open) .scrim{background:rgba(30,21,16,.55)}
 .sheet.menu #weeklyList{width:100%}
 .sheet.menu .dish-grid{display:flex;flex-wrap:wrap;justify-content:center;gap:24px;margin:0}
 .sheet.menu .dish{width:min(200px,42vw);box-sizing:border-box;padding:18px 16px 20px;gap:8px;background:#fffaf0;border-radius:var(--wobble);box-shadow:inset 0 0 0 6px #fffaf0,inset 0 0 0 7.5px rgba(201,102,61,.4)}
@@ -455,7 +456,8 @@ body.playing .turntable .arm{transform:none}
 .sheet.menu .dish:nth-child(3n){transform:rotate(.8deg)}
 .sheet.menu .dish b{margin:0 6px;padding-top:12px;background:var(--hline) left top/100% 7px no-repeat}
 .sheet.menu .empty-note{padding:18px 24px;background:#fffaf0;border-radius:var(--wobble);text-align:center}
-.sheet.book{background:none;border:0;filter:none;overflow:hidden}
+.sheet.book{background:none;border:0;filter:none;overflow:hidden;top:0!important;left:0!important;width:100vw!important;height:100vh!important;height:100dvh!important;max-height:none!important;transform:none!important;border-radius:0}
+.sheet.book .jbook{border-radius:0}
 .sheet.book .sheet-bar{position:absolute;left:34px;bottom:36px;top:auto;right:auto;z-index:6;padding:0;background:none;border:0;transform:none}
 .sheet.book .sheet-x{width:44px;height:44px;color:#1f1a17;border:0;background:none}
 .sheet.book .sheet-x svg{width:28px;height:28px;filter:url(#ink)}
@@ -523,7 +525,8 @@ body.playing .turntable .arm{transform:none}
 .jb-curl .jb-face.jc-top .jb-shade{display:none}
 .jb-curl .jc-lift{z-index:2}
 .jb-curl .jc-flap{overflow:hidden;transform-origin:0 0;box-sizing:border-box;background:var(--paper-tex),#f8f5ee;border:1.5px solid #c9b48f;border-radius:3px 8px 8px 3px}
-.jc-band{position:absolute;height:400vmax;transform-origin:0 0;pointer-events:none}
+.jb-still{display:block;margin:0 auto;border-radius:2px}
+.jc-band{position:absolute;height:260vh;transform-origin:0 0;pointer-events:none}
 .jb-cast{position:absolute;top:0;bottom:0;z-index:2;pointer-events:none;opacity:0}
 .jb-no{position:absolute;bottom:20px;z-index:4;font-family:var(--f-body);font-size:13px;color:var(--ink-soft);transform:translateX(-50%);pointer-events:none}
 .jb-no-l{display:none;left:25%}
@@ -659,7 +662,7 @@ body:has(.sheet.book.open) .top{z-index:5}
   .bub{min-height:36px}
   .edge-tab{min-width:44px}
 }
-@media (max-width:760px){
+@media (max-width:760px),(max-width:1100px) and (orientation:portrait){
   .hint{display:none}
   .grain{opacity:.045}
   .menu-list,.teo-card,.tdrawer,.ticket-wrap,.bub,.stub{filter:none}
@@ -728,7 +731,7 @@ body:has(.sheet.book.open) .top{z-index:5}
   body.zoomed .canvas-view .fs-x{display:none!important}
   .ticket-wrap{inset:12px 0 calc(var(--nav-h,92px) + 10px);max-height:calc(100vh - var(--nav-h,92px) - 22px);max-height:calc(100dvh - var(--nav-h,92px) - 22px);overflow-y:auto;overscroll-behavior:contain}
 }
-@media (max-width:760px){
+@media (max-width:760px),(max-width:1100px) and (orientation:portrait){
   .mark h1{font-size:30px}
   .mark p{font-size:13px;max-width:22ch}
   #sndVol{width:60px}
@@ -753,6 +756,7 @@ body:has(.sheet.book.open) .top{z-index:5}
   .screen-bar h2{font-size:26px}
   .work-list button{grid-template-columns:110px minmax(0,1fr)}
   .sheet h2{font-size:42px}
+  .sheet.menu h2,.sheet.shelf h2{top:92px;font-size:36px}
   .meta{grid-template-columns:minmax(0,1fr)}
 }
 @media (prefers-reduced-motion:reduce){
@@ -2048,7 +2052,7 @@ function openBook(html, toc) {
 function layoutBook() {
   const pages = $('#jbPages'), flow = $('#jbFlow');
   if (!book || !pages || !flow || !sheet.classList.contains('book')) return;
-  const W = pages.clientWidth, H = pages.clientHeight, spread = W >= 760, P = spread ? W / 2 : W;
+  const W = pages.clientWidth, H = pages.clientHeight, spread = W >= 760 && !phone.matches, P = spread ? W / 2 : W;
   const pad = spread ? 46 : W < 480 ? 26 : 40, top = W < 480 ? 34 : 44, colH = Math.max(160, H - top - 66);
   Object.assign(book, { W, H, spread, P, pad, top });
   $('#jbook').classList.toggle('spread', spread);
@@ -2059,7 +2063,7 @@ function layoutBook() {
   book.n = Math.max(1, Math.floor(end / P) + 1);
   const step = spread ? 2 : 1;
   book.at = Math.min(book.at - book.at % step, Math.floor((book.n - 1) / step) * step);
-  showBook();
+  showBook(); queueGhost();
 }
 function showBook() {
   const { at, n, P, spread } = book, flow = $('#jbFlow');
@@ -2072,7 +2076,9 @@ function showBook() {
 // a page (a copy of the post shifted to show page k) for the turning leaf
 function bookFace(k, cls) {
   const f = document.createElement('div'); f.className = 'jb-face' + (cls ? ' ' + cls : '');
-  if (k >= 0 && k < book.n) {
+  if (k >= 0 && k < book.n && book.ghost && !book.ghost.el.isConnected) {
+    const g = book.ghost; freshStills(g); g.el.style.left = book.pad - k * book.P + 'px'; f.appendChild(g.el);
+  } else if (k >= 0 && k < book.n) {
     const c = $('#jbFlow').cloneNode(true);
     c.removeAttribute('id'); c.querySelectorAll('[id]').forEach(x => x.removeAttribute('id'));
     c.querySelectorAll('video').forEach(v => { v.removeAttribute('autoplay'); v.removeAttribute('controls'); });
@@ -2083,6 +2089,26 @@ function bookFace(k, cls) {
   f.appendChild(Object.assign(document.createElement('i'), { className: 'jb-shade' }));
   return f;
 }
+function makeGhost() {
+  const flow = $('#jbFlow'); if (!book || !flow) return null;
+  const c = flow.cloneNode(true), vids = [...flow.querySelectorAll('video')];
+  c.removeAttribute('id'); c.querySelectorAll('[id]').forEach(x => x.removeAttribute('id'));
+  c.querySelectorAll('button, a').forEach(x => x.setAttribute('tabindex', '-1'));
+  const stills = [...c.querySelectorAll('video')].map((v, i) => { const cv = document.createElement('canvas'); cv.className = 'jb-still'; v.replaceWith(cv); return [vids[i], cv]; });
+  c.style.transform = 'none';
+  return { el: c, stills };
+}
+function freshStills(g) {
+  g.stills.forEach(([v, cv]) => {
+    const r = v.getBoundingClientRect(); cv.style.width = r.width + 'px'; cv.style.height = r.height + 'px';
+    if (!v.videoWidth) return;
+    cv.width = Math.min(v.videoWidth, 900); cv.height = cv.width * v.videoHeight / v.videoWidth;
+    try { cv.getContext('2d').drawImage(v, 0, 0, cv.width, cv.height); } catch (e) { }
+  });
+}
+let ghostTimer = 0;
+function queueGhost() { clearTimeout(ghostTimer); if (book) book.ghost = null; ghostTimer = setTimeout(() => { if (book && !book.busy) book.ghost = makeGhost(); else if (book) queueGhost(); }, 350); }
+function restVideos(rest) { const f = $('#jbFlow'); if (f) f.querySelectorAll('video').forEach(v => { if (rest) v.pause(); else { const go = v.play(); if (go) go.catch(() => { }); } }); }
 async function turnPage(dir) {
   if (!book || book.busy) return;
   const { P, spread } = book, step = spread ? 2 : 1, from = book.at, to = from + dir * step;
@@ -2167,6 +2193,7 @@ function placeBand(b, M, ang, len, grad) {
   Object.assign(b.style, { left: M[0] + 'px', top: M[1] + 'px', width: Math.max(1, len) + 'px', transform: `rotate(${ang}rad) translateY(-50%)`, background: grad });
 }
 function makeCurl(turning, face) {
+  restVideos(true);
   const { P, H } = book, pages = $('#jbPages');
   const c = document.createElement('div'); c.className = 'jb-curl';
   const under = document.createElement('div'); under.className = 'jc-under';
@@ -2250,7 +2277,7 @@ async function curlEnd(cu, done) {
     book.at = b.at; layoutBook(); return;
   }
   if (done) book.at = cu.to; else book.at = cu.from;
-  showBook(); cu.el.remove(); book.busy = false;
+  showBook(); cu.el.remove(); book.busy = false; restVideos(false);
 }
 async function curlTurn(dir) {
   if (!book || book.busy) return;
@@ -2259,7 +2286,7 @@ async function curlTurn(dir) {
   const { P, H } = book;
   // a tap: the corner lifts and the page sweeps over in a gentle arc
   await cu.tween(dir > 0 ? [-P, cu.cy] : [P, cu.cy], 900, H * .16, t => t < .5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2);
-  book.at = cu.to; showBook(); cu.el.remove(); book.busy = false;
+  book.at = cu.to; showBook(); cu.el.remove(); book.busy = false; restVideos(false);
 }
 let pageDrag = null, pageDragged = false;
 sheet.addEventListener('pointerdown', e => {
@@ -2359,7 +2386,7 @@ function readForm() {
 function openReading() {
   readingOpen = true;
   if (staticSite) {
-    openSheet(`<h2 id="sheetTitle" class="sr-only" tabindex="-1">On my reading stack</h2><div id="readingLists">${readingLists()}</div>`, false, null);
+    openSheet(`<h2 id="sheetTitle" tabindex="-1">currently reading</h2><div id="readingLists">${readingLists()}</div>`, false, null);
     sheet.classList.add('shelf'); return;
   }
   openSheet(`<h2 id="sheetTitle" tabindex="-1">On my reading stack</h2>
@@ -2402,8 +2429,8 @@ initReading();
 /* ---------- this week in the kitchen: what I'm cooking and drinking ---------- */
 // both lists live in the db; people with edit access add and remove items from the panel itself
 const WEEKLY = {
-  menu: { title: 'what i\u2019m cooking this week', empty: 'Nothing on the menu yet this week.', add: 'Add a dish', name: 'Dish', note: 'Notes, like the day or the recipe (optional)', button: 'Add to the menu' },
-  drinks: { title: 'what i\u2019m drinking this week', empty: 'Nothing steeping yet this week.', add: 'Add a tea or coffee', name: 'Tea or coffee', note: 'Notes, like where it\u2019s from (optional)', button: 'Add to the tea bar' }
+  menu: { title: 'currently cooking', empty: 'Nothing on the menu yet this week.', add: 'Add a dish', name: 'Dish', note: 'Notes, like the day or the recipe (optional)', button: 'Add to the menu' },
+  drinks: { title: 'currently sipping', empty: 'Nothing steeping yet this week.', add: 'Add a tea or coffee', name: 'Tea or coffee', note: 'Notes, like where it\u2019s from (optional)', button: 'Add to the tea bar' }
 };
 Object.values(WEEKLY).forEach(w => { w.items = []; w.state = staticSite ? 'ready' : 'loading'; });
 // as a static site the menu comes from data/cooking.json (my "On The Menu" database in Notion), already newest first.
@@ -2454,7 +2481,7 @@ function openWeekly(k) {
 }
 // phones: the dish cards sit in one stack. Swipe the top card either way and it slides off, then tucks back in
 // at the bottom, so you can keep going round and round
-const dishStackMQ = matchMedia('(max-width:760px)');
+const dishStackMQ = matchMedia('(max-width:760px),(max-width:1100px) and (orientation:portrait)');
 let dishOrder = [];
 function stackDishes() {
   const g = sheet.classList.contains('menu') && $('#weeklyList .dish-grid');
@@ -2832,7 +2859,7 @@ body.addEventListener('submit', async e => {
 initJams();
 
 /* ---------- placing popovers next to their objects ---------- */
-const svg = $('#scene'), stage = $('#stage'), mobile = matchMedia('(max-width: 760px)');
+const svg = $('#scene'), stage = $('#stage'), mobile = matchMedia('(max-width:760px),(max-width:1100px) and (orientation:portrait)');
 function place(el, x, y, fn) {
   if (mobile.matches) { el.style.left = el.style.top = ''; return; }
   const pt = svg.createSVGPoint(); pt.x = x - (TEO.outside ? 0 : slide); pt.y = y;
@@ -3692,7 +3719,7 @@ function animSlide(to, ms) {
   });
 }
 // on portrait phones and tablets the camera stops at one spot at a time
-const phone = matchMedia('(max-width: 1100px) and (orientation: portrait)'), smallScreen = matchMedia('(max-width: 760px)');
+const phone = matchMedia('(max-width: 1100px) and (orientation: portrait)'), smallScreen = matchMedia('(max-width:760px),(max-width:1100px) and (orientation:portrait)');
 // on phones the camera is as wide as it needs to be to show about 640 of the scene's 764 units of height, so wider
 // or shorter screens (a Fold, a phone with big browser bars) zoom out further and tall ones stay close; never tighter than 380
 const stopW = () => {
