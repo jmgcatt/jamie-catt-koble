@@ -1613,6 +1613,10 @@ function buildCozy() {
     const pg = E('g', { transform: `rotate(${rot} ${x + w / 2} ${y + h / 2})` }, sofa);
     piece(pg, { occ: rr(x, y, w, h, 10), fill: [[rr(x, y, w, h, 10), c, .95]], line: [rr(x, y, w, h, 10), { d: `M${x + 6},${y + h / 2}q${w / 2 - 6},4 ${w - 12},0`, stroke: '#a8987a', 'stroke-width': 1 }] });
   });
+  // an open book left face-down on the daybed: it opens "currently reading" too
+  const ob = E('g', { id: 'sofaBook', class: 'hot', tabindex: 0, role: 'button', 'aria-label': 'A book left open on the daybed. Press to see what I am reading.' }, sofa);
+  const obL = 'M178,563 L196,553 L198,563 L182,572Z', obR = 'M196,553 L214,562 L212,572 L198,563Z';
+  piece(ob, { occ: obL + obR, fill: [[obL, '#7a2633', .95], [obR, '#8c3040', .95], ['M182,572 L198,563 L212,572 L211,574 L198,566 L183,574Z', '#fffdf6', 1]], line: [obL, obR, 'M182,572 L198,563 L212,572', { d: 'M188,562 L193,559M202,559 L207,562', stroke: '#e2b54f', 'stroke-width': 1.2 }], lw: 1.6 });
   // reading stack beside the daybed
   const bs = E('g', { id: 'books', class: 'hot', transform: 'translate(38,-114)', tabindex: 0, role: 'button', 'aria-label': 'Stack of books by the daybed. Press to see what I am reading.' }, world);
   const bks = [[294, 664, 54, 12, '#c9663d'], [298, 654, 46, 10, '#6f9a69'], [295, 644, 50, 10, '#8fb0d9'], [300, 634, 42, 10, '#f2c45a']];
@@ -3409,7 +3413,7 @@ const ZOOMS = {
 };
 const machineView = document.createElement('div');
 // objects that open a sheet: frame the drawing as it sits now, stored unslid like the others
-const SHEET_ZOOMS = ['pan', 'teabar', 'vinyl', 'books', 'journal', 'typewriter'];
+const SHEET_ZOOMS = ['pan', 'teabar', 'vinyl', 'books', 'journal', 'typewriter', 'sofaBook'];
 function zoomBox(el) {
   const r = el.getBoundingClientRect(), m = svg.getScreenCTM().inverse(), pt = svg.createSVGPoint();
   pt.x = r.left; pt.y = r.top; const a = pt.matrixTransform(m); pt.x = r.right; pt.y = r.bottom; const b = pt.matrixTransform(m);
@@ -3863,7 +3867,7 @@ const stopW = () => {
   const r = stage.getBoundingClientRect(), a = r.width && r.height ? r.width / r.height : .6;
   return Math.round(Math.max(380, Math.min(720, 640 * a)));
 };
-const STOP_DEFS = [['books', ['books', 'typewriter']], ['easel', ['easel']], ['desk & window', ['laptop', 'candle', 'win']], ['entrance', ['door', 'ticketMachine', 'crate']], ['tea bar', ['teabar'], 0, 1], ['stove', ['pan'], 0, 1]];
+const STOP_DEFS = [['books', ['books', 'typewriter', 'sofaBook']], ['easel', ['easel']], ['desk & window', ['laptop', 'candle', 'win']], ['entrance', ['door', 'ticketMachine', 'crate']], ['tea bar', ['teabar'], 0, 1], ['stove', ['pan'], 0, 1]];
 let STOPS = [], stopIdx = 0, placeIdx = 0, moving = false, edgeTimer = null;
 const placeOf = x => x > 1120 ? 1 : 0; // for things inside the house
 // an element's box in scene coordinates
@@ -4110,7 +4114,7 @@ function setNight(on) {
   sunEl.setAttribute('aria-label', on ? 'Moon. Press to make it daytime.' : 'Sun. Press to make it nighttime.');
   say(on ? 'It is nighttime. The lamps are on.' : 'It is daytime again.');
 }
-const actions = { typewriter: () => zoomThen('typewriter', openLetter), pan: () => openCooking(), teabar: () => zoomThen('teabar', () => openWeekly('drinks')), crate: () => TEO.cave ? command('come') : command('cave'), vinyl: () => zoomThen('vinyl', openRecords), books: () => zoomThen('books', openReading), journal: () => zoomThen('journal', openJournal), toy: () => bounceBall(), door: () => placeIdx === 2 ? goInside() : goOutside(), easel: () => zoomed === 'easel' ? closeEasel() : openEasel(), candle: () => toggleCandle(), sun: () => setNight(!svg.classList.contains('night')), ticketMachine: issueTicket, laptop: () => setDrawer(laptopState === 'closed'), teo: () => bubbles.hidden ? openBubbles() : closeBubbles(), win: nextScene };
+const actions = { sofaBook: () => zoomThen('sofaBook', openReading), typewriter: () => zoomThen('typewriter', openLetter), pan: () => openCooking(), teabar: () => zoomThen('teabar', () => openWeekly('drinks')), crate: () => TEO.cave ? command('come') : command('cave'), vinyl: () => zoomThen('vinyl', openRecords), books: () => zoomThen('books', openReading), journal: () => zoomThen('journal', openJournal), toy: () => bounceBall(), door: () => placeIdx === 2 ? goInside() : goOutside(), easel: () => zoomed === 'easel' ? closeEasel() : openEasel(), candle: () => toggleCandle(), sun: () => setNight(!svg.classList.contains('night')), ticketMachine: issueTicket, laptop: () => setDrawer(laptopState === 'closed'), teo: () => bubbles.hidden ? openBubbles() : closeBubbles(), win: nextScene };
 document.querySelectorAll('.hot').forEach(h => {
   h.addEventListener('click', () => actions[h.id]());
   h.addEventListener('keydown', e => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); actions[h.id](); } });
