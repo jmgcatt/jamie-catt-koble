@@ -427,6 +427,17 @@ body.playing .turntable .arm{transform:none}
 @media (hover:none){.sleeve{transform:none}.crate{flex-wrap:wrap;gap:16px}.sleeve,.sleeve svg{width:min(110px,27vw);height:auto}}
 @media (prefers-reduced-motion:reduce){.turntable .rec{animation:none}.sleeve{transition:none}}
 .sheet.menu{background:transparent;border:0;filter:none}
+/* send me a letter */
+.sheet.letter{background:transparent;border:0;filter:none}
+.sheet.letter .sheet-bar{display:none}
+.sheet.letter .sheet-body{min-height:100%;box-sizing:border-box;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:70px 16px 16px!important}
+.letter-wrap{display:grid;justify-items:center;width:min(440px,100%)}
+.letter-paper{display:block;width:76%;min-height:130px;box-sizing:border-box;margin:0 0 -16px;padding:18px 18px 30px;border:0;outline:0;resize:none;background:var(--paper-tex),#fffdf8;border-radius:2px 2px 0 0;font-family:var(--f-body);font-size:15px;font-weight:500;line-height:1.7;letter-spacing:.03em;color:var(--ink)}
+.letter-paper::placeholder{color:var(--ink-soft);opacity:.7}
+.letter-tw{position:relative;z-index:1;display:block;width:100%;height:auto;overflow:visible}
+.letter-tw.clack{animation:clack .09s ease}
+@keyframes clack{50%{transform:translateY(1.5px)}}
+#letterSend{margin-top:14px}
 /* the reading stack: the books stand up in a row over the house, angled like the record sleeves */
 .sheet.shelf{background:transparent;border:0;filter:none}
 .sheet.shelf .sheet-bar{display:none}
@@ -447,8 +458,8 @@ body.playing .turntable .arm{transform:none}
 .sheet.menu .sheet-body{min-height:100%;box-sizing:border-box;display:flex;flex-direction:column;align-items:center;justify-content:center;padding-top:0}
 /* the cards sit dead centre on the screen: no notebook margin on one side */
 .sheet.menu .sheet-body,.sheet.shelf .sheet-body,.sheet.player .sheet-body{padding-left:16px!important;padding-right:16px!important}
-.sheet.menu h2,.sheet.shelf h2{position:absolute;top:14px;left:0;right:0;margin:0;text-align:center;font-size:40px;line-height:1.2;color:#fffaf0;filter:none;pointer-events:none}
-body:has(.sheet.menu.open) .scrim,body:has(.sheet.shelf.open) .scrim{background:rgba(30,21,16,.55)}
+.sheet.menu h2,.sheet.shelf h2,.sheet.letter h2{position:absolute;top:14px;left:0;right:0;margin:0;text-align:center;font-size:40px;line-height:1.2;color:#fffaf0;filter:none;pointer-events:none}
+body:has(.sheet.menu.open) .scrim,body:has(.sheet.shelf.open) .scrim,body:has(.sheet.letter.open) .scrim{background:rgba(30,21,16,.55)}
 .sheet.menu #weeklyList{width:100%}
 .sheet.menu .dish-grid{display:flex;flex-wrap:wrap;justify-content:center;gap:24px;margin:0}
 .sheet.menu .dish{width:min(200px,42vw);box-sizing:border-box;padding:18px 16px 20px;gap:8px;background:#fffaf0;border-radius:var(--wobble);box-shadow:inset 0 0 0 6px #fffaf0,inset 0 0 0 7.5px rgba(201,102,61,.4)}
@@ -772,7 +783,7 @@ body:has(.sheet.book.open) .top{z-index:5}
   .screen-bar h2{font-size:26px}
   .work-list button{grid-template-columns:110px minmax(0,1fr)}
   .sheet h2{font-size:42px}
-  .sheet.menu h2,.sheet.shelf h2{top:92px;font-size:36px}
+  .sheet.menu h2,.sheet.shelf h2,.sheet.letter h2{top:92px;font-size:36px}
   .meta{grid-template-columns:minmax(0,1fr)}
 }
 @media (prefers-reduced-motion:reduce){
@@ -809,6 +820,7 @@ body:has(.sheet.book.open) .top{z-index:5}
           <li><button class="link" id="navWork" type="button">Works</button></li>
           <li><button class="link" id="navTiny" type="button">Digital Home</button></li>
           <li><button class="link" id="navFaves" type="button">Monthly Faves</button></li>
+          <li><button class="link" id="navLetter" type="button">Send Me a Letter</button></li>
         </ul>
       </div>
     </div>
@@ -1575,9 +1587,17 @@ function buildCozy() {
   const bs = E('g', { id: 'books', class: 'hot', transform: 'translate(38,-114)', tabindex: 0, role: 'button', 'aria-label': 'Stack of books by the daybed. Press to see what I am reading.' }, world);
   const bks = [[294, 664, 54, 12, '#c9663d'], [298, 654, 46, 10, '#6f9a69'], [295, 644, 50, 10, '#8fb0d9'], [300, 634, 42, 10, '#f2c45a']];
   const books = bks.map(([x, y, w, h]) => rect(x, y, w, h)).join(''), mug = rr(310, 620, 14, 14, 3);
-  piece(bs, { occ: books + mug, fill: [...bks.map(([x, y, w, h, c]) => [rect(x, y, w, h), c, .9]), [mug, '#efe2c6', 1], ['M330,644 l2,8 l2,-3 l2,3 l-1,-8Z', '#c0503a', 1]], line: [...bks.map(([x, y, w, h]) => rect(x, y, w, h)), { d: 'M340,667H346M340,656H342M337,646H343', 'stroke-width': 1 }, mug, 'M324,624q5,0 5,4q0,4 -5,4', { d: 'M314,616q-2,-4 0,-7M320,616q-2,-4 0,-7', stroke: '#a59a8a', 'stroke-width': 1.2 }], lw: 1.8 });
+  piece(bs, { occ: books, fill: [...bks.map(([x, y, w, h, c]) => [rect(x, y, w, h), c, .9]), ['M330,644 l2,8 l2,-3 l2,3 l-1,-8Z', '#c0503a', 1]], line: [...bks.map(([x, y, w, h]) => rect(x, y, w, h)), { d: 'M340,667H346M340,656H342M337,646H343', 'stroke-width': 1 }, ], lw: 1.8 });
+  drawTypewriterSmall(E('g', { id: 'typewriter', class: 'hot', transform: 'translate(38,-114)', tabindex: 0, role: 'button', 'aria-label': 'Typewriter on the book stack. Press to write me a letter.' }, world));
+  // the coffee sits on the desk now
+  const dmug = rr(524, 482, 14, 14, 3);
+  piece(world, { occ: dmug, fill: [[dmug, '#efe2c6', 1]], line: [dmug, 'M538,486q5,0 5,4q0,4 -5,4', { d: 'M528,478q-2,-4 0,-7M534,478q-2,-4 0,-7', stroke: '#a59a8a', 'stroke-width': 1.2 }], lw: 1.8 });
 }
 
+function drawTypewriterSmall(g) {
+  const body = 'M302,634 L305,622 H337 L340,634Z', paper = rect(311, 604, 20, 17), roller = rr(301, 618, 40, 5, 2);
+  piece(g, { occ: body + paper + roller, fill: [[paper, '#fffdf6', 1], [roller, '#3d3a3c', .95], [body, '#7f9a8c', .95]], line: [paper, roller, body, { d: 'M314,609H328M314,613H325', 'stroke-width': .8 }, { d: 'M309,627H333M307,631H335', stroke: '#f6f1e6', 'stroke-width': 1.6, 'stroke-dasharray': '2 2.2' }], lw: 1.6 });
+}
 /* ---------- day and night ---------- */
 function buildNight() {
   const hole = 'M-3000,-3000H4200V4200H-3000Z' + rect(80, 202, 1040, 486);
@@ -1890,7 +1910,7 @@ const sheet = $('#sheet'), scrim = $('#scrim'), app = $('#app'), body = $('#shee
 let lastFocus = null;
 const say = t => { live.textContent = ''; setTimeout(() => live.textContent = t, 30); };
 function openSheet(html, showBack, seg, barTitle) {
-  clearTimeout(sheetLookTimer); sheet.classList.remove('book', 'player', 'menu', 'shelf'); book = null;
+  clearTimeout(sheetLookTimer); sheet.classList.remove('book', 'player', 'menu', 'shelf', 'letter'); book = null;
   $('#barTitle').innerHTML = barTitle || ''; $('#barTitle').hidden = !barTitle;
   if (!sheet.classList.contains('open')) lastFocus = document.activeElement;
   body.innerHTML = html; sheet.scrollTop = 0;
@@ -1905,7 +1925,7 @@ function closeSheet() {
   readingOpen = false; recordsOpen = false; weeklyOpen = null;
   sheet.classList.remove('open'); scrim.classList.remove('open'); app.inert = false; book = null;
   // the special looks stay on until the fade-out has finished, so the plain lined card never flashes through
-  clearTimeout(sheetLookTimer); sheetLookTimer = setTimeout(() => { if (!sheet.classList.contains('open')) sheet.classList.remove('book', 'player', 'menu', 'shelf'); }, 450);
+  clearTimeout(sheetLookTimer); sheetLookTimer = setTimeout(() => { if (!sheet.classList.contains('open')) sheet.classList.remove('book', 'player', 'menu', 'shelf', 'letter'); }, 450);
   if (lastFocus && lastFocus.isConnected) lastFocus.focus({ preventScroll: true });
   if (SHEET_ZOOMS.includes(zoomed)) closeZoom();
 }
@@ -1999,6 +2019,29 @@ $('#zoomX').onclick = () => {
   closeZoom();
 };
 $('#navFaves').onclick = () => { setMenu(false); openFaves(); };
+$('#navLetter').onclick = () => { setMenu(false); openLetter(); };
+// send me a letter: a typewriter with a sheet of paper in it. The page grows out of the roller as you type;
+// Send opens an email to me with what you wrote
+function openLetter() {
+  openSheet(`<h2 id="sheetTitle" tabindex="-1">send me a letter</h2><div class="letter-wrap">
+    <textarea class="letter-paper" id="letterText" rows="4" placeholder="dear jamie," aria-label="Your letter"></textarea>
+    <svg class="letter-tw" id="letterTw" viewBox="0 0 320 150" aria-hidden="true"></svg>
+    <button class="btn-ink" id="letterSend" type="button">Send</button></div>`, false, null);
+  sheet.classList.add('letter');
+  const g = E('g', {}, $('#letterTw')), ta = $('#letterText');
+  const body = 'M30,74 Q30,60 46,60 H274 Q290,60 290,74 L300,132 Q301,142 290,142 H30 Q19,142 20,132Z', panel = rr(52, 82, 216, 52, 8), roller = rr(14, 44, 292, 16, 7);
+  let keys = '';
+  [[92, 11, 66], [106, 10, 76], [120, 9, 86]].forEach(([y, n, x0]) => { for (let i = 0; i < n; i++) keys += ell(x0 + i * 19, y, 6.2); });
+  piece(g, { occ: body + roller, fill: [[roller, '#3d3a3c', .95], [ell(14, 52, 7, 9) + ell(306, 52, 7, 9), '#2b2829', 1], [body, '#7f9a8c', .95], [panel, '#5f7a6c', .9]], line: [roller, ell(14, 52, 7, 9), ell(306, 52, 7, 9), body, panel] });
+  piece(g, { fill: [[keys, '#f6f1e6', 1], [rr(112, 126, 96, 7, 3.5), '#f6f1e6', 1]], line: [keys, rr(112, 126, 96, 7, 3.5)], lw: 1.4 });
+  const fit = () => { ta.style.height = 'auto'; ta.style.height = Math.min(ta.scrollHeight, innerHeight * .46) + 'px'; };
+  ta.addEventListener('input', () => { fit(); const tw = $('#letterTw'); tw.classList.remove('clack'); void tw.getBoundingClientRect(); tw.classList.add('clack'); });
+  fit(); setTimeout(() => ta.focus({ preventScroll: true }), 350);
+  $('#letterSend').onclick = () => {
+    const t = ta.value.trim(); if (!t) { ta.focus(); return; }
+    location.href = 'mailto:jmgcatt@gmail.com?subject=' + encodeURIComponent('a letter for you') + '&body=' + encodeURIComponent(t);
+  };
+}
 $('#sheetBack').onclick = () => openWork(projects[sheetProject] ? projects[sheetProject].cat : 'Design');
 sheet.addEventListener('click', e => { const b = e.target.closest('[data-seg]'); if (b) openWork(b.dataset.seg); }); $('#sheetClose').onclick = closeSheet; scrim.onclick = closeSheet;
 sheet.addEventListener('keydown', e => {
@@ -2562,7 +2605,7 @@ sheet.addEventListener('pointerup', dishDragEnd); sheet.addEventListener('pointe
 sheet.addEventListener('click', e => { if (dishDragged && e.target.closest('.dish-grid.stack')) { e.preventDefault(); e.stopPropagation(); } }, true);
 sheet.addEventListener('keydown', e => { if (dishOrder.length && (e.key === 'ArrowLeft' || e.key === 'ArrowRight')) { e.preventDefault(); throwDish(e.key === 'ArrowRight' ? 1 : -1); } });
 dishStackMQ.addEventListener('change', stackDishes);
-sheet.addEventListener('click', e => { if ((sheet.classList.contains('menu') || sheet.classList.contains('player') || sheet.classList.contains('shelf')) && (e.target === sheet || e.target === body || e.target.id === 'weeklyList' || e.target.id === 'readingLists' || e.target.classList.contains('shelf-row') || e.target.classList.contains('dish-grid') || e.target.classList.contains('player-deck') || e.target.classList.contains('crate'))) closeSheet(); });
+sheet.addEventListener('click', e => { if ((sheet.classList.contains('menu') || sheet.classList.contains('player') || sheet.classList.contains('shelf') || sheet.classList.contains('letter')) && (e.target === sheet || e.target === body || e.target.classList.contains('letter-wrap') || e.target.id === 'weeklyList' || e.target.id === 'readingLists' || e.target.classList.contains('shelf-row') || e.target.classList.contains('dish-grid') || e.target.classList.contains('player-deck') || e.target.classList.contains('crate'))) closeSheet(); });
 function refreshWeekly() { const el = $('#weeklyList'); if (weeklyOpen && el && sheet.classList.contains('open')) { el.innerHTML = weeklyList(weeklyOpen); stackDishes(); } }
 async function initWeekly() {
   if (staticSite || !window.claude || !window.claude.use) { if (!staticSite) Object.values(WEEKLY).forEach(w => { w.state = 'error'; }); return; }
@@ -3314,7 +3357,7 @@ const ZOOMS = {
 };
 const machineView = document.createElement('div');
 // objects that open a sheet: frame the drawing as it sits now, stored unslid like the others
-const SHEET_ZOOMS = ['pan', 'teabar', 'vinyl', 'books', 'journal'];
+const SHEET_ZOOMS = ['pan', 'teabar', 'vinyl', 'books', 'journal', 'typewriter'];
 function zoomBox(el) {
   const r = el.getBoundingClientRect(), m = svg.getScreenCTM().inverse(), pt = svg.createSVGPoint();
   pt.x = r.left; pt.y = r.top; const a = pt.matrixTransform(m); pt.x = r.right; pt.y = r.bottom; const b = pt.matrixTransform(m);
@@ -3762,7 +3805,7 @@ const stopW = () => {
   const r = stage.getBoundingClientRect(), a = r.width && r.height ? r.width / r.height : .6;
   return Math.round(Math.max(380, Math.min(720, 640 * a)));
 };
-const STOP_DEFS = [['books', ['books']], ['easel', ['easel']], ['desk & window', ['laptop', 'candle', 'win']], ['entrance', ['door', 'ticketMachine', 'crate']], ['tea bar', ['teabar'], 0, 1], ['stove', ['pan'], 0, 1]];
+const STOP_DEFS = [['books', ['books', 'typewriter']], ['easel', ['easel']], ['desk & window', ['laptop', 'candle', 'win']], ['entrance', ['door', 'ticketMachine', 'crate']], ['tea bar', ['teabar'], 0, 1], ['stove', ['pan'], 0, 1]];
 let STOPS = [], stopIdx = 0, placeIdx = 0, moving = false, edgeTimer = null;
 const placeOf = x => x > 1120 ? 1 : 0; // for things inside the house
 // an element's box in scene coordinates
@@ -4004,7 +4047,7 @@ function setNight(on) {
   sunEl.setAttribute('aria-label', on ? 'Moon. Press to make it daytime.' : 'Sun. Press to make it nighttime.');
   say(on ? 'It is nighttime. The lamps are on.' : 'It is daytime again.');
 }
-const actions = { pan: () => openCooking(), teabar: () => zoomThen('teabar', () => openWeekly('drinks')), crate: () => TEO.cave ? command('come') : command('cave'), vinyl: () => zoomThen('vinyl', openRecords), books: () => zoomThen('books', openReading), journal: () => zoomThen('journal', openJournal), toy: () => bounceBall(), door: () => placeIdx === 2 ? goInside() : goOutside(), easel: () => zoomed === 'easel' ? closeEasel() : openEasel(), candle: () => toggleCandle(), sun: () => setNight(!svg.classList.contains('night')), ticketMachine: issueTicket, laptop: () => setDrawer(laptopState === 'closed'), teo: () => bubbles.hidden ? openBubbles() : closeBubbles(), win: nextScene };
+const actions = { typewriter: () => zoomThen('typewriter', openLetter), pan: () => openCooking(), teabar: () => zoomThen('teabar', () => openWeekly('drinks')), crate: () => TEO.cave ? command('come') : command('cave'), vinyl: () => zoomThen('vinyl', openRecords), books: () => zoomThen('books', openReading), journal: () => zoomThen('journal', openJournal), toy: () => bounceBall(), door: () => placeIdx === 2 ? goInside() : goOutside(), easel: () => zoomed === 'easel' ? closeEasel() : openEasel(), candle: () => toggleCandle(), sun: () => setNight(!svg.classList.contains('night')), ticketMachine: issueTicket, laptop: () => setDrawer(laptopState === 'closed'), teo: () => bubbles.hidden ? openBubbles() : closeBubbles(), win: nextScene };
 document.querySelectorAll('.hot').forEach(h => {
   h.addEventListener('click', () => actions[h.id]());
   h.addEventListener('keydown', e => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); actions[h.id](); } });
