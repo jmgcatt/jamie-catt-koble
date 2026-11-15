@@ -562,8 +562,9 @@ body:has(.sheet.menu.open) .scrim,body:has(.sheet.shelf.open) .scrim,body:has(.s
 .read-form{margin-top:6px;padding-top:18px;background:var(--hline2) left top/100% 7px no-repeat}
 .rf-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;margin-bottom:10px}
 .rf-grid input,.rf-grid select{min-width:0;font:inherit;font-size:14px;padding:7px 9px;background:#fff;border:1.5px solid var(--ink);border-radius:8px}
-.exp b{font-weight:700}
-.exp .when{display:block;margin:2px 0 4px;font-size:13px;color:var(--ink-soft)}
+.exp b{font-family:var(--f-body);font-size:16px;font-weight:500;filter:none!important}
+.exp p{margin:0;font-size:16px}
+.exp .when{display:block;margin:3px 0 6px;font-size:14px;letter-spacing:.08em;text-transform:uppercase;color:var(--ink-soft)}
 .body-p{margin:0 0 20px}
 .about-tag{margin:8px 0 18px;font-family:var(--f-hand);font-size:16px;color:var(--ink-soft)}
 .year{margin:4px 0 14px;font-family:var(--f-hand);font-size:13px;color:var(--ink-soft)}
@@ -2036,10 +2037,9 @@ const jobs = [
 ];
 function openAbout() {
   openSheet(`<h2 id="sheetTitle" tabindex="-1">I\u2019m a design lead based in Salida, Colorado</h2>
-    <p class="about-tag">manile\u00F1a, pisces, designer, illustrator, traveling with Teo</p>
+    <p class="about-tag">manile\u00F1a, pisces, illustration and lead designer based in colorado &amp; California</p>
     <p class="body-p">I thrive in spaces that move with momentum \u2014 where fast learning, exploration, and creative thinking matter. I balance structure with playfulness, and find joy in crafting experiences that feel approachable and delightful.</p>
     <p class="body-p">With over 5 years across startups and global design agencies, I\u2019ve helped shape digital products for industry-leading clients in health, finance, automotive, e-commerce, and marketing \u2014 from mobile and web apps to large-scale design systems.</p>
-    <dl class="meta"><div><dt>Practice</dt><dd>Identity, illustration, picture books, editorial writing</dd></div><div><dt>Tools</dt><dd>Coloured pencils, gouache, Figma, a notebook</dd></div><div><dt>Currently</dt><dd>Booking projects for spring 2027</dd></div><div><dt>Studio hours</dt><dd>Whenever Teo is asleep</dd></div></dl>
     <section><h3>Experience</h3><ul class="exp">${jobs.map(([co, role, when, t]) => `<li><b>${esc(co)}</b><span class="when">${esc(role)} \u00B7 ${when}</span><p>${esc(t)}</p></li>`).join('')}</ul></section>
     <section><h3>Say hello</h3><p class="body-p">Wanna chat for fun or work with Laro Design?</p>
     <dl class="meta"><div><dt>E-mail</dt><dd>laro@laro.design<br>jmgcatt@gmail.com</dd></div><div><dt>Socials</dt><dd><a href="https://www.linkedin.com/in/jamiecatt/" target="_blank" rel="noopener">LinkedIn</a> \u00B7 <a href="https://www.instagram.com/jamiecatt" target="_blank" rel="noopener">Instagram</a></dd></div></dl></section>`, false);
