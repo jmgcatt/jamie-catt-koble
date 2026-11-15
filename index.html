@@ -665,6 +665,10 @@ body.zoomed .zoom-x{opacity:1;pointer-events:auto;transform:none}
 body.drawer-open .top{z-index:23}
 body.drawer-open .menu-btn{opacity:0;pointer-events:none;transform:rotate(90deg) scale(.6)}
 body.drawer-open .zoom-x{opacity:1;pointer-events:auto;transform:none}
+/* one rule everywhere: whenever anything is open (the menu, a menu page, a zoomed-in view), the menu button is the close button */
+body:has(.menu-list:not([hidden])) .menu-btn,body:has(.sheet.open) .menu-btn{opacity:0;pointer-events:none;transform:rotate(90deg) scale(.6)}
+body:has(.menu-list:not([hidden])) .zoom-x,body:has(.sheet.open) .zoom-x{opacity:1;pointer-events:auto;transform:none}
+.sheet:not(.book) #sheetClose{display:none}
 body:has(.sheet.book.open) .zoom-x{opacity:0!important;pointer-events:none!important}
 body.zoomed .canvas-view .fs-x{display:none!important}
 /* the laptop: its screen fills the whole view, with the dark edge of the lid around it and the keyboard along the bottom */
@@ -2066,7 +2070,8 @@ function setMenu(open) {
 menuBtn.onclick = e => { e.stopPropagation(); setMenu(menuList.hidden); };
 document.addEventListener('click', e => { if (!menuList.hidden && !e.target.closest('.menu')) setMenu(false); });
 $('#navWork').onclick = () => { setMenu(false); openWork(); }; $('#navTiny').onclick = () => { setMenu(false); openTiny(); }; $('#navAbout').onclick = () => { setMenu(false); openAbout(); };
-$('#zoomX').onclick = () => {
+$('#zoomX').onclick = e => {
+  if (!menuList.hidden) { e.stopPropagation(); return setMenu(false); }
   if (!$('#tDrawer').hidden) return closeDrawer();
   if (!$('#ticket').hidden) closeTicket(false);
   if (sheet.classList.contains('open')) return closeSheet();
