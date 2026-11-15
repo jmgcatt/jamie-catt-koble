@@ -195,6 +195,15 @@ body.playing .notes .note:nth-child(2){animation-delay:-1.8s}
   .shelf-row{gap:56px!important}
   .shelf-book{width:min(320px,24vw,34vh)!important}
 }
+/* dish and drink cards in one swipeable stack (phones and tablets; the script decides when) */
+.sheet.menu .dish-grid.stack{display:grid;grid-template-columns:min(270px,68vw);justify-content:center;justify-items:center;gap:0;padding:24px 0 40px}
+.sheet.menu .dish-grid.stack .dish{grid-area:1/1;width:min(270px,68vw);touch-action:pan-y;user-select:none;-webkit-user-select:none;transition:transform .5s cubic-bezier(.2,.8,.2,1),opacity .35s ease}
+.sheet.menu .dish-grid.stack .dish img{-webkit-user-drag:none;pointer-events:none}
+.sheet.menu .dish-grid.stack .dish[data-p="0"]{z-index:5;transform:rotate(-1deg)}
+.sheet.menu .dish-grid.stack .dish[data-p="1"]{z-index:4;transform:translate(7px,9px) rotate(3deg)}
+.sheet.menu .dish-grid.stack .dish[data-p="2"]{z-index:3;transform:translate(-7px,15px) rotate(-4deg)}
+.sheet.menu .dish-grid.stack .dish[data-p="far"]{z-index:1;opacity:0;transform:translate(0,18px) rotate(1deg)}
+.sheet.menu .dish-grid.stack .dish.held{transition:none}
 /* every all-caps eyebrow label is 14px */
 .t-date,.t-kick,.kick,.meta dt,.stub-top span,.t-cite,.t-by,.stub-by,.stub-c,.exp .when{font-size:14px!important;letter-spacing:.1em}
 .screen.viewing .screen-bar{padding-bottom:0}
@@ -2782,7 +2791,8 @@ function openWeekly(k) {
 }
 // phones: the dish cards sit in one stack. Swipe the top card either way and it slides off, then tucks back in
 // at the bottom, so you can keep going round and round
-const dishStackMQ = matchMedia('(max-width:760px),(max-width:1100px) and (orientation:portrait)');
+// phones and tablets in either orientation stack the cards; desktop lays them out side by side
+const dishStackMQ = matchMedia('(max-width:760px),(max-width:1100px) and (orientation:portrait),(max-width:1400px) and (pointer:coarse)');
 let dishOrder = [];
 function stackDishes() {
   const g = sheet.classList.contains('menu') && $('#weeklyList .dish-grid');
