@@ -645,6 +645,19 @@ blockquote{margin:0 0 28px;padding:0;font-family:var(--f-title);font-size:28px;l
 .zoom-x{display:grid;position:fixed;top:28px;right:max(20px,env(safe-area-inset-right,0px));z-index:30;opacity:0;pointer-events:none;transform:rotate(-90deg) scale(.6);transition:opacity .25s ease,transform .3s ease}
 body.zoomed .menu-btn{opacity:0;pointer-events:none;transform:rotate(90deg) scale(.6)}
 body.zoomed .zoom-x{opacity:1;pointer-events:auto;transform:none}
+/* ephemera: no paper behind it; the ticket stack floats in the middle of the dimmed scene under a white title */
+.tdrawer{top:0!important;left:0!important;right:auto!important;bottom:auto!important;width:100vw!important;height:100vh!important;height:100dvh!important;max-height:none!important;transform:none!important;box-sizing:border-box;padding:88px 16px 40px!important;background:none!important;border:0!important;border-radius:0!important;filter:none!important;animation:fadeIn .25s ease!important;display:flex;flex-direction:column;align-items:center;justify-content:center;overflow-y:auto}
+.tdrawer[hidden]{display:none}
+.td-scrim{background:rgba(30,21,16,.55)}
+.td-head{display:block;margin:0 0 6px;flex:none}
+.td-head h2{color:#fffaf0;text-align:center;font-size:40px}
+#tdClose{display:none}
+.tdrawer .stubs{width:100%;padding:12px 0 30px}
+.td-empty{justify-items:center;padding:18px 24px;background:#fffaf0;border-radius:var(--wobble)}
+/* with the ephemera open, the menu button becomes the close button, as when zoomed */
+body.drawer-open .top{z-index:23}
+body.drawer-open .menu-btn{opacity:0;pointer-events:none;transform:rotate(90deg) scale(.6)}
+body.drawer-open .zoom-x{opacity:1;pointer-events:auto;transform:none}
 body:has(.sheet.book.open) .zoom-x{opacity:0!important;pointer-events:none!important}
 body.zoomed .canvas-view .fs-x{display:none!important}
 /* the laptop: its screen fills the whole view, with the dark edge of the lid around it and the keyboard along the bottom */
@@ -2046,6 +2059,7 @@ menuBtn.onclick = e => { e.stopPropagation(); setMenu(menuList.hidden); };
 document.addEventListener('click', e => { if (!menuList.hidden && !e.target.closest('.menu')) setMenu(false); });
 $('#navWork').onclick = () => { setMenu(false); openWork(); }; $('#navTiny').onclick = () => { setMenu(false); openTiny(); }; $('#navAbout').onclick = () => { setMenu(false); openAbout(); };
 $('#zoomX').onclick = () => {
+  if (!$('#tDrawer').hidden) return closeDrawer();
   if (!$('#ticket').hidden) closeTicket(false);
   if (sheet.classList.contains('open')) return closeSheet();
   if (zoomed === 'laptop' && !$('#screenProject').hidden) return showCards();
@@ -3268,9 +3282,10 @@ async function visitMachine() {
   say('Here is the ticket machine. Press it for a ticket.');
 }
 let drawerReturn = null;
-function openDrawer() { drawerReturn = document.activeElement; renderDrawer(); $('#tdScrim').hidden = false; $('#tDrawer').hidden = false; stubBtn.setAttribute('aria-expanded', 'true'); app.inert = true; $('#tdClose').focus({ preventScroll: true }); }
-function closeDrawer() { $('#tdScrim').hidden = true; $('#tDrawer').hidden = true; stubBtn.setAttribute('aria-expanded', 'false'); app.inert = false; if (drawerReturn && drawerReturn.isConnected) drawerReturn.focus({ preventScroll: true }); }
+function openDrawer() { document.body.classList.add('drawer-open'); drawerReturn = document.activeElement; renderDrawer(); $('#tdScrim').hidden = false; $('#tDrawer').hidden = false; stubBtn.setAttribute('aria-expanded', 'true'); app.inert = true; $('#tdClose').focus({ preventScroll: true }); }
+function closeDrawer() { document.body.classList.remove('drawer-open'); $('#tdScrim').hidden = true; $('#tDrawer').hidden = true; stubBtn.setAttribute('aria-expanded', 'false'); app.inert = false; if (drawerReturn && drawerReturn.isConnected) drawerReturn.focus({ preventScroll: true }); }
 stubBtn.onclick = e => { e.stopPropagation(); openDrawer(); };
+$('#tDrawer').addEventListener('click', e => { if (e.target.id === 'tDrawer' || e.target.id === 'stubs' || e.target.closest('.td-head')) closeDrawer(); });
 $('#tdClose').onclick = closeDrawer; $('#tdScrim').onclick = () => { if (!menuList.hidden) setMenu(false); else closeDrawer(); };
 $('#tDrawer').addEventListener('keydown', e => {
   if (e.key !== 'Tab') return;
