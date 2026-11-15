@@ -473,7 +473,7 @@ body:has(.sheet.menu.open) .scrim,body:has(.sheet.shelf.open) .scrim{background:
 .jb-page{position:absolute;top:0;bottom:0;box-sizing:border-box;background-color:#fffdf8;border:1.5px solid transparent}
 .jb-page::after{content:"";position:absolute;inset:-1.5px;border:1.8px solid #a88a5e;border-radius:inherit;pointer-events:none;filter:url(#pencil)}
 /* paper grain and fibers on every page */
-.jbook{--paper-tex:url("data:image/svg+xml,%3Csvg%20xmlns%3D%27http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%27%20width%3D%27160%27%20height%3D%27160%27%3E%3Cfilter%20id%3D%27g%27%3E%3CfeTurbulence%20type%3D%27fractalNoise%27%20baseFrequency%3D%27.7%27%20numOctaves%3D%272%27%20seed%3D%275%27%20stitchTiles%3D%27stitch%27%2F%3E%3CfeColorMatrix%20values%3D%270%200%200%200%20.62%200%200%200%200%20.55%200%200%200%200%20.46%203.2%200%200%200%20-1.85%27%2F%3E%3C%2Ffilter%3E%3Cfilter%20id%3D%27h%27%3E%3CfeTurbulence%20type%3D%27fractalNoise%27%20baseFrequency%3D%27.7%27%20numOctaves%3D%272%27%20seed%3D%2712%27%20stitchTiles%3D%27stitch%27%2F%3E%3CfeColorMatrix%20values%3D%270%200%200%200%20.93%200%200%200%200%20.9%200%200%200%200%20.84%203.2%200%200%200%20-1.7%27%2F%3E%3C%2Ffilter%3E%3Crect%20width%3D%27160%27%20height%3D%27160%27%20filter%3D%27url%28%23h%29%27%20opacity%3D%27.6%27%2F%3E%3Crect%20width%3D%27160%27%20height%3D%27160%27%20filter%3D%27url%28%23g%29%27%20opacity%3D%27.42%27%2F%3E%3C%2Fsvg%3E") 0 0/160px 160px}
+:root{--paper-tex:url("data:image/svg+xml,%3Csvg%20xmlns%3D%27http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%27%20width%3D%27160%27%20height%3D%27160%27%3E%3Cfilter%20id%3D%27g%27%3E%3CfeTurbulence%20type%3D%27fractalNoise%27%20baseFrequency%3D%27.7%27%20numOctaves%3D%272%27%20seed%3D%275%27%20stitchTiles%3D%27stitch%27%2F%3E%3CfeColorMatrix%20values%3D%270%200%200%200%20.62%200%200%200%200%20.55%200%200%200%200%20.46%203.2%200%200%200%20-1.85%27%2F%3E%3C%2Ffilter%3E%3Cfilter%20id%3D%27h%27%3E%3CfeTurbulence%20type%3D%27fractalNoise%27%20baseFrequency%3D%27.7%27%20numOctaves%3D%272%27%20seed%3D%2712%27%20stitchTiles%3D%27stitch%27%2F%3E%3CfeColorMatrix%20values%3D%270%200%200%200%20.93%200%200%200%200%20.9%200%200%200%200%20.84%203.2%200%200%200%20-1.7%27%2F%3E%3C%2Ffilter%3E%3Crect%20width%3D%27160%27%20height%3D%27160%27%20filter%3D%27url%28%23h%29%27%20opacity%3D%27.6%27%2F%3E%3Crect%20width%3D%27160%27%20height%3D%27160%27%20filter%3D%27url%28%23g%29%27%20opacity%3D%27.42%27%2F%3E%3C%2Fsvg%3E") 0 0/160px 160px}
 .jb-l{display:none}
 .jb-r{left:0;right:0;border-radius:3px 8px 8px 3px;background:var(--paper-tex),linear-gradient(90deg,rgba(74,58,46,.13),transparent 30px),#fffdf8;box-shadow:2px 2px 0 #f3efe7,4px 4px 0 #e9e3d7,6px 6px 0 #ddd5c6,8px 7px 0 #cfc6b4}
 .spread .jb-l{display:block;left:0;right:50%;border-right:0;border-radius:8px 0 0 8px;background:var(--paper-tex),linear-gradient(270deg,rgba(74,58,46,.16),transparent 40px),#fffdf8;box-shadow:-2px 2px 0 #f3efe7,-4px 4px 0 #e9e3d7,-6px 6px 0 #ddd5c6,-8px 7px 0 #cfc6b4}
@@ -621,7 +621,30 @@ blockquote{margin:0 0 28px;padding:0;font-family:var(--f-title);font-size:28px;l
 .sound:not(.open){gap:0;padding:3px}
 .sound:not(.open) #sndVol{width:0;opacity:0;margin:0;pointer-events:none}
 .fs-x{display:none}
-.zoom-x{display:none}
+.menu-btn{transition:opacity .25s ease,transform .3s ease}
+.zoom-x{display:grid;position:fixed;top:28px;right:max(20px,env(safe-area-inset-right,0px));z-index:30;opacity:0;pointer-events:none;transform:rotate(-90deg) scale(.6);transition:opacity .25s ease,transform .3s ease}
+body.zoomed .menu-btn{opacity:0;pointer-events:none;transform:rotate(90deg) scale(.6)}
+body.zoomed .zoom-x{opacity:1;pointer-events:auto;transform:none}
+body:has(.sheet.book.open) .zoom-x{opacity:0!important;pointer-events:none!important}
+body.zoomed .canvas-view .fs-x{display:none!important}
+/* the laptop: its screen fills the whole view, with the dark edge of the lid around it and the keyboard along the bottom */
+.screen{position:fixed!important;inset:0!important;width:auto!important;height:auto!important;z-index:18;box-sizing:border-box;border:12px solid #3b3739;border-bottom:0;border-radius:20px 20px 0 0}
+.screen .screen-bar{padding-top:86px;background:none}
+.screen-bar .seg button{min-height:0}
+.lap-kb{flex:none;height:clamp(54px,11vh,112px);margin:0 -12px;background:#c5cad2;border-top:7px solid #2d2a2b}
+.lap-kb svg{display:block;width:100%;height:100%}
+body:has(#screen:not([hidden])) .top .mark h1{color:var(--ink)}
+@media (min-width:1200px) and (orientation:landscape){.screen .cards{grid-template-columns:repeat(4,minmax(0,1fr))}}
+/* the easel: a grid of projects on grainy paper; a project opens on the same canvas */
+.canvas-view{background:var(--paper-tex),#fffdf8}
+.cv-bar,.cv-form,#cvMsg{display:none!important}
+.cv-art.has-detail{padding:14px}
+.cv-grid{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;max-height:none;overflow:visible}
+.cv-grid .card{border:0;background:#fff;transform:none!important}
+.cv-grid .c-t{font-size:18px}
+.cv-title{margin:6px 0 2px;font-family:var(--f-title);font-weight:400;font-size:30px;line-height:1.2;text-align:center;text-transform:lowercase;filter:url(#ink);outline:none}
+.cv-year{margin:0 0 14px;text-align:center;font-size:13px;color:var(--ink-soft)}
+.cv-art .shots{margin-bottom:14px}
 .menu-btn,.stub-btn,.sound,.zoom-x,.sheet-x{background:#fffaf0;border:1.5px solid var(--ink);color:var(--ink);filter:url(#ink)}
 .sheet.book .sheet-x{filter:none}
 .sound{border-radius:999px}
@@ -722,13 +745,6 @@ body:has(.sheet.book.open) .top{z-index:5}
   .navbar .dots i{border-color:#fffaf0}
   .navbar .dots i.on{background:#fffaf0}
   .edge-tab{display:none!important}
-  /* zoomed in on anything: the menu button turns into a close button in the same spot */
-  .menu-btn{transition:opacity .25s ease,transform .3s ease}
-  .zoom-x{display:grid;position:fixed;top:28px;right:max(20px,env(safe-area-inset-right,0px));z-index:30;opacity:0;pointer-events:none;transform:rotate(-90deg) scale(.6);transition:opacity .25s ease,transform .3s ease}
-  body.zoomed .menu-btn{opacity:0;pointer-events:none;transform:rotate(90deg) scale(.6)}
-  body.zoomed .zoom-x{opacity:1;pointer-events:auto;transform:none}
-  body:has(.sheet.book.open) .zoom-x{opacity:0!important;pointer-events:none!important}
-  body.zoomed .canvas-view .fs-x{display:none!important}
   .ticket-wrap{inset:12px 0 calc(var(--nav-h,92px) + 10px);max-height:calc(100vh - var(--nav-h,92px) - 22px);max-height:calc(100dvh - var(--nav-h,92px) - 22px);overflow-y:auto;overscroll-behavior:contain}
 }
 @media (max-width:760px),(max-width:1100px) and (orientation:portrait){
@@ -847,6 +863,7 @@ body:has(.sheet.book.open) .top{z-index:5}
         </div>
         <ul class="cards" id="cards"></ul>
         <div class="screen-project" id="screenProject" hidden></div>
+        <div class="lap-kb" id="lapKb" aria-hidden="true"></div>
       </section>
 
       <section class="canvas-view" id="easelView" aria-label="My newest illustration work" hidden>
@@ -1892,7 +1909,7 @@ async function openProject(i) {
   if (ei >= 0) {
     if (sheet.classList.contains('open')) closeSheet();
     if (zoomed === 'laptop') await closeLaptop(); else if (zoomed && zoomed !== 'easel') await zoomOut();
-    easelIdx = ei; renderEasel();
+    easelIdx = ei; easelMode = 'detail'; renderEasel();
     if (zoomed !== 'easel') { if (phone.matches) { const st = STOPS.findIndex(x => x.name.includes('easel')); if (st >= 0 && st !== stopIdx) await moveTo(st, 400); } else if (placeIdx !== 0) await moveTo(0); await openEasel(); }
     return;
   }
@@ -1902,11 +1919,9 @@ async function openProject(i) {
 }
 function showOnScreen(i) {
   const p = projects[i], pane = $('#screenProject');
-  pane.innerHTML = `<button class="link sp-back" type="button">All work</button>
-    <div class="sp-head"><h3>${esc(p.title)}</h3><span class="bt-year">${p.year}</span></div>
+  pane.innerHTML = `<div class="sp-head"><h3>${esc(p.title)}</h3><span class="bt-year">${p.year}</span></div>
     <p class="body-p">${esc(p.text)}</p>${shots(p)}`;
   $('#cards').hidden = true; $('#screenSeg').hidden = true; pane.hidden = false; pane.scrollTop = 0;
-  pane.querySelector('.sp-back').onclick = showCards;
   pane.querySelector('h3').setAttribute('tabindex', '-1'); pane.querySelector('h3').focus({ preventScroll: true });
   say(`${p.title}, on the laptop screen.`);
 }
@@ -1964,7 +1979,10 @@ document.addEventListener('click', e => { if (!menuList.hidden && !e.target.clos
 $('#navWork').onclick = () => { setMenu(false); openWork(); }; $('#navTiny').onclick = () => { setMenu(false); openTiny(); }; $('#navAbout').onclick = () => { setMenu(false); openAbout(); };
 $('#zoomX').onclick = () => {
   if (!$('#ticket').hidden) closeTicket(false);
-  if (sheet.classList.contains('open')) closeSheet(); else closeZoom();
+  if (sheet.classList.contains('open')) return closeSheet();
+  if (zoomed === 'laptop' && !$('#screenProject').hidden) return showCards();
+  if (zoomed === 'easel' && easelMode === 'detail' && easelItems.length > 1) { easelMode = 'grid'; return renderEasel(); }
+  closeZoom();
 };
 $('#navFaves').onclick = () => { setMenu(false); openFaves(); };
 $('#sheetBack').onclick = () => openWork(projects[sheetProject] ? projects[sheetProject].cat : 'Design');
@@ -3276,7 +3294,7 @@ const VB0 = [-24, 0, 1248, 764];
 let texBase = VB0[2]; // the view width at which the pencil texture looks right
 const ZOOMS = {
   laptop: { cx: 590, cy: 478, w: 92, h: 64, fill: .97, box: [550, 450, 630, 496], view: () => screenEl, phone: { cy: 474, w: 84, h: 60, fill: 1 } },
-  easel: { cx: 398, cy: 494, w: 92, h: 100, box: [360, 452, 436, 536], view: () => $('#easelView'), phone: { w: 82, h: 96, fill: 1 } },
+  easel: { cx: 398, cy: 494, w: 92, h: 100, box: [360, 452, 436, 536], view: () => $('#easelView'), phone: { cy: 484, w: 82, h: 96, fill: 1 } },
   machine: { cx: 940, cy: 420, w: 260, h: 250, box: [920, 326, 984, 456], view: () => machineView },
   pan: { cx: 1513, cy: 490, w: 170, h: 90, box: [1471, 470, 1565, 510], view: () => machineView }
 };
@@ -3410,12 +3428,13 @@ async function openEasel() {
 }
 async function closeEasel() {
   if (zoomed !== 'easel') return;
+  setTimeout(() => { easelMode = 'grid'; }, 900);
   $('#cvForm').hidden = true; await zoomOut();
   easelEl.setAttribute('aria-expanded', 'false'); easelEl.focus({ preventScroll: true });
 }
 function closeZoom() { if (zoomed === 'laptop') closeLaptop(); else if (zoomed === 'easel') closeEasel(); else if (zoomed === 'machine') zoomOut(); else if (zoomed === 'pan') { $('#pan').classList.remove('cooking'); zoomOut(); } else if (zoomed) zoomOut(); }
 function setDrawer(open) { open ? openLaptop() : closeLaptop(); }
-document.addEventListener('click', e => { if (zoomed && !zooming && !sheet.classList.contains('open') && !e.target.closest('.screen, .canvas-view, .ticket-wrap, .sheet, .scrim, .top, .chips, .tdrawer, .td-scrim' + (zoomed === 'machine' ? ', #ticketMachine' : ''))) closeZoom(); });
+document.addEventListener('click', e => { if (zoomed && !zooming && !sheet.classList.contains('open') && !e.target.closest('.screen, .canvas-view, .ticket-wrap, .sheet, .scrim, .top, .chips, .tdrawer, .td-scrim, .zoom-x' + (zoomed === 'machine' ? ', #ticketMachine' : ''))) closeZoom(); });
 
 /* ---------- the easel's paintings ---------- */
 // people with edit access hang new paintings from the page itself: the image goes to the asset store, its details to the db
@@ -3424,6 +3443,7 @@ const LOCAL_EASEL = [
   { title: 'In Case You Come Back', year: '2016', url: 'media/incase-2.png', projectId: 'incase' },
   { title: 'Siblings Candle', year: '2021', url: 'media/candle-1.png', projectId: 'candle' }
 ];
+let easelMode = 'grid';
 let easelItems = staticSite ? LOCAL_EASEL : [], easelIdx = 0, easelDb = null, easelAssets = null, easelState = staticSite ? 'ready' : 'loading', pendingFile = null, confirmTake = false;
 const easelEdit = () => !!(easelDb && easelAssets);
 function renderEasel() {
@@ -3434,13 +3454,14 @@ function renderEasel() {
     const msg = easelState === 'loading' ? 'Setting up the easel\u2026' : easelState === 'error' ? 'The easel is out of reach right now. Try again in a moment.' : easelEdit() ? 'Nothing on the easel yet. Add a painting to hang the first one.' : 'Nothing on the easel yet. New work is on its way.';
     art.innerHTML = `<p class="cv-empty">${msg}</p>`; cap.textContent = ''; return;
   }
-  const pi = projects.findIndex(p => p.id === it.projectId);
-  art.innerHTML = pi >= 0
-    ? `<div class="cv-scroll" tabindex="0" aria-label="${esc(projects[pi].title)}"><div class="cv-hero">${thumb(projects[pi].id)}</div><div class="cv-detail"><p class="body-p">${esc(projects[pi].text)}</p>${shots(projects[pi])}</div></div>`
-    : `<button class="cv-open" type="button" data-painting="${easelIdx}" aria-label="Look at ${esc(it.title || 'this painting')}"><img src="${it.url}" alt=""></button>`;
-  const meta = [it.year, easelItems.length > 1 ? `${easelIdx + 1} of ${easelItems.length}` : ''].filter(Boolean).join(' \u00B7 ');
-  cap.innerHTML = `<b>${esc(it.title || 'Untitled')}</b>${esc(meta)}`;
-  art.classList.toggle('has-detail', pi >= 0); art.scrollTop = 0;
+  cap.textContent = '';
+  if (easelMode === 'grid' && easelItems.length > 1) {
+    art.innerHTML = `<ul class="cv-grid">${easelItems.map((x, i) => { const p = projects.find(q => q.id === x.projectId); return `<li><button class="card" type="button" data-easel="${i}">${p ? thumb(p.id) : `<img src="${x.url}" alt="">`}<span class="c-t">${esc((p || x).title || 'Untitled')}</span><span class="c-m">${esc((p || x).year || '')}</span></button></li>`; }).join('')}</ul>`;
+    art.classList.add('has-detail'); art.scrollTop = 0; return;
+  }
+  const p = projects.find(q => q.id === it.projectId);
+  art.innerHTML = `<h3 class="cv-title" tabindex="-1">${esc((p || it).title || 'Untitled')}</h3><p class="cv-year">${esc((p || it).year || '')}</p>` + (p ? `${shots(p)}<p class="body-p">${esc(p.text)}</p>` : `<div class="shots"><img src="${it.url}" alt=""></div>`);
+  art.classList.add('has-detail'); art.scrollTop = 0;
 }
 async function initEasel() {
   if (staticSite || !window.claude || !window.claude.use) { if (!staticSite) easelState = 'error'; renderEasel(); return; }
@@ -3492,7 +3513,7 @@ function openPainting(i) {
     <figure class="art"><img src="${it.url}" alt="${esc(it.title || 'Painting')}"></figure>
     ${it.year ? `<p class="body-p">${esc(it.year)}</p>` : ''}`, false, null);
 }
-$('#cvArt').addEventListener('click', e => { const b = e.target.closest('[data-painting]'); if (b) openPainting(+b.dataset.painting); });
+$('#cvArt').addEventListener('click', e => { const b = e.target.closest('[data-easel]'); if (b) { e.stopPropagation(); easelIdx = +b.dataset.easel; easelMode = 'detail'; renderEasel(); const h = $('#cvArt .cv-title'); if (h) h.focus({ preventScroll: true }); } });
 initEasel();
 
 /* ---------- Teo: pets, treats, training, roaming ---------- */
@@ -4031,6 +4052,11 @@ async function openCooking() {
   if (zooming || (zoomed && zoomed !== 'pan')) return;
   $('#pan').classList.add('cooking'); await zoomThen('pan', () => openWeekly('menu'));
 }
+(() => {
+  let keys = '';
+  for (let r = 0; r < 4; r++) for (let c = 0; c < 15; c++) { const x = 34 + c * 62.5 + (r % 2) * 10, w = 52; if (r === 3 && c > 3 && c < 10) { if (c === 4) keys += `<rect x="${x}" y="${12 + r * 22}" width="${6 * 62.5 - 10}" height="16" rx="4"/>`; continue; } keys += `<rect x="${x}" y="${12 + r * 22}" width="${w}" height="16" rx="4"/>`; }
+  $('#lapKb').innerHTML = `<svg viewBox="0 0 1000 104" preserveAspectRatio="none"><g fill="#8a8f98" filter="url(#pencil)">${keys}</g></svg>`;
+})();
 $('#screenX').onclick = () => closeLaptop(); $('#easelX').onclick = () => closeEasel();
 // left and right arrows move between rooms, or stops on phones
 document.addEventListener('keydown', e => {
