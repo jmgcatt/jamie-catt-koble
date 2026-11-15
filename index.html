@@ -705,7 +705,7 @@ body:has(.sheet.book.open) .top{z-index:5}
 }
 @media (max-width:760px),(max-width:1100px) and (orientation:portrait){
   .hint{display:none}
-  .grain{opacity:.025}
+  .grain{opacity:.04}
   .menu-list,.teo-card,.tdrawer,.ticket-wrap,.bub,.stub{filter:none}
   #teo:not(.chin):not(.boop):not(.tilt):not(.eating):not([data-pose="sleep"]) .head-wrap{animation:none}
   .rain{animation-duration:1.6s}
@@ -4049,10 +4049,10 @@ function setMode() {
   setLong(phone.matches && placeIdx !== 2);
   // small screens: a gentler pencil grain, so the drawing reads cleaner
   const soft = smallScreen.matches;
-  document.querySelector('#pencil feColorMatrix').setAttribute('values', `0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  ${soft ? '-.8 0 0 0 1.32' : '-2.4 0 0 0 1.95'}`);
-  document.querySelector('#crayon feColorMatrix').setAttribute('values', `0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  ${soft ? '-1.1 0 0 0 1.45' : '-3 0 0 0 2.15'}`);
+  document.querySelector('#pencil feColorMatrix').setAttribute('values', `0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  ${soft ? '-1.35 0 0 0 1.57' : '-2.4 0 0 0 1.95'}`);
+  document.querySelector('#crayon feColorMatrix').setAttribute('values', `0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  ${soft ? '-1.75 0 0 0 1.72' : '-3 0 0 0 2.15'}`);
   // and steadier edges: less wobble in the pencil lines
-  TEXTURE.forEach(t => { if (t[1] === 'scale') { t[3] = t[3] || t[2]; t[2] = t[3].map(x => soft ? x * .45 : x); } }); textureK = 0;
+  TEXTURE.forEach(t => { if (t[1] === 'scale') { t[3] = t[3] || t[2]; t[2] = t[3].map(x => soft ? x * .85 : x); } }); textureK = 0;
   placeControls();
   if (!zoomed && !zooming) { setVB(homeVB()); setSlide(homeSlide()); }
   updateNav(); requestAnimationFrame(addHitAreas);
