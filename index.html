@@ -2179,8 +2179,6 @@ async function letterAway(page) {
   piece(flap, { occ: flapD, fill: [[flapD, '#efe4cd', 1]], line: [flapD] });
   const seal = E('g', { class: 'env-seal' }, g), wax = fluff(100, 100, 15, 14, 10, 2.2, 912);
   piece(seal, { occ: wax, fill: [[wax, '#9c2f2a', 1], [ell(100, 100, 9.5), '#b23a33', 1]], line: [wax, { d: ell(100, 100, 9.5), stroke: '#7a211d', 'stroke-width': 1.2 }], color: '#6e1d1a', lw: 1.6 });
-  // the initial is pressed into the wax: a lit lower edge under a darker letter, centred in the ring
-  [[.7, .8, '#d0665e'], [0, 0, '#6e1d1a']].forEach(([dx, dy, c]) => { E('text', { x: 99.4 + dx, y: 99 + dy, 'text-anchor': 'middle', 'dominant-baseline': 'central', 'font-family': 'La Belle Aurore, cursive', 'font-size': 12.5, fill: c }, seal).textContent = 'J'; });
   const holder = document.createElement('div'); holder.className = 'env-holder'; holder.appendChild(env);
   holder.style.top = page.offsetTop - up + page.offsetHeight / 2 + 'px'; wrap.appendChild(holder);
   await Promise.all([
