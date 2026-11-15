@@ -463,7 +463,11 @@ body.playing .turntable .arm{transform:none}
 .letter-tw{position:relative;z-index:1;display:block;width:100%;height:auto;overflow:visible}
 .letter-tw.clack{animation:clack .09s ease}
 @keyframes clack{50%{transform:translateY(1.5px)}}
-#letterSend{margin-top:14px;padding:9px 22px;background:#fffaf0;border:1.5px solid var(--ink);border-radius:14px 11px 15px 10px / 11px 15px 10px 14px;font-family:var(--f-body);font-size:16px;font-weight:500;color:var(--ink)}
+.letter-from{display:flex;gap:8px;width:92%;margin-top:14px}
+.letter-from input{flex:1;min-width:0;box-sizing:border-box;padding:9px 12px;background:#fffaf0;border:1.5px solid var(--ink);border-radius:12px 10px 13px 9px / 10px 13px 9px 12px;font-family:var(--f-body);font-size:14px;color:var(--ink);outline-offset:2px}
+.letter-from input::placeholder{color:var(--ink-soft)}
+.letter-msg{min-height:1.4em;margin:10px 0 0;font-size:14px;color:#fffaf0;text-align:center}
+#letterSend{margin-top:12px;padding:9px 22px;background:#fffaf0;border:1.5px solid var(--ink);border-radius:14px 11px 15px 10px / 11px 15px 10px 14px;font-family:var(--f-body);font-size:16px;font-weight:500;color:var(--ink)}
 #letterSend:hover{background:#fdf1e2}
 /* the reading stack: the books stand up in a row over the house, angled like the record sleeves */
 .sheet.shelf{background:transparent;border:0;filter:none}
@@ -2181,7 +2185,8 @@ function openLetter() {
   openSheet(`<h2 id="sheetTitle" tabindex="-1">send me a letter</h2><div class="letter-wrap">
     <div class="letter-page" id="letterPage"><div class="letter-mirror" id="letterMirror" aria-hidden="true"></div><textarea class="letter-paper" id="letterText" aria-label="Your letter" spellcheck="false"></textarea></div>
     <svg class="letter-tw" id="letterTw" viewBox="0 30 320 120" aria-hidden="true"></svg>
-    <button class="btn-ink" id="letterSend" type="button">Send</button></div>`, false, null);
+    <div class="letter-from"><input id="letterName" type="text" placeholder="your name (optional)" aria-label="Your name, optional" autocomplete="name" maxlength="80"><input id="letterEmail" type="email" placeholder="your email (optional)" aria-label="Your email, optional" autocomplete="email" maxlength="120"></div>
+    <button class="btn-ink" id="letterSend" type="button">Send</button><p class="letter-msg" id="letterMsg" aria-live="polite"></p></div>`, false, null);
   sheet.classList.add('letter');
   const g = E('g', {}, $('#letterTw')), ta = $('#letterText');
   const body = 'M30,74 Q30,60 46,60 H274 Q290,60 290,74 L300,132 Q301,142 290,142 H30 Q19,142 20,132Z', panel = rr(52, 82, 216, 52, 8), roller = rr(14, 44, 292, 16, 7);
@@ -2196,13 +2201,23 @@ function openLetter() {
   ta.addEventListener('input', e => { show(); typeSound(e.inputType === 'insertLineBreak' ? 'bell' : e.data === ' ' ? 'space' : 'key'); const tw = $('#letterTw'); tw.classList.remove('clack'); void tw.getBoundingClientRect(); tw.classList.add('clack'); });
   ['keyup', 'click', 'select', 'focus'].forEach(k => ta.addEventListener(k, show));
   show(); setTimeout(() => ta.focus({ preventScroll: true }), 350);
+  $('#letterEmail').addEventListener('input', () => { $('#letterMsg').textContent = ''; });
   let sending = false;
   $('#letterSend').onclick = async () => {
     const t = ta.value.trim(); if (!t) { ta.focus(); return; }
     if (sending) return; sending = true; ta.blur();
-    await letterAway(page);
-    ta.value = ''; show(); sending = false;
-    location.href = 'mailto:jmgcatt@gmail.com?subject=' + encodeURIComponent('a letter for you') + '&body=' + encodeURIComponent(t);
+    const name = $('#letterName').value.trim(), email = $('#letterEmail').value.trim(), msg = $('#letterMsg');
+    if (email && !/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(email)) { sending = false; msg.textContent = 'that email doesn\u2019t look right. fix it or leave it blank.'; $('#letterEmail').focus(); return; }
+    msg.textContent = '';
+    // the letter goes straight to my inbox through a form-to-email service; if that can't be reached, the visitor's own email app opens instead
+    const data = { name: name || 'a visitor', message: t, _subject: 'a letter from your site' + (name ? ' \u2014 ' + name : ''), _template: 'box' };
+    if (email) data.email = email;
+    const post = fetch('https://formsubmit.co/ajax/jmgcatt@gmail.com', { method: 'POST', headers: { 'Content-Type': 'application/json', Accept: 'application/json' }, body: JSON.stringify(data) })
+      .then(r => r.ok ? r.json() : null).then(j => !!j && String(j.success) === 'true').catch(() => false);
+    const [ok] = await Promise.all([post, letterAway(page)]);
+    sending = false;
+    if (ok) { ta.value = ''; show(); msg.textContent = 'sent. thank you for the letter!'; }
+    else { msg.textContent = 'that didn\u2019t go through, so your email app is opening with the letter instead.'; location.href = 'mailto:jmgcatt@gmail.com?subject=' + encodeURIComponent('a letter for you') + '&body=' + encodeURIComponent(t + (name ? '\n\n' + name : '')); }
   };
 }
 $('#sheetBack').onclick = () => openWork(projects[sheetProject] ? projects[sheetProject].cat : 'Design');

@@ -39,7 +39,7 @@ Everything in a database is published (there's no "show on site" checkbox). All 
 - The menu ("what I'm cooking") and the record player float over the house with no paper behind them, and close when you click outside.
 - **Two fonts only**: the script (La Belle Aurore, always with the `#ink` texture like the logo) for the logo, titles and names; the body font (Zen Maru Gothic) for everything else. The one exception is the letter page, typed in Special Elite. Sizes: 14px all-caps eyebrow labels, 13px dates and captions, 14px secondary, 16px body. Images and videos have no borders and 2px corners.
 - Opening anything is immersive: the laptop and journal fill the screen, the close button replaces the menu button, and the logo stays visible. On phones and tablet portrait the house is drawn full length (`setLong`) so moving between spots is one pan.
-- "Send Me a Letter" (menu and the typewriter on the book stack) opens an email draft to Jamie with the typed text; there is no backend to send an image.
+- "Send Me a Letter" (menu, the typewriter on the book stack, and "chat for fun" on About) posts the letter, with an optional name and email, to FormSubmit (`formsubmit.co/ajax/...`), which emails it to Jamie; if that fails it falls back to a `mailto:` draft. Writing letters into Notion would need a small hosted function to hold the Notion token; a static page cannot do it safely.
 - The journal is Jamie's Bordeaux leather notebook. Their charms (a gold J, a gold-and-pearl camera, silver cherries, a silver teardrop with a pearl, a gold croissant) hang in a row on a taupe elastic, **on the front cover only**. There is no jasper/polka-dot pendant: that one isn't theirs.
 
 ## Content rules
