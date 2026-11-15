@@ -861,10 +861,10 @@ body:has(.sheet.book.open) .top{z-index:5}
 
       <div class="teo-bubbles" id="teoBubbles" role="group" aria-label="Things to do with Teo" hidden>
         <button class="bub" type="button" data-teo="pet">Pet</button>
-        <button class="bub" type="button" data-teo="treat">Give treat</button>
+        <button class="bub" type="button" data-teo="treat">Treat</button>
         <button class="bub" type="button" data-teo="train" aria-controls="teoCard">Train</button>
-        <button class="bub tc-out" type="button" data-teo="fetch">Play fetch</button>
-        <button class="bub tc-out" type="button" data-teo="potty">Potty break</button>
+        <button class="bub" type="button" data-teo="potty">Potty</button>
+        <button class="bub" type="button" data-teo="fetch">Fetch</button>
       </div>
       <div class="ticket-wrap" id="ticket" role="dialog" aria-label="Your ticket" tabindex="-1" hidden>
         <div class="ticket" id="ticketCard">
@@ -3787,7 +3787,13 @@ bubbles.addEventListener('click', e => {
   const b = e.target.closest('[data-teo]'); if (!b) return;
   const k = b.dataset.teo;
   if (k === 'train') { e.stopPropagation(); bubbles.innerHTML = BUB_TRAIN; placeBubbles(); bubbles.querySelector('.bub').focus({ preventScroll: true }); return; }
-  closeBubbles(); ({ pet: petTeo, treat: giveTreat, fetch: playFetch, potty: pottyBreak })[k]();
+  closeBubbles();
+  // potty and fetch happen in the yard: step outside with Teo first if you're still indoors
+  if (k === 'fetch' || k === 'potty') return (async () => {
+    if (placeIdx !== 2) { await goOutside(); await new Promise(r => setTimeout(r, 400)); }
+    await waitIdle(); if (TEO.outside) (k === 'fetch' ? playFetch : pottyBreak)();
+  })();
+  ({ pet: petTeo, treat: giveTreat })[k]();
 });
 document.addEventListener('click', e => { if (!bubbles.hidden && !e.target.closest('#teoBubbles, #teo')) closeBubbles(); });
 addEventListener('resize', placeBubbles);
@@ -4005,7 +4011,8 @@ function endDrag(e) {
   dragged = true; setTimeout(() => { dragged = false; }, 60);
   // a cancelled touch (the browser took over) just settles back
   const dir = e.type !== 'pointercancel' && Math.abs(e.clientX - d.x0) > 50 ? (e.clientX < d.x0 ? 1 : -1) : 0, cur = phone.matches ? stopIdx : placeIdx, max = placeIdx === 2 ? 2 : phone.matches ? STOPS.length - 1 : PLACES.length - 1;
-  if (dir && cur + dir >= 0 && cur + dir <= max) stepBy(dir);
+  if (dir && placeIdx === 2 && phone.matches) goInside();
+  else if (dir && cur + dir >= 0 && cur + dir <= max) stepBy(dir);
   else if (pan) panTo(homeVB()[0], 300);
   else { animVB(homeVB(), 300); animSlide(homeSlide(), 300); }
 }
