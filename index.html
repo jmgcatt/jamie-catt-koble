@@ -457,6 +457,7 @@ body.playing .turntable .arm{transform:none}
 .env-flap{transform-box:fill-box;transform-origin:center top;transform:scaleY(-1)}
 .env-seal{transform-box:fill-box;transform-origin:center;opacity:0}
 .letter-page{position:relative;z-index:0;width:74%;box-sizing:border-box;margin:0 0 -22px;padding:18px 18px 40px;min-height:150px;max-height:42vh;overflow-y:auto;background:var(--paper-tex),#fffdf8;border-radius:2px 2px 0 0;font-family:"Special Elite",var(--f-body);font-size:16px;line-height:1.6;color:var(--ink)}
+.letter-page:not(.typing) .tw-caret{visibility:hidden;animation:none}
 .letter-mirror{white-space:pre-wrap;overflow-wrap:anywhere;min-height:4.8em}
 .letter-mirror .tw-caret{display:inline-block;width:.46em;height:1.1em;margin:0 .04em -.2em;background:linear-gradient(var(--ink),var(--ink)) center/1.6px 100% no-repeat,linear-gradient(var(--ink),var(--ink)) top/100% 1.6px no-repeat,linear-gradient(var(--ink),var(--ink)) bottom/100% 1.6px no-repeat;filter:url(#ink);animation:twBlink 1.1s steps(1) infinite}
 @keyframes twBlink{50%{opacity:0}}
@@ -2215,6 +2216,8 @@ function openLetter() {
   const show = () => { const i = ta.selectionStart, v = ta.value; mirror.innerHTML = esc(v.slice(0, i)) + '<span class="tw-caret"></span>' + esc(v.slice(i)) + '\n'; const c = mirror.querySelector('.tw-caret'); if (c.offsetTop + c.offsetHeight > page.scrollTop + page.clientHeight - 30) page.scrollTop = c.offsetTop - page.clientHeight + 60; };
   ta.addEventListener('input', e => { show(); typeSound(e.inputType === 'insertLineBreak' ? 'bell' : e.data === ' ' ? 'space' : 'key'); const tw = $('#letterTw'); tw.classList.remove('clack'); void tw.getBoundingClientRect(); tw.classList.add('clack'); });
   ['keyup', 'click', 'select', 'focus'].forEach(k => ta.addEventListener(k, show));
+  // the cursor only shows while the page is being typed on
+  ta.addEventListener('focus', () => page.classList.add('typing')); ta.addEventListener('blur', () => page.classList.remove('typing'));
   show(); setTimeout(() => ta.focus({ preventScroll: true }), 350);
   let sending = false;
   $('#letterSend').onclick = async () => {
