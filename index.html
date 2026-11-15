@@ -687,6 +687,12 @@ body.drawer-open .zoom-x{opacity:1;pointer-events:auto;transform:none}
 body:has(.menu-list:not([hidden])) .menu-btn,body:has(.sheet.open) .menu-btn{opacity:0;pointer-events:none;transform:rotate(90deg) scale(.6)}
 body:has(.menu-list:not([hidden])) .zoom-x,body:has(.sheet.open) .zoom-x{opacity:1;pointer-events:auto;transform:none}
 .sheet:not(.book) #sheetClose{display:none}
+/* the button itself stays put; only the icon inside turns from the menu lines into the cross and back */
+.menu-btn,.zoom-x{transition:none!important;transform:none!important}
+.menu-btn svg,.zoom-x svg{transition:transform .32s cubic-bezier(.3,.7,.3,1),opacity .2s ease}
+.zoom-x svg{transform:rotate(-90deg) scale(.5);opacity:0}
+body:is(.zoomed,.drawer-open,:has(.menu-list:not([hidden])),:has(.sheet.open)) .zoom-x svg{transform:none;opacity:1}
+body:is(.zoomed,.drawer-open,:has(.menu-list:not([hidden])),:has(.sheet.open)) .menu-btn svg{transform:rotate(90deg) scale(.5);opacity:0}
 body:has(.sheet.book.open) .zoom-x{opacity:0!important;pointer-events:none!important}
 body.zoomed .canvas-view .fs-x{display:none!important}
 /* the laptop: its screen fills the whole view, with the dark edge of the lid around it and the keyboard along the bottom */
