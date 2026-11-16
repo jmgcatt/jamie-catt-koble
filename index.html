@@ -30,9 +30,11 @@ button{font:inherit;color:inherit}
 .top{position:absolute;inset:0 0 auto;z-index:5;display:flex;justify-content:space-between;align-items:flex-start;gap:16px;
   padding-block:24px 0;padding-left:max(34px,env(safe-area-inset-left,0px));padding-right:max(20px,env(safe-area-inset-right,0px));pointer-events:none}
 .top>*{pointer-events:auto}
-.mark h1{margin:0;font-family:var(--f-title);font-weight:400;font-size:36px;line-height:1.1;filter:url(#ink)}
+:root{--btn-h:42px}
+@media (pointer:coarse){:root{--btn-h:46px}}
+.mark h1{margin:0;font-family:var(--f-title);font-weight:400;font-size:36px;line-height:var(--btn-h);height:var(--btn-h);filter:url(#ink)}
 .mark p{margin:4px 0 0;font-size:13px;color:var(--ink-soft)}
-.top-right{display:flex;align-items:center;gap:12px;padding-top:4px}
+.top-right{display:flex;align-items:center;gap:12px;padding-top:0;height:var(--btn-h)}
 .sound{display:flex;align-items:center;gap:6px;padding:3px 10px 3px 4px;background:var(--paper);border:1.5px solid var(--ink);border-radius:999px}
 .snd-btn,.menu-btn{display:grid;place-items:center;width:34px;height:34px;padding:0;background:none;border:0;color:var(--ink)}
 .snd-btn svg,.menu-btn svg{width:26px;height:26px}
@@ -56,13 +58,16 @@ button{font:inherit;color:inherit}
 .td-head h2{margin:0;font-family:var(--f-title);font-weight:400;font-size:36px;line-height:1.2;text-transform:lowercase;filter:url(#ink)}
 .td-x{position:static}
 .td-head{margin-bottom:14px}
-.stubs{list-style:none;margin:0;padding:26px 0 40px;display:grid;justify-content:center;grid-template-columns:min(340px,82%)}
-.stubs .stub{grid-area:1/1;margin:0;align-self:start;touch-action:pan-y;user-select:none;-webkit-user-select:none;cursor:grab;transition:transform .55s cubic-bezier(.34,1.5,.64,1),opacity .3s ease}
+.stubs{list-style:none;margin:0;padding:26px 0 40px;display:grid;justify-content:center;grid-template-columns:var(--tk-w)}
+.stubs .stub{grid-area:1/1;margin:0;align-self:center;width:var(--tk-w);height:var(--tk-h);box-sizing:border-box;display:flex;flex-direction:column;overflow:hidden;touch-action:pan-y;user-select:none;-webkit-user-select:none;cursor:grab;transition:transform .55s cubic-bezier(.34,1.5,.64,1),opacity .3s ease}
 .stubs .stub[data-p="0"]{z-index:5;transform:rotate(-1deg)}
 .stubs .stub[data-p="1"]{z-index:4;transform:translate(8px,10px) rotate(3deg)}
 .stubs .stub[data-p="2"]{z-index:3;transform:translate(-8px,17px) rotate(-4deg)}
 .stubs .stub[data-p="far"]{z-index:1;opacity:0;pointer-events:none;transform:translate(0,20px) rotate(1deg)}
 .stubs .stub.held{transition:none;cursor:grabbing}
+.stub .stub-top{flex:none}
+.stub .stub-body{flex:1;min-height:0;overflow-y:auto;overscroll-behavior:contain;scrollbar-width:none;padding-top:8px}
+.stub .stub-body::-webkit-scrollbar{display:none}
 .stub{position:relative;margin-top:-6px;padding:12px 16px 12px 18px;background:#fffaf0;border-radius:var(--wobble)}
 .stub:first-child{margin-top:0}
 .stub:nth-child(odd){transform:rotate(-.7deg)}
@@ -150,6 +155,10 @@ input[type="text"],input[type="url"]{cursor:text}
 #scene.night .day-only{opacity:0}
 body.night{background:#3d4357}
 body.night .top{color:#efe6d2}
+.mark h1,.mark p{transition:color .35s ease}
+body:has(.sheet.menu.open) .mark h1,body:has(.sheet.shelf.open) .mark h1,body:has(.sheet.letter.open) .mark h1,body:has(#tdScrim:not([hidden])) .mark h1,body.drawer-open .mark h1{color:#fffaf0}
+body:has(.sheet.menu.open) .mark p,body:has(.sheet.shelf.open) .mark p,body:has(.sheet.letter.open) .mark p,body:has(#tdScrim:not([hidden])) .mark p,body.drawer-open .mark p{color:#efe6d2}
+body.night .mark h1{color:#fffaf0}
 body.night .mark p{color:#d9cfb9}
 body.night .top > .mark .link{color:#d9cfb9}
 body.night .link:hover{color:#fff6e2}
@@ -361,8 +370,9 @@ body.zoomed .edge-tab,.edge-tab[hidden]{display:none}
 .t-cite a:hover,.stub-c a:hover{color:var(--link)}
 .t-doodle{display:block;width:96px;height:80px;margin:2px 0 2px}
 /* the ticket is a frame: it hugs short quotes, and a long quote scrolls inside it while the number, date and outline stay put */
-.ticket-wrap{top:112px;bottom:76px;height:auto;max-height:calc(100dvh - 188px);margin:auto;overflow:visible;display:flex;align-items:center}
-.ticket-wrap .ticket{width:100%;max-height:100%;box-sizing:border-box;display:flex;flex-direction:column}
+:root{--tk-w:min(380px,calc(100vw - 40px));--tk-h:min(400px,calc(100dvh - 300px))}
+.ticket-wrap{inset:0;width:var(--tk-w);height:var(--tk-h);max-height:none;margin:auto;overflow:visible;display:block}
+.ticket-wrap .ticket{width:100%;height:100%;box-sizing:border-box;display:flex;flex-direction:column}
 .ticket .t-top{flex:none}
 .t-body{margin-top:12px;min-height:0;overflow-y:auto;overscroll-behavior:contain;padding-bottom:4px;scrollbar-width:none}
 .t-body::-webkit-scrollbar{display:none}
@@ -703,7 +713,8 @@ body.zoomed .zoom-x{opacity:1;pointer-events:auto;transform:none}
 .td-head{display:block;margin:0 0 6px;flex:none}
 .td-head h2{color:#fffaf0;text-align:center;font-size:40px}
 #tdClose{display:none}
-.tdrawer .stubs{width:100%;padding:12px 0 30px}
+.tdrawer .stubs{width:100%;padding:0}
+.tdrawer .td-head{position:absolute;top:68px;left:0;right:0;margin:0}
 .td-empty{justify-items:center;padding:18px 24px;background:#fffaf0;border-radius:var(--wobble)}
 /* with the ephemera open, the menu button becomes the close button, as when zoomed */
 body.drawer-open .top{z-index:23}
@@ -858,8 +869,6 @@ body:has(.sheet.book.open) .top{z-index:5}
   .zoom-x{right:max(12px,env(safe-area-inset-right,0px))}
   .cv-title{margin-top:20px;font-size:34px}
   body:has(#screen:not([hidden])) .top{align-items:center;padding-left:26px;padding-right:22px}
-  body:has(#screen:not([hidden])) .top .mark{padding-top:8px}
-  body:has(#screen:not([hidden])) .top-right{padding-top:8px}
   body:has(#screen:not([hidden])) .zoom-x{right:22px;top:32px}
   .top{gap:8px;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(12px,env(safe-area-inset-right,0px))}
   .top .mark h1{font-size:clamp(20px,6.4vw,30px)!important;white-space:nowrap}
@@ -3420,9 +3429,9 @@ document.addEventListener('click', e => { if (current && !ticketEl.hidden && !e.
 // ephemera: every ticket taken, newest first
 const DL_ICON = '<svg viewBox="0 0 20 20" aria-hidden="true"><g fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M10 3.6 V12.4 M6.4 9 L10 12.6 L13.6 9"/><path d="M4.6 15.8 Q10 16.6 15.4 15.8"/></g></svg>';
 function renderDrawer() {
-  $('#stubs').innerHTML = saved.length ? saved.slice().reverse().map(t => `<li class="stub"><div class="stub-top"><b>No. ${pad(t.no)}</b><span class="stub-meta"><span>${niceDate(t.date)}</span></span></div>
+  $('#stubs').innerHTML = saved.length ? saved.slice().reverse().map(t => `<li class="stub"><div class="stub-top"><b>No. ${pad(t.no)}</b><span class="stub-meta"><span>${niceDate(t.date)}</span></span></div><div class="stub-body">
     ${t.kind === 'favorite' || t.kind === 'book' ? `<div class="fav">${t.kind === 'book' ? bookThumb(t) : favThumb(t)}<div><p class="stub-q fav-t">${linkOr(t.title, t.url)}</p>${t.kind === 'book' ? bookBy(t, 'stub-by') : ''}${t.description ? `<p class="stub-d">${esc(t.description)}</p>` : ''}<p class="stub-c">${t.kind === 'book' ? bookCite(t) : favCite(t)}</p></div></div>`
-      : `<p class="stub-q">\u201C${esc(t.quote)}\u201D</p><p class="stub-c">${quoteCite(t)}</p>`}</li>`).join('')
+      : `<p class="stub-q">\u201C${esc(t.quote)}\u201D</p><p class="stub-c">${quoteCite(t)}</p>`}</div></li>`).join('')
     : '<li class="td-empty">No keepsakes yet.<button class="btn-ink" type="button" id="tdVisit">Visit the ticket machine</button></li>';
   const v = $('#tdVisit'); if (v) v.onclick = visitMachine;
   stubOrder = [...$('#stubs').querySelectorAll('.stub')]; placeStubs();
@@ -3632,12 +3641,12 @@ function scaleTexture(k) {
 let strip = null; // { x0, w, k, W, H } while the strip camera is on
 const STRIP_X0 = -160, STRIP_W = 2080;
 function layoutStrip(on) {
-  if (!on) { if (strip) { strip = null; Object.assign(svg.style, { position: '', left: '', bottom: '', width: '', height: '', transformOrigin: '', transform: '', transition: '' }); } return; }
+  if (!on) { if (strip) { strip = null; Object.assign(svg.style, { position: '', left: '', bottom: '', width: '', height: '', transformOrigin: '', transform: '', transition: '', willChange: '' }); } return; }
   const r = stage.getBoundingClientRect(); if (!r.width || !r.height) return;
   const k = Math.max(r.width / stopW(), r.height / 764);
   strip = { x0: STRIP_X0, w: STRIP_W, k, W: r.width, H: r.height };
   svg.setAttribute('viewBox', `${STRIP_X0} 0 ${STRIP_W} 764`); svg.setAttribute('preserveAspectRatio', 'none');
-  Object.assign(svg.style, { position: 'absolute', left: '0', bottom: '0', width: STRIP_W * k + 'px', height: 764 * k + 'px', transformOrigin: '0 0' });
+  Object.assign(svg.style, { position: 'absolute', left: '0', bottom: '0', width: STRIP_W * k + 'px', height: 764 * k + 'px', transformOrigin: '0 0', willChange: 'transform' });
 }
 function camTransform(v) {
   const s = Math.max(strip.W / v[2], strip.H / v[3]), S = s / strip.k;
@@ -3650,21 +3659,28 @@ const setVB = v => {
 };
 const pause = ms => new Promise(r => setTimeout(r, reduceMotion.matches ? 0 : ms));
 let vbGen = 0;
+// a zoom lands on real vector drawing (sharp, at the normal grain); the glide itself runs on the ready-made picture
+const isHomeWidth = v => v[2] >= stopW() * .95;
+function toCrisp(to) { layoutStrip(false); svg.setAttribute('preserveAspectRatio', 'xMidYMax slice'); setVB(to); }
+function toStrip(to) { if (phone.matches && !strip && isHomeWidth(to)) { layoutStrip(true); setVB(to); } }
 function animVB(to, ms) {
   const gen = ++vbGen;
   if (strip && !reduceMotion.matches) {
     // handed to the graphics card as one glide
     vb = to; svg.style.transition = `transform ${ms}ms cubic-bezier(.65,0,.35,1)`; svg.style.transform = camTransform(to);
-    return new Promise(done => setTimeout(() => { if (gen === vbGen) svg.style.transition = 'none'; done(); }, ms + 40));
+    return new Promise(done => setTimeout(() => {
+      if (gen === vbGen) { svg.style.transition = 'none'; if (!isHomeWidth(to)) toCrisp(to); }
+      done();
+    }, ms + 40));
   }
   return new Promise(done => {
-    if (reduceMotion.matches) { setVB(to); return done(); }
+    if (reduceMotion.matches) { if (strip && !isHomeWidth(to)) toCrisp(to); else setVB(to); toStrip(to); return done(); }
     const from = vb.slice(), t0 = performance.now();
     const step = now => {
       if (gen !== vbGen) return done();
       const t = Math.min(1, (now - t0) / ms), e = t < .5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2;
       setVB(from.map((f, i) => f + (to[i] - f) * e));
-      t < 1 ? requestAnimationFrame(step) : done();
+      if (t < 1) requestAnimationFrame(step); else { toStrip(to); done(); }
     };
     requestAnimationFrame(step);
   });
