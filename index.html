@@ -907,10 +907,10 @@ body:has(.sheet.book.open) .top{z-index:5}
 }
 
 /* ================= type system: two fonts, five groups (desktop / phone) =================
-   1 titles 28/24 script   2 card titles 24/20 script   3 quotes 20/18 sans
-   4 body 18/16 sans regular   5 metadata 16/14 sans all caps   6 buttons and inputs 18/16 sans small caps medium */
-:root{--t-title:28px;--t-card:24px;--t-quote:20px;--t-body:18px;--t-meta:16px;--t-btn:18px}
-@media (max-width:760px),(max-width:1100px) and (orientation:portrait){:root{--t-title:24px;--t-card:20px;--t-quote:18px;--t-body:16px;--t-meta:14px;--t-btn:16px}}
+   1 titles 48/32 script   2 card titles 32/28 script   3 quotes 20/18 sans
+   4 body 20/18 sans regular   5 metadata 18/16 sans all caps   6 buttons and inputs 20/18 sans lowercase medium */
+:root{--t-title:48px;--t-card:32px;--t-quote:20px;--t-body:20px;--t-meta:18px;--t-btn:20px}
+@media (max-width:760px),(max-width:1100px) and (orientation:portrait){:root{--t-title:32px;--t-card:28px;--t-quote:18px;--t-body:18px;--t-meta:16px;--t-btn:18px}}
 html .sheet h2,html .sheet .jb-flow h2,html .sheet .bar-title h2,html .sp-head h3,html .cv-title,html .td-head h2,html .sheet.menu h2,html .sheet.shelf h2,html .sheet.letter h2,html .screen-bar h2{font-family:var(--f-title)!important;font-size:var(--t-title)!important;font-weight:400!important;line-height:1.25!important;text-transform:lowercase}
 html .c-t,html .screen .c-t,html .cv-grid .c-t,html .dish b,html .fave b,html li.book b,html .jams b,html .posts b,html .work-list b,html .cv-cap b,html .jb-toc .jt-t,html .sheet h3,html .post h3,html .post h4,html .spin-title,html .t-no,html .stub-top b{font-family:var(--f-title)!important;font-size:var(--t-card)!important;font-weight:400!important;line-height:1.25!important}
 html .t-quote,html .stub-q,html blockquote,html .post blockquote{font-family:var(--f-body)!important;font-size:var(--t-quote)!important;font-weight:400!important;line-height:1.5!important;filter:none!important}
