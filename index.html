@@ -32,7 +32,7 @@ button{font:inherit;color:inherit}
 .top>*{pointer-events:auto}
 :root{--btn-h:42px}
 @media (pointer:coarse){:root{--btn-h:46px}}
-.mark h1{margin:0;font-family:var(--f-title);font-weight:400;font-size:36px;line-height:var(--btn-h);height:var(--btn-h);filter:url(#ink)}
+.mark h1{transform:translateY(1px);margin:0;font-family:var(--f-title);font-weight:400;font-size:36px;line-height:var(--btn-h);height:var(--btn-h);filter:url(#ink)}
 .mark p{margin:4px 0 0;font-size:13px;color:var(--ink-soft)}
 .top-right{display:flex;align-items:center;gap:12px;padding-top:0;height:var(--btn-h)}
 .sound{display:flex;align-items:center;gap:6px;padding:3px 10px 3px 4px;background:var(--paper);border:1.5px solid var(--ink);border-radius:999px}
@@ -158,7 +158,8 @@ body.night .top{color:#efe6d2}
 .mark h1,.mark p{transition:color .35s ease}
 body:has(.sheet.menu.open) .mark h1,body:has(.sheet.shelf.open) .mark h1,body:has(.sheet.letter.open) .mark h1,body:has(#tdScrim:not([hidden])) .mark h1,body.drawer-open .mark h1{color:#fffaf0}
 body:has(.sheet.menu.open) .mark p,body:has(.sheet.shelf.open) .mark p,body:has(.sheet.letter.open) .mark p,body:has(#tdScrim:not([hidden])) .mark p,body.drawer-open .mark p{color:#efe6d2}
-body.night .mark h1{color:#fffaf0}
+body.night .mark h1,body.logo-light .mark h1{color:#fffaf0}
+body.logo-light .mark p{color:#efe6d2}
 body.night .mark p{color:#d9cfb9}
 body.night .top > .mark .link{color:#d9cfb9}
 body.night .link:hover{color:#fff6e2}
@@ -204,6 +205,12 @@ body.playing .notes .note:nth-child(2){animation-delay:-1.8s}
   .shelf-row{gap:56px!important}
   .shelf-book{width:min(320px,24vw,34vh)!important}
 }
+/* project cards on the laptop and the easel: centred title and year, every card the same height */
+.screen .cards,.cv-grid{grid-auto-rows:1fr;align-items:stretch}
+.screen .cards>li,.cv-grid>li{display:flex}
+.screen .card,.cv-grid .card{height:100%;width:100%;align-items:center;text-align:center;justify-content:flex-start}
+.screen .card svg,.cv-grid .card svg,.screen .card img,.cv-grid .card img{align-self:stretch}
+.screen .card .c-t,.cv-grid .card .c-t,.screen .card .c-m,.cv-grid .card .c-m{width:100%;text-align:center}
 /* the record player: a little larger and exactly centred on the screen */
 html .sheet.player .sheet-body{padding-left:0!important;padding-right:0!important;padding-top:0!important;padding-bottom:0!important}
 .player-deck{padding:0!important}
@@ -2254,6 +2261,15 @@ async function letterAway(page) {
   await holder.animate([{ opacity: 1, transform: 'translate(-50%,-50%)' }, { opacity: 0, transform: 'translate(-50%,-130%) rotate(-5deg)' }], { duration: 520, easing: 'ease-in', fill: 'forwards' }).finished;
   holder.remove(); page.getAnimations().forEach(a => a.cancel());
 }
+// the logo is white whenever a dark overlay (or the night scene) sits behind it, and ink again when it lifts
+function syncLogoTone() {
+  const a = el => { if (!el || el.hidden) return 0; const m = getComputedStyle(el).backgroundColor.match(/rgba?\(([^)]+)\)/); if (!m) return 0; const p = m[1].split(',').map(Number); return p.length > 3 ? p[3] : 1; };
+  const sc = document.querySelector('.scrim'), td = document.getElementById('tdScrim');
+  const dark = document.getElementById('scene').classList.contains('night') || document.body.classList.contains('night') || (sc && sc.classList.contains('open') && a(sc) >= .4) || (td && !td.hidden && a(td) >= .4);
+  document.body.classList.toggle('logo-light', !!dark);
+}
+new MutationObserver(syncLogoTone).observe(document.body, { attributes: true, subtree: true, attributeFilter: ['class', 'hidden'] });
+syncLogoTone();
 // where letters go: my Notion "Letters" database, through the small helper in workers/letters-to-notion.js.
 // Paste the helper's address here once it exists; until then letters are emailed through FormSubmit.
 const LETTERS_URL = '';
@@ -2666,6 +2682,20 @@ sheet.addEventListener('dragstart', e => { if (e.target.closest && e.target.clos
 addEventListener('resize', () => { if (book) layoutBook(); });
 body.addEventListener('click', e => { const b = e.target.closest('[data-post]'); if (b) return openPost(+b.dataset.post); if (e.target.closest('[data-journal]')) openWriting(); });
 
+// every project card in a grid is as tall as the tallest one
+function equalCards(grid) {
+  if (!grid || !grid.clientWidth) return;
+  grid.style.gridAutoRows = 'auto';
+  const cards = [...grid.querySelectorAll('.card')]; let m = 0;
+  cards.forEach(c => { c.style.height = 'auto'; m = Math.max(m, c.offsetHeight); });
+  cards.forEach(c => { c.style.height = ''; });
+  if (m) grid.style.gridAutoRows = m + 'px';
+}
+(() => {
+  const fix = () => { equalCards(document.getElementById('cards')); equalCards(document.querySelector('.cv-grid')); };
+  ['cards', 'cvArt'].forEach(id => { const el = document.getElementById(id); if (!el) return; new MutationObserver(() => requestAnimationFrame(fix)).observe(el, { childList: true }); new ResizeObserver(() => requestAnimationFrame(fix)).observe(el); });
+  addEventListener('resize', () => requestAnimationFrame(fix)); if (document.fonts) document.fonts.ready.then(fix);
+})();
 /* ---------- reading stack: now reading, past reads, reviews ---------- */
 // the list lives in the db; people with edit access add and remove books from the panel itself
 let books = [], readDb = null, readEdit = false, readState = staticSite ? 'ready' : 'loading', readingOpen = false;
