@@ -43,7 +43,7 @@ Everything in a database is published (there's no "show on site" checkbox). All 
   3. Quotes (tickets, pull quotes): sans, 20 / 18px (`--t-quote`)
   4. Body text: sans regular, 18 / 16px (`--t-body`)
   5. Metadata (years, dates, eyebrows, supporting labels): sans, ALL CAPS, 16 / 14px (`--t-meta`)
-  6. Buttons and input placeholders: sans medium, small caps, 18 / 16px (`--t-btn`)
+  6. Buttons, pills, links and input placeholders: sans medium, lowercase (no small caps), 18 / 16px (`--t-btn`)
   New text must use one of these groups; add its selector to the matching rule in that block rather than giving it its own size. Images and videos have no borders and 2px corners.
 - Opening anything is immersive: the laptop and journal fill the screen, the close button replaces the menu button, and the logo stays visible. On phones and tablet portrait the house is drawn full length (`setLong`) so moving between spots is one pan.
 - "Send Me a Letter" (menu, the typewriter on the book stack, and "chat for fun" on About) posts the letter, with an optional name and email, to FormSubmit (`formsubmit.co/ajax/...`), which emails it to Jamie. It never opens the visitor's email app and shows no status text. Jamie chose FormSubmit over Notion; the unused Notion route is still here: the **Letters** database (From, Email, Message, Received) exists on the "Jamie Catt-Koble" page, and `workers/letters-to-notion.js` is a Cloudflare Worker that writes to it. It still needs Jamie to create the Worker (free Cloudflare account, secret `NOTION_TOKEN`); then set `LETTERS_URL` in `index.html` to the Worker's address and letters go to Notion instead of FormSubmit.

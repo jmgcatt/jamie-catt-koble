@@ -360,10 +360,7 @@ body.zoomed .edge-tab,.edge-tab[hidden]{display:none}
 .t-cite a,.stub-c a{color:inherit;text-decoration:none}
 .t-cite a:hover,.stub-c a:hover{color:var(--link)}
 .t-doodle{display:block;width:96px;height:80px;margin:2px 0 2px}
-.ticket{height:300px;box-sizing:border-box;display:flex;flex-direction:column}
-.t-top{flex:none}
-.t-body{flex:1;min-height:0;margin-top:12px;overflow-y:auto;overscroll-behavior:contain}
-.stubs .stub{height:250px;box-sizing:border-box;overflow-y:auto;overscroll-behavior:contain}
+.t-body{margin-top:12px}
 .t-body .t-kick:first-child{margin-top:0}
 .t-x{position:absolute;top:8px;right:8px;display:grid;place-items:center;width:28px;height:28px;padding:0;color:var(--ink-soft);background:none;border:0;border-radius:50%}
 .t-x:hover{color:var(--ink);background:#f6ead0}
@@ -711,7 +708,7 @@ body.drawer-open .zoom-x{opacity:1;pointer-events:auto;transform:none}
 body:has(.menu-list:not([hidden])) .menu-btn,body:has(.sheet.open) .menu-btn{opacity:0;pointer-events:none;transform:rotate(90deg) scale(.6)}
 body:has(.menu-list:not([hidden])) .zoom-x,body:has(.sheet.open) .zoom-x{opacity:1;pointer-events:auto;transform:none}
 .sheet:not(.book) #sheetClose{display:none}
-.sheet.book .sheet-bar{left:auto!important;right:34px!important}
+.sheet.book .sheet-bar{left:auto!important;right:26px!important;bottom:44px!important}
 .jb-toc-btn{right:auto!important;left:8px!important}
 .sheet.book .sheet-x,.jb-toc-btn,.proj-nav .soc-btn{width:44px;height:44px;background:none!important;border:1.5px solid transparent!important;border-radius:14px 11px 15px 10px / 11px 15px 10px 14px;color:var(--ink)}
 .sheet.book .sheet-x{position:relative}
@@ -816,7 +813,7 @@ body:has(.sheet.book.open) .top{z-index:5}
   .jbook{padding:max(12px,env(safe-area-inset-top,0px)) 16px max(14px,env(safe-area-inset-bottom,0px)) 24px;border-radius:0;border:0}
   .sheet .jb-flow h2{font-size:38px}
   .post.jb-flow{font-size:16px;line-height:1.7}
-  .sheet.book .sheet-bar{right:24px!important;bottom:calc(max(14px,env(safe-area-inset-bottom,0px)) + 12px);top:auto}
+  .sheet.book .sheet-bar{right:16px!important;bottom:calc(max(14px,env(safe-area-inset-bottom,0px)) + 20px)!important;top:auto}
   .jb-no-r{bottom:26px;font-size:13px;color:var(--ink-soft)}
   /* the menu on phones: one dish card on top of a little stack; swipe it away and it tucks back in at the bottom */
   .sheet.menu .dish-grid.stack{display:grid;grid-template-columns:min(250px,68vw);justify-content:center;justify-items:center;gap:0;padding:24px 0 40px}
@@ -921,7 +918,8 @@ html body,html .sheet-body,html .body-p,html .post,html .post.jb-flow,html .lede
 html .body-p,html .post,html .lede,html .exp p,html .t-desc,html .stub-d,html .fave span,html .shelf-note,html .meta dd,html .about-tag,html .letter-page{font-weight:400!important}
 html .exp b{font-weight:500!important}
 html .c-m,html .bt-year,html .cv-year,html .jb-flow .jb-date,html .jb-toc .jt-d,html .t-date,html .t-kick,html .kick,html .meta dt,html .stub-top span,html .t-cite,html .t-by,html .stub-by,html .stub-c,html .exp .when,html .year,html .jb-no,html .dish span,html .jams small,html .posts small,html li.book span,html .work-list span,html .cv-cap{font-family:var(--f-body)!important;font-size:var(--t-meta)!important;font-weight:400!important;text-transform:uppercase!important;letter-spacing:.08em!important;font-style:normal!important}
-html .btn-ink,html .btn-plain,html .bub,html .cmd,html .chip,html .tab,html .seg button,html .link,html .menu-list .link,html .read-on,html #letterSend,html .letter-field input,html .rf-grid input,html .rf-grid select,html .cv-form input,html input::placeholder{font-family:var(--f-body)!important;font-size:var(--t-btn)!important;font-weight:500!important;font-variant-caps:small-caps;letter-spacing:.03em}
+html .btn-ink,html .btn-plain,html .bub,html .cmd,html .chip,html .tab,html .seg button,html .link,html .menu-list .link,html .read-on,html #letterSend,html .letter-field input,html .rf-grid input,html .rf-grid select,html .cv-form input,html input::placeholder{font-family:var(--f-body)!important;font-size:var(--t-btn)!important;font-weight:500!important;font-variant-caps:normal!important;text-transform:lowercase!important;letter-spacing:.01em}
+html .inline-link{text-transform:lowercase}
 </style>
 
 <div class="app" id="app">
@@ -3988,7 +3986,8 @@ async function playFetch() {
 async function pottyBreak() {
   if (!TEO.outside || TEO.busy) return; TEO.busy = true; TEO.last = Date.now();
   try {
-    await walkTo(phone.matches ? Math.min(1632, 1048 + stopW() - 70) : 1632, 754, 140); TEO.f = 1; placeTeo(); teoSay('Sniff, sniff\u2026 the bush is very interesting.'); await nap(1800);
+    if (phone.matches && yardIdx === 0) { TEO.busy = false; await panYard(1, false); TEO.busy = true; }
+    await walkTo(1632, 754, 140); TEO.f = 1; placeTeo(); teoSay('Sniff, sniff\u2026 the bush is very interesting.'); await nap(1800);
     teoSay('All done. Good boy, Teo!'); hearts(1); bump('love', 4); await nap(900); await walkTo(YARD[0], YARD[1]); setPose('sit');
   } finally { TEO.busy = false; }
 }
@@ -4094,7 +4093,7 @@ function buildStops() {
 }
 // stops are measured with the rooms unslid; kitchen stops are seen with the rooms slid over
 const stopVB = i => [STOPS[i].cx - stopW() / 2, 0, stopW(), 764];
-const homeVB = () => placeIdx === 2 ? (phone.matches ? [1048, 0, stopW(), 764] : VB_OUT) : phone.matches ? stopVB(stopIdx) : VB0;
+const homeVB = () => placeIdx === 2 ? (phone.matches ? [yardIdx ? 1848 - stopW() : 1048, 0, stopW(), 764] : VB_OUT) : phone.matches ? stopVB(stopIdx) : VB0;
 const homeSlide = () => placeIdx === 2 || phone.matches ? 0 : PLACES[placeIdx].slide;
 function nearestStop(p) {
   const c = p === 1 ? 1350 : 900; let best = -1;
@@ -4178,6 +4177,13 @@ async function moveTo(i, ms) {
   else if (phone.matches) say(STOPS[stopIdx].name);
 }
 const stepBy = d => placeIdx === 2 ? (d < 0 ? goInside() : null) : moveTo((phone.matches ? stopIdx : placeIdx) + d);
+// phones: the yard has two spots, by the house and over by the bushes
+let yardIdx = 0;
+async function panYard(i, bringTeo = true) {
+  if (!phone.matches || placeIdx !== 2 || moving || yardIdx === i) return;
+  yardIdx = i; moving = true; await panTo(homeVB()[0], 700); moving = false;
+  if (bringTeo) { await waitIdle(); if (!TEO.outside || placeIdx !== 2) return; TEO.busy = true; try { await walkTo(i ? 1848 - stopW() / 2 - 40 : YARD[0], 754, 180); TEO.f = 1; setPose('sit'); } finally { TEO.busy = false; } }
+}
 async function softCut(long) {
   stage.style.transition = 'opacity .28s ease'; stage.style.opacity = 0; await pause(300);
   setLong(long); setSlide(0); setVB(homeVB());
@@ -4187,7 +4193,7 @@ async function softCut(long) {
 async function goOutside() {
   if (placeIdx === 2 || moving || zoomed || zooming) return;
   if (!$('#ticket').hidden) closeTicket(false);
-  placeIdx = 2; updateNav(); teoOut(); collapsePan();
+  placeIdx = 2; yardIdx = 0; updateNav(); teoOut(); collapsePan();
   moving = true; if (phone.matches) await softCut(false); else await Promise.all([animVB(homeVB(), 1500), animSlide(0, 1500)]); moving = false;
   sparkleInView(); say('You stepped outside. Teo is right behind you.');
 }
@@ -4248,7 +4254,12 @@ function endDrag(e) {
   dragged = true; setTimeout(() => { dragged = false; }, 60);
   // a cancelled touch (the browser took over) just settles back
   const dir = e.type !== 'pointercancel' && Math.abs(e.clientX - d.x0) > 50 ? (e.clientX < d.x0 ? 1 : -1) : 0, cur = phone.matches ? stopIdx : placeIdx, max = placeIdx === 2 ? 2 : phone.matches ? STOPS.length - 1 : PLACES.length - 1;
-  if (dir && placeIdx === 2) goInside(); // outside, a swipe either way takes you back in, on every screen
+  // outside: swiping toward the bushes goes there (phones), swiping toward the house goes back in
+  if (dir && placeIdx === 2) {
+    if (dir > 0) { if (phone.matches && yardIdx === 0) panYard(1); else if (pan) panTo(homeVB()[0], 300); else animVB(homeVB(), 300); }
+    else if (phone.matches && yardIdx === 1) panYard(0);
+    else goInside();
+  }
   else if (dir && cur + dir >= 0 && cur + dir <= max) stepBy(dir);
   else if (pan) panTo(homeVB()[0], 300);
   else { animVB(homeVB(), 300); animSlide(homeSlide(), 300); }
