@@ -907,10 +907,10 @@ body:has(.sheet.book.open) .top{z-index:5}
 }
 
 /* ================= type system: two fonts, five groups (desktop / phone) =================
-   1 titles 48/32 script   2 card titles 32/28 script   3 quotes 20/18 sans
-   4 body 20/18 sans regular   5 metadata 18/16 sans all caps   6 buttons and inputs 20/18 sans lowercase medium */
-:root{--t-title:48px;--t-card:32px;--t-quote:20px;--t-body:20px;--t-meta:18px;--t-btn:20px}
-@media (max-width:760px),(max-width:1100px) and (orientation:portrait){:root{--t-title:32px;--t-card:28px;--t-quote:18px;--t-body:18px;--t-meta:16px;--t-btn:18px}}
+   1 titles 48/40 script   2 card titles 32/28 script   3 quotes 20/18 sans
+   4 body 20/18 sans regular   5 metadata 16/14 sans all caps   6 buttons and inputs 20/18 sans lowercase medium */
+:root{--t-title:48px;--t-card:32px;--t-quote:20px;--t-body:20px;--t-meta:16px;--t-btn:20px}
+@media (max-width:760px),(max-width:1100px) and (orientation:portrait){:root{--t-title:40px;--t-card:28px;--t-quote:18px;--t-body:18px;--t-meta:14px;--t-btn:18px}}
 html .sheet h2,html .sheet .jb-flow h2,html .sheet .bar-title h2,html .sp-head h3,html .cv-title,html .td-head h2,html .sheet.menu h2,html .sheet.shelf h2,html .sheet.letter h2,html .screen-bar h2{font-family:var(--f-title)!important;font-size:var(--t-title)!important;font-weight:400!important;line-height:1.25!important;text-transform:lowercase}
 html .c-t,html .screen .c-t,html .cv-grid .c-t,html .dish b,html .fave b,html li.book b,html .jams b,html .posts b,html .work-list b,html .cv-cap b,html .jb-toc .jt-t,html .sheet h3,html .post h3,html .post h4,html .spin-title,html .t-no,html .stub-top b{font-family:var(--f-title)!important;font-size:var(--t-card)!important;font-weight:400!important;line-height:1.25!important}
 html .t-quote,html .stub-q,html blockquote,html .post blockquote{font-family:var(--f-body)!important;font-size:var(--t-quote)!important;font-weight:400!important;line-height:1.5!important;filter:none!important}
@@ -3188,7 +3188,7 @@ function place(el, x, y, fn) {
   el.style.top = Math.max(76, Math.min(t, s.height - el.offsetHeight - 16)) + 'px';
 }
 const placeTicket = () => { };
-addEventListener('resize', () => { if (!$('#ticket').hidden) placeTicket(); if (zoomed) { setVB(zoomView(zAdj(ZOOMS[zoomed]))); placeOverlay(zAdj(ZOOMS[zoomed])); } });
+addEventListener('resize', () => { if (strip) { layoutStrip(true); if (!zoomed && !zooming) setVB(homeVB()); } if (!$('#ticket').hidden) placeTicket(); if (zoomed) { setVB(zoomView(zAdj(ZOOMS[zoomed]))); placeOverlay(zAdj(ZOOMS[zoomed])); } });
 
 /* ---------- ticket machine: keepsake tickets with a quote ---------- */
 // quotes, monthly favorites and book recommendations come from data/quotes.json, data/faves.json and
@@ -3624,11 +3624,34 @@ function scaleTexture(k) {
   if (Math.abs(k - textureK) < .01) return; textureK = k;
   TEXTURE.forEach(([n, attr, base]) => n.setAttribute(attr, base.map(x => attr === 'scale' ? x / k : x * k).join(' ')));
 }
-const setVB = v => { if (pan) collapsePan(); vb = v; svg.setAttribute('viewBox', v.map(n => Math.round(n * 100) / 100).join(' ')); scaleTexture(texBase / v[2]); };
+let strip = null; // { x0, w, k, W, H } while the strip camera is on
+const STRIP_X0 = -160, STRIP_W = 2080;
+function layoutStrip(on) {
+  if (!on) { if (strip) { strip = null; Object.assign(svg.style, { position: '', left: '', bottom: '', width: '', height: '', transformOrigin: '', transform: '', transition: '' }); } return; }
+  const r = stage.getBoundingClientRect(); if (!r.width || !r.height) return;
+  const k = Math.max(r.width / stopW(), r.height / 764);
+  strip = { x0: STRIP_X0, w: STRIP_W, k, W: r.width, H: r.height };
+  svg.setAttribute('viewBox', `${STRIP_X0} 0 ${STRIP_W} 764`); svg.setAttribute('preserveAspectRatio', 'none');
+  Object.assign(svg.style, { position: 'absolute', left: '0', bottom: '0', width: STRIP_W * k + 'px', height: 764 * k + 'px', transformOrigin: '0 0' });
+}
+function camTransform(v) {
+  const s = Math.max(strip.W / v[2], strip.H / v[3]), S = s / strip.k;
+  const tx = strip.W / 2 - S * (v[0] + v[2] / 2 - strip.x0) * strip.k, ty = 764 * strip.k - S * (v[1] + v[3]) * strip.k;
+  return `translate3d(${Math.round(tx * 10) / 10}px,${Math.round(ty * 10) / 10}px,0) scale(${Math.round(S * 10000) / 10000})`;
+}
+const setVB = v => {
+  if (strip) { vb = v; svg.style.transition = 'none'; svg.style.transform = camTransform(v); return; }
+  if (pan) collapsePan(); vb = v; svg.setAttribute('viewBox', v.map(n => Math.round(n * 100) / 100).join(' ')); scaleTexture(texBase / v[2]);
+};
 const pause = ms => new Promise(r => setTimeout(r, reduceMotion.matches ? 0 : ms));
 let vbGen = 0;
 function animVB(to, ms) {
   const gen = ++vbGen;
+  if (strip && !reduceMotion.matches) {
+    // handed to the graphics card as one glide
+    vb = to; svg.style.transition = `transform ${ms}ms cubic-bezier(.65,0,.35,1)`; svg.style.transform = camTransform(to);
+    return new Promise(done => setTimeout(() => { if (gen === vbGen) svg.style.transition = 'none'; done(); }, ms + 40));
+  }
   return new Promise(done => {
     if (reduceMotion.matches) { setVB(to); return done(); }
     const from = vb.slice(), t0 = performance.now();
@@ -3646,6 +3669,7 @@ function animVB(to, ms) {
 // (Redrawing all the pencil texture every frame is what made sliding stutter.)
 let pan = null;
 function expandPan(x0, uw) {
+  if (strip) return;
   const r = stage.getBoundingClientRect(), k = Math.max(r.width / vb[2], r.height / vb[3]);
   svg.setAttribute('viewBox', `${x0} ${vb[1]} ${uw} ${vb[3]}`);
   Object.assign(svg.style, { width: uw * k + 'px', marginLeft: (x0 - vb[0]) * k + 'px', willChange: 'transform', transform: 'translate3d(0,0,0)' });
@@ -3658,6 +3682,7 @@ function collapsePan() {
   setVB([p.base - p.px / p.k, vb[1], vb[2], vb[3]]);
 }
 function panTo(toX, ms) {
+  if (strip) return animVB([toX, vb[1], vb[2], vb[3]], ms);
   const w = vb[2];
   if (!pan || toX < pan.x0 - .5 || toX + w > pan.x0 + pan.uw + .5) { collapsePan(); expandPan(Math.min(vb[0], toX), Math.abs(vb[0] - toX) + w); }
   const gen = ++vbGen, from = pan.px, to = (pan.base - toX) * pan.k;
@@ -4241,7 +4266,7 @@ stage.addEventListener('pointermove', e => {
     // start from where the camera is now (it may still be settling) and from where the finger is now
     drag.on = true; vbGen++; slideGen++;
     // phones: draw a strip one spot wider on each side, then the finger just slides that picture
-    if (phone.matches) { if (!pan) expandPan(vb[0] - vb[2], vb[2] * 3); drag.px0 = pan.px; }
+    if (phone.matches && !strip) { if (!pan) expandPan(vb[0] - vb[2], vb[2] * 3); drag.px0 = pan.px; }
     drag.vb = vb.slice(); drag.slide = slide; drag.x = e.clientX;
     try { stage.setPointerCapture(e.pointerId); } catch (err) { }
   }
@@ -4299,6 +4324,7 @@ function placeControls() {
 function setMode() {
   texBase = phone.matches ? stopW() : VB0[2];
   svg.setAttribute('preserveAspectRatio', phone.matches ? 'xMidYMax slice' : 'xMidYMid meet');
+  layoutStrip(false); if (phone.matches) layoutStrip(true);
   setLong(phone.matches && placeIdx !== 2);
   // small screens: a gentler pencil grain, so the drawing reads cleaner
   const soft = smallScreen.matches;
