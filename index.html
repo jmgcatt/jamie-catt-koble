@@ -204,6 +204,12 @@ body.playing .notes .note:nth-child(2){animation-delay:-1.8s}
   .shelf-row{gap:56px!important}
   .shelf-book{width:min(320px,24vw,34vh)!important}
 }
+/* the record player: a little larger and exactly centred on the screen */
+.sheet.player .sheet-body{padding:0 8px!important}
+.player-deck{padding:0!important}
+.crate{padding:20px 0 0!important}
+@media (max-width:760px),(max-width:1100px) and (orientation:portrait){.turntable{width:min(calc(100vw - 12px),560px,calc((100dvh - 250px) * 1.38))!important;max-width:none!important}}
+@media (min-width:900px) and (orientation:landscape){.turntable{width:min(880px,70vw,calc((100vh - 100px - min(200px,22vh) - 22px) * 1.38))!important}}
 /* dish and drink cards in one swipeable stack (phones and tablets; the script decides when) */
 .sheet.menu .dish-grid.stack{display:grid;grid-template-columns:min(270px,68vw);justify-content:center;justify-items:center;gap:0;padding:24px 0 40px}
 .sheet.menu .dish-grid.stack .dish{grid-area:1/1;width:min(270px,68vw);touch-action:pan-y;user-select:none;-webkit-user-select:none;transition:transform .55s cubic-bezier(.34,1.5,.64,1),opacity .3s ease}
@@ -470,7 +476,7 @@ body.playing .turntable .arm{transform:none}
 .sleeve{display:block;width:160px;color:#f3ead8;text-decoration:none;transform:perspective(700px) rotateY(52deg);transform-origin:left center;transition:transform .45s cubic-bezier(.2,.8,.2,1)}
 .sleeve svg{display:block;width:160px;height:160px;filter:drop-shadow(-8px 10px 10px rgba(0,0,0,.4))}
 .sleeve[aria-pressed="true"],.sleeve:hover,.sleeve:focus-visible{transform:perspective(700px) rotateY(0) translateY(-10px) scale(1.06)}
-@media (hover:none){.sleeve{transform:none}.crate{flex-wrap:wrap;gap:16px}.sleeve,.sleeve svg{width:min(110px,27vw);height:auto}}
+@media (hover:none){.sleeve{transform:none}.crate{flex-wrap:wrap;gap:16px}.sleeve,.sleeve svg{width:min(132px,31vw);height:auto}}
 @media (prefers-reduced-motion:reduce){.turntable .rec{animation:none}.sleeve{transition:none}}
 .sheet.menu{background:transparent;border:0;filter:none}
 /* script titles everywhere carry the same inked texture as the logo */
