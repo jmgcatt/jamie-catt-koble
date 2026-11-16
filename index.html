@@ -360,7 +360,12 @@ body.zoomed .edge-tab,.edge-tab[hidden]{display:none}
 .t-cite a,.stub-c a{color:inherit;text-decoration:none}
 .t-cite a:hover,.stub-c a:hover{color:var(--link)}
 .t-doodle{display:block;width:96px;height:80px;margin:2px 0 2px}
-.t-body{margin-top:12px}
+/* the ticket is a frame: it hugs short quotes, and a long quote scrolls inside it while the number, date and outline stay put */
+.ticket-wrap{top:112px;bottom:76px;height:auto;max-height:calc(100dvh - 188px);margin:auto;overflow:visible;display:flex;align-items:center}
+.ticket-wrap .ticket{width:100%;max-height:100%;box-sizing:border-box;display:flex;flex-direction:column}
+.ticket .t-top{flex:none}
+.t-body{margin-top:12px;min-height:0;overflow-y:auto;overscroll-behavior:contain;padding-bottom:4px;scrollbar-width:none}
+.t-body::-webkit-scrollbar{display:none}
 .t-body .t-kick:first-child{margin-top:0}
 .t-x{position:absolute;top:8px;right:8px;display:grid;place-items:center;width:28px;height:28px;padding:0;color:var(--ink-soft);background:none;border:0;border-radius:50%}
 .t-x:hover{color:var(--ink);background:#f6ead0}
@@ -827,7 +832,7 @@ body:has(.sheet.book.open) .top{z-index:5}
   .sheet-body{padding-left:max(40px,env(safe-area-inset-left,0px));padding-right:max(18px,env(safe-area-inset-right,0px));padding-bottom:calc(28px + env(safe-area-inset-bottom,0px))}
   .canvas-view{z-index:18}
   .tdrawer{border:0!important;top:auto;bottom:0;left:0;right:0;width:100%;height:auto;box-sizing:border-box;padding-left:max(42px,env(safe-area-inset-left,0px));padding-right:max(18px,env(safe-area-inset-right,0px));max-height:85vh;max-height:85dvh;transform:none;border-bottom:0;border-radius:18px 18px 0 0;padding-bottom:calc(26px + env(safe-area-inset-bottom,0px));animation:sheetUp .35s cubic-bezier(.2,.8,.2,1)}
-  .ticket-wrap{max-height:calc(100vh - 32px);max-height:calc(100dvh - 32px);overflow-y:auto}
+  .ticket-wrap{overflow:visible}
   .menu-list{position:fixed;top:auto;left:0;right:0;bottom:0;width:auto;height:80vh;height:80dvh;z-index:22;box-sizing:border-box;align-content:start;overflow-y:auto;
     padding:34px max(18px,env(safe-area-inset-right,0px)) calc(26px + env(safe-area-inset-bottom,0px)) 46px;
     background:var(--paper-tex),#fffdf8;
@@ -866,7 +871,7 @@ body:has(.sheet.book.open) .top{z-index:5}
   .zoom-x svg{width:27px;height:27px}
   .navbar .nav-name{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
   .edge-tab{display:none!important}
-  .ticket-wrap{inset:12px 0 calc(var(--nav-h,92px) + 10px);max-height:calc(100vh - var(--nav-h,92px) - 22px);max-height:calc(100dvh - var(--nav-h,92px) - 22px);overflow-y:auto;overscroll-behavior:contain}
+  .ticket-wrap{overflow:visible}
 }
 @media (max-width:760px),(max-width:1100px) and (orientation:portrait){
   .mark h1{font-size:30px}
