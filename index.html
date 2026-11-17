@@ -1004,11 +1004,26 @@ body:has(.sheet.page.open) .mark p{color:var(--ink-soft)!important}
 .hello-row{display:flex;align-items:center;justify-content:space-between;gap:20px}
 .hello-row .body-p,.hello-row .soc-row{margin:0}
 @media (max-width:760px),(max-width:1100px) and (orientation:portrait){.sheet.page .sheet-body{padding:100px 20px 56px!important}}
+
+/* monthly faves: cards like the dish cards, side by side on desktop, stacked on phones; press to turn over */
+.fave-cards{list-style:none;margin:8px 0 28px;padding:0;display:flex;flex-wrap:wrap;gap:28px}
+.fc{--fw:min(340px,calc(100vw - 80px));width:var(--fw);height:calc(var(--fw) * 1.4);perspective:1200px;cursor:pointer;outline:none;-webkit-tap-highlight-color:transparent}
+.fc-in{position:relative;width:100%;height:100%;transform-style:preserve-3d;transition:transform .6s cubic-bezier(.4,.2,.2,1)}
+.fc.flipped .fc-in{transform:rotateY(180deg)}
+.fc-face{position:absolute;inset:0;box-sizing:border-box;display:flex;flex-direction:column;align-items:center;gap:10px;padding:22px 20px;text-align:center;background:#fffaf0;border-radius:var(--wobble);box-shadow:inset 0 0 0 6px #fffaf0,inset 0 0 0 7.5px rgba(201,102,61,.4);backface-visibility:hidden;-webkit-backface-visibility:hidden;overflow:hidden}
+.fc-back{transform:rotateY(180deg);justify-content:center;overflow-y:auto}
+.fc-face .fav-art,.fc-face .fav-img{display:block;flex:none;width:100%;max-height:none;height:auto;aspect-ratio:1;object-fit:contain;margin:0}
+.fc-face b{display:block;margin:0 6px}
+.fc-face b a{color:inherit;text-decoration:none}
+.fc-face b a:hover{color:var(--link)}
+.fc-back p{margin:0;font-size:var(--t-body)}
+.fc:focus-visible .fc-face{outline:2px solid var(--link);outline-offset:2px}
+@media (max-width:760px),(max-width:1100px) and (orientation:portrait){.fave-cards{flex-direction:column;align-items:center;gap:22px}.fc{--fw:min(280px,calc(100vw - 40px))}}
 @media (max-width:760px),(max-width:1100px) and (orientation:portrait){:root{--t-title:40px;--t-card:28px;--t-quote:18px;--t-body:18px;--t-meta:14px;--t-btn:18px}}
 html .sheet h2,html .sheet .jb-flow h2,html .sheet .bar-title h2,html .sp-head h3,html .cv-title,html .td-head h2,html .sheet.menu h2,html .sheet.shelf h2,html .sheet.letter h2,html .screen-bar h2{font-family:var(--f-title)!important;font-size:var(--t-title)!important;font-weight:400!important;line-height:1.25!important;text-transform:lowercase}
-html .c-t,html .screen .c-t,html .cv-grid .c-t,html .dish b,html .fave b,html li.book b,html .jams b,html .posts b,html .work-list b,html .cv-cap b,html .jb-toc .jt-t,html .sheet h3,html .post h3,html .post h4,html .spin-title,html .t-no,html .stub-top b{font-family:var(--f-title)!important;font-size:var(--t-card)!important;font-weight:400!important;line-height:1.25!important}
+html .c-t,html .screen .c-t,html .cv-grid .c-t,html .dish b,html .fave b,html .fc-face b,html li.book b,html .jams b,html .posts b,html .work-list b,html .cv-cap b,html .jb-toc .jt-t,html .sheet h3,html .post h3,html .post h4,html .spin-title,html .t-no,html .stub-top b{font-family:var(--f-title)!important;font-size:var(--t-card)!important;font-weight:400!important;line-height:1.25!important}
 html .t-quote,html .stub-q,html blockquote,html .post blockquote{font-family:var(--f-body)!important;font-size:var(--t-quote)!important;font-weight:400!important;line-height:1.5!important;filter:none!important}
-html body,html .sheet-body,html .body-p,html .post,html .post.jb-flow,html .lede,html .exp p,html .exp b,html .t-desc,html .stub-d,html .fave span,html .shelf-note,html .empty-note,html .meta dd,html .td-empty,html .about-tag,html .post figcaption,html .screen-project,html .cv-art,html .letter-page,html .hint p,html .note,html .cv-empty,html .tc-say{font-family:var(--f-body)!important;font-size:var(--t-body)!important}
+html body,html .sheet-body,html .body-p,html .post,html .post.jb-flow,html .lede,html .exp p,html .exp b,html .t-desc,html .stub-d,html .fave span,html .fc-back p,html .shelf-note,html .empty-note,html .meta dd,html .td-empty,html .about-tag,html .post figcaption,html .screen-project,html .cv-art,html .letter-page,html .hint p,html .note,html .cv-empty,html .tc-say{font-family:var(--f-body)!important;font-size:var(--t-body)!important}
 html .body-p,html .post,html .lede,html .exp p,html .t-desc,html .stub-d,html .fave span,html .shelf-note,html .meta dd,html .about-tag,html .letter-page{font-weight:400!important}
 html .exp b{font-weight:500!important}
 html .c-m,html .bt-year,html .cv-year,html .jb-flow .jb-date,html .jb-toc .jt-d,html .t-date,html .t-kick,html .kick,html .meta dt,html .stub-top span,html .t-cite,html .t-by,html .stub-by,html .stub-c,html .exp .when,html .year,html .jb-no,html .dish span,html .jams small,html .posts small,html li.book span,html .work-list span,html .cv-cap{font-family:var(--f-body)!important;font-size:var(--t-meta)!important;font-weight:400!important;text-transform:uppercase!important;letter-spacing:.08em!important;font-style:normal!important}
@@ -3477,9 +3492,13 @@ function favesList() {
   if (!FAVES.length) return '<p class="empty-note">No favorites to share just yet. Check back next month.</p>';
   const groups = [];
   FAVES.forEach(f => { const label = [f.month, f.year].filter(Boolean).join(' ').toLowerCase() || 'lately'; let g = groups.find(x => x.label === label); if (!g) groups.push(g = { label, items: [] }); g.items.push(f); });
-  return groups.map(g => `<section><h3>${esc(g.label)}</h3><ul class="fave-grid">${g.items.map(f => `<li class="fave">${favThumb(f) || FAVE_STAR}<div><b>${linkOr(f.title, f.url)}</b>${f.description ? `<span>${esc(f.description)}</span>` : ''}</div></li>`).join('')}</ul></section>`).join('');
+  return groups.map(g => `<section><h3>${esc(g.label)}</h3><ul class="fave-cards">${g.items.map(f => `<li><div class="fc" role="button" tabindex="0" aria-pressed="false" aria-label="${esc(f.title)}, press to read about it"><div class="fc-in"><div class="fc-face fc-front">${favThumb(f) || FAVE_STAR}<b>${esc(f.title)}</b></div><div class="fc-face fc-back"><b>${linkOr(f.title, f.url)}</b>${f.description ? `<p>${esc(f.description)}</p>` : ''}</div></div></div></li>`).join('')}</ul></section>`).join('');
 }
 function openFaves() { openSheet(`<h2 id="sheetTitle" tabindex="-1">monthly faves</h2><div id="favesList">${favesList()}</div>`, false, null, '', true); }
+// monthly faves: a card shows the picture and title; press it to turn it over and read about it
+function flipFave(c) { const on = !c.classList.contains('flipped'); c.classList.toggle('flipped', on); c.setAttribute('aria-pressed', on); }
+document.addEventListener('click', e => { const c = e.target.closest('.fc'); if (c && !e.target.closest('a')) flipFave(c); });
+document.addEventListener('keydown', e => { const c = e.target.closest && e.target.closest('.fc'); if (c && (e.key === 'Enter' || e.key === ' ')) { e.preventDefault(); flipFave(c); } });
 function refreshFaves() { const el = $('#favesList'); if (el) el.innerHTML = favesList(); }
 const favCite = t => ['favorite', [t.month.toLowerCase(), t.year].filter(Boolean).join(', ')].filter(Boolean).join(' \u2022 ');
 const bookCite = () => 'read';
