@@ -835,8 +835,8 @@ body:has(.sheet.book.open) .top{z-index:5}
   body.playing .notes .note{animation-duration:6s}
   .sheet{top:0;left:0;width:100vw;height:100vh;height:100dvh;max-height:none;border:0;border-radius:0;transform:translateY(4%)}
   .sheet.open{transform:none}
-  .sheet:not(.book):not(.menu):not(.shelf):not(.player):not(.letter){top:auto;bottom:0;height:88vh;height:88dvh;border-radius:18px 18px 0 0;transform:translateY(8%)}
-  .sheet.open:not(.book):not(.menu):not(.shelf):not(.player):not(.letter){transform:none}
+  .sheet:not(.book):not(.menu):not(.shelf):not(.player):not(.letter):not(.page){top:auto;bottom:0;height:88vh;height:88dvh;border-radius:18px 18px 0 0;transform:translateY(8%)}
+  .sheet.open:not(.book):not(.menu):not(.shelf):not(.player):not(.letter):not(.page){transform:none}
   .sheet.book{border-radius:0}
   .fave-grid{grid-template-columns:1fr}
   .fave .fav-art,.fave .fav-img{width:78px}
@@ -984,6 +984,26 @@ body:has(.sheet.book.open) .top{z-index:5}
 }
 /* every button and field: regular weight, never bold */
 html button,html input,html select,html textarea,html .proj-link,html .inline-link,html .link{font-weight:400}
+
+/* menu pages (about, work, digital home, monthly faves): a full-screen page, the top nav stays on top, no outline or shadow */
+.sheet.page{top:0;left:0;width:100vw;height:100vh;height:100dvh;border:0;border-radius:0;filter:none;transform:none;transition:opacity .3s,visibility 0s .3s}
+.sheet.page.open{transform:none;transition:opacity .3s}
+body:has(.sheet.page.open) .scrim{opacity:0;visibility:hidden}
+body:has(.sheet.page.open) .top{z-index:21}
+body:has(.sheet.page.open) .mark h1{color:var(--ink)!important}
+body:has(.sheet.page.open) .mark p{color:var(--ink-soft)!important}
+.sheet.page .sheet-bar{display:none}
+.sheet.page .sheet-body{box-sizing:border-box;max-width:1180px;margin:0 auto;padding:120px 40px 72px!important}
+.sheet.page .work-list button{border:0;background:#fff}
+.sheet.page .work-list{grid-template-columns:repeat(auto-fill,minmax(320px,1fr));gap:18px}
+.about-grid{display:grid;grid-template-columns:minmax(0,1fr);gap:32px}
+.about-col h3{margin-top:0}
+@media (min-width:900px){.about-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:64px}}
+.hello{position:relative;margin-top:44px;padding-top:30px}
+.hello::before{content:"";position:absolute;left:0;right:0;top:0;height:7px;filter:url(#pencil);background:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 400 7' preserveAspectRatio='none'%3E%3Cpath d='M0 3.6 C40 2.4 70 4.6 120 3.4 S200 2.6 250 3.8 S340 4.4 400 3.2' fill='none' stroke='%234a3a2e' stroke-width='1.7' stroke-linecap='round'/%3E%3C/svg%3E") 0 0/100% 100% no-repeat}
+.hello-row{display:flex;align-items:center;justify-content:space-between;gap:20px}
+.hello-row .body-p,.hello-row .soc-row{margin:0}
+@media (max-width:760px),(max-width:1100px) and (orientation:portrait){.sheet.page .sheet-body{padding:100px 20px 56px!important}}
 @media (max-width:760px),(max-width:1100px) and (orientation:portrait){:root{--t-title:40px;--t-card:28px;--t-quote:18px;--t-body:18px;--t-meta:14px;--t-btn:18px}}
 html .sheet h2,html .sheet .jb-flow h2,html .sheet .bar-title h2,html .sp-head h3,html .cv-title,html .td-head h2,html .sheet.menu h2,html .sheet.shelf h2,html .sheet.letter h2,html .screen-bar h2{font-family:var(--f-title)!important;font-size:var(--t-title)!important;font-weight:400!important;line-height:1.25!important;text-transform:lowercase}
 html .c-t,html .screen .c-t,html .cv-grid .c-t,html .dish b,html .fave b,html li.book b,html .jams b,html .posts b,html .work-list b,html .cv-cap b,html .jb-toc .jt-t,html .sheet h3,html .post h3,html .post h4,html .spin-title,html .t-no,html .stub-top b{font-family:var(--f-title)!important;font-size:var(--t-card)!important;font-weight:400!important;line-height:1.25!important}
@@ -2132,15 +2152,15 @@ renderCards(null);
 const sheet = $('#sheet'), scrim = $('#scrim'), app = $('#app'), body = $('#sheetBody'), live = $('#live');
 let lastFocus = null;
 const say = t => { live.textContent = ''; setTimeout(() => live.textContent = t, 30); };
-function openSheet(html, showBack, seg, barTitle) {
-  clearTimeout(sheetLookTimer); sheet.classList.remove('book', 'player', 'menu', 'shelf', 'letter'); book = null;
+function openSheet(html, showBack, seg, barTitle, asPage) {
+  clearTimeout(sheetLookTimer); sheet.classList.remove('book', 'player', 'menu', 'shelf', 'letter', 'page'); book = null; if (asPage) sheet.classList.add('page');
   $('#barTitle').innerHTML = barTitle || ''; $('#barTitle').hidden = !barTitle;
   if (!sheet.classList.contains('open')) lastFocus = document.activeElement;
   body.innerHTML = html; sheet.scrollTop = 0;
   $('#sheetBack').hidden = !showBack;
   $('#sheetSeg').hidden = !seg;
   document.querySelectorAll('#sheetSeg [data-seg]').forEach(b => b.setAttribute('aria-pressed', b.dataset.seg === seg));
-  sheet.classList.add('open'); scrim.classList.add('open'); app.inert = true;
+  sheet.classList.add('open'); scrim.classList.add('open'); app.inert = !asPage;
   requestAnimationFrame(() => $('#sheetTitle').focus({ preventScroll: true }));
 }
 let sheetLookTimer = null;
@@ -2148,7 +2168,7 @@ function closeSheet() {
   readingOpen = false; recordsOpen = false; weeklyOpen = null;
   sheet.classList.remove('open'); scrim.classList.remove('open'); app.inert = false; book = null;
   // the special looks stay on until the fade-out has finished, so the plain lined card never flashes through
-  clearTimeout(sheetLookTimer); sheetLookTimer = setTimeout(() => { if (!sheet.classList.contains('open')) sheet.classList.remove('book', 'player', 'menu', 'shelf', 'letter'); }, 450);
+  clearTimeout(sheetLookTimer); sheetLookTimer = setTimeout(() => { if (!sheet.classList.contains('open')) sheet.classList.remove('book', 'player', 'menu', 'shelf', 'letter', 'page'); }, 450);
   if (lastFocus && lastFocus.isConnected) lastFocus.focus({ preventScroll: true });
   if (SHEET_ZOOMS.includes(zoomed)) closeZoom();
 }
@@ -2204,13 +2224,13 @@ function openWork(cat = 'Design') {
   const lede = cat === 'Design' ? 'Design systems, product and brand work for health, finance, travel and climate.' : 'Book covers, packaging and watercolor illustration.';
   openSheet(`<div class="title-row"><h2 id="sheetTitle" tabindex="-1">All work</h2><div class="seg" role="group" aria-label="Kind of work">${['Design', 'Illustration'].map(c => `<button type="button" data-seg="${c}" aria-pressed="${c === cat}">${c.toLowerCase()}</button>`).join('')}</div></div>
     <p class="body-p">${lede}</p>
-    ${workList(cat)}`, false, null);
+    ${workList(cat)}`, false, null, '', true);
 }
 function openTiny() {
   openSheet(`<h2 id="sheetTitle" tabindex="-1">A tiny home that moves with me</h2>
     <p class="lede">Home is a tiny house in Salida, Colorado, with mountains in every direction.</p>
     <section><h3>Teo</h3><p>Teo is a 7-month old curly, tri-color Maltipoo. His favorites include going on sniffari walks, being a pocket pup, receiving &ldquo;good boy&rdquo; affirmations, training and treats, forehead kisses and lots of snuggles.</p></section>
-    <section><h3>Where we are</h3><p>Currently back on the road from Colorado to California for the holiday &amp; winter season</p></section>`, false);
+    <section><h3>Where we are</h3><p>Currently back on the road from Colorado to California for the holiday &amp; winter season</p></section>`, false, null, '', true);
 }
 const jobs = [
   ['10kR', 'Lead Designer', '2025 \u2013 Now', 'I work with a team of robots and human designers to build intelligent digital experiences for visionary clients, bringing AI to the forefront of how we design and deliver.'],
@@ -2221,13 +2241,13 @@ const jobs = [
   ['Startup', 'Product Designer', '2019 \u2013 2020', 'Turning founder visions into beta-ready products is where I made impact at startups. I led design and helped launch Chea Seed, Flipside AR, and SewerAI.']
 ];
 function openAbout() {
-  openSheet(`<h2 id="sheetTitle" tabindex="-1">I\u2019m a design lead based in Salida, Colorado</h2>
+  openSheet(`<div class="about-grid"><div class="about-col"><h2 id="sheetTitle" tabindex="-1">I\u2019m a design lead based in Salida, Colorado</h2>
     <p class="about-tag">manile\u00F1a, pisces, illustration and lead designer based in colorado &amp; California</p>
     <p class="body-p">I thrive in spaces that move with momentum \u2014 where fast learning, exploration, and creative thinking matter. I balance structure with playfulness, and find joy in crafting experiences that feel approachable and delightful.</p>
-    <p class="body-p">With over 5 years across startups and global design agencies, I\u2019ve helped shape digital products for industry-leading clients in health, finance, automotive, e-commerce, and marketing \u2014 from mobile and web apps to large-scale design systems.</p>
-    <section><h3>Experience</h3><ul class="exp">${jobs.map(([co, role, when, t]) => `<li><b>${esc(co)}</b><span class="when">${esc(role)} \u00B7 ${when}</span><p>${esc(t)}</p></li>`).join('')}</ul></section>
-    <section><h3>Say hello</h3><p class="body-p">Wanna <button class="inline-link" type="button" data-letter>chat for fun</button> or <a href="mailto:laro@laro.design">work with Laro Design</a>?</p>
-    <p class="soc-row"><a class="soc-btn" href="https://www.linkedin.com/in/jamiecatt/" target="_blank" rel="noopener" aria-label="LinkedIn"><svg viewBox="0 0 28 28" aria-hidden="true"><g fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round"><path d="M8 12.4 Q8.3 16.6 8 20.4"/><path d="M12.6 20.4 Q12.4 16.2 12.7 12.6 M12.7 15.6 Q13.4 12.4 16.6 12.5 Q19.8 12.7 19.9 16 Q20.1 18.4 19.9 20.4"/></g><circle cx="8" cy="8.2" r="1.6" fill="currentColor"/></svg></a><a class="soc-btn" href="https://www.instagram.com/jamiecatt" target="_blank" rel="noopener" aria-label="Instagram"><svg viewBox="0 0 28 28" aria-hidden="true"><g fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9.6 6.4 Q14 5.8 18.6 6.4 Q21.4 6.9 21.7 9.6 Q22.2 14 21.6 18.6 Q21.2 21.3 18.4 21.7 Q14 22.2 9.5 21.6 Q6.8 21.2 6.4 18.4 Q5.8 14 6.4 9.5 Q6.9 6.8 9.6 6.4Z"/><circle cx="14" cy="14" r="3.7"/></g><circle cx="18.6" cy="9.5" r="1.1" fill="currentColor"/></svg></a></p></section>`, false);
+    <p class="body-p">With over 5 years across startups and global design agencies, I\u2019ve helped shape digital products for industry-leading clients in health, finance, automotive, e-commerce, and marketing \u2014 from mobile and web apps to large-scale design systems.</p></div>
+    <section class="about-col"><h3>Experience</h3><ul class="exp">${jobs.map(([co, role, when, t]) => `<li><b>${esc(co)}</b><span class="when">${esc(role)} \u00B7 ${when}</span><p>${esc(t)}</p></li>`).join('')}</ul></section></div>
+    <section class="hello"><h3>Say hello</h3><div class="hello-row"><p class="body-p">Wanna <button class="inline-link" type="button" data-letter>chat for fun</button> or <a href="mailto:laro@laro.design">work with Laro Design</a>?</p>
+    <p class="soc-row"><a class="soc-btn" href="https://www.linkedin.com/in/jamiecatt/" target="_blank" rel="noopener" aria-label="LinkedIn"><svg viewBox="0 0 28 28" aria-hidden="true"><g fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round"><path d="M8 12.4 Q8.3 16.6 8 20.4"/><path d="M12.6 20.4 Q12.4 16.2 12.7 12.6 M12.7 15.6 Q13.4 12.4 16.6 12.5 Q19.8 12.7 19.9 16 Q20.1 18.4 19.9 20.4"/></g><circle cx="8" cy="8.2" r="1.6" fill="currentColor"/></svg></a><a class="soc-btn" href="https://www.instagram.com/jamiecatt" target="_blank" rel="noopener" aria-label="Instagram"><svg viewBox="0 0 28 28" aria-hidden="true"><g fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9.6 6.4 Q14 5.8 18.6 6.4 Q21.4 6.9 21.7 9.6 Q22.2 14 21.6 18.6 Q21.2 21.3 18.4 21.7 Q14 22.2 9.5 21.6 Q6.8 21.2 6.4 18.4 Q5.8 14 6.4 9.5 Q6.9 6.8 9.6 6.4Z"/><circle cx="14" cy="14" r="3.7"/></g><circle cx="18.6" cy="9.5" r="1.1" fill="currentColor"/></svg></a></p></div></section>`, false, null, '', true);
 }
 document.addEventListener('click', e => {
   const o = e.target.closest('[data-open]');
@@ -3459,7 +3479,7 @@ function favesList() {
   FAVES.forEach(f => { const label = [f.month, f.year].filter(Boolean).join(' ').toLowerCase() || 'lately'; let g = groups.find(x => x.label === label); if (!g) groups.push(g = { label, items: [] }); g.items.push(f); });
   return groups.map(g => `<section><h3>${esc(g.label)}</h3><ul class="fave-grid">${g.items.map(f => `<li class="fave">${favThumb(f) || FAVE_STAR}<div><b>${linkOr(f.title, f.url)}</b>${f.description ? `<span>${esc(f.description)}</span>` : ''}</div></li>`).join('')}</ul></section>`).join('');
 }
-function openFaves() { openSheet(`<h2 id="sheetTitle" tabindex="-1">monthly faves</h2><div id="favesList">${favesList()}</div>`, false, null); }
+function openFaves() { openSheet(`<h2 id="sheetTitle" tabindex="-1">monthly faves</h2><div id="favesList">${favesList()}</div>`, false, null, '', true); }
 function refreshFaves() { const el = $('#favesList'); if (el) el.innerHTML = favesList(); }
 const favCite = t => ['favorite', [t.month.toLowerCase(), t.year].filter(Boolean).join(', ')].filter(Boolean).join(' \u2022 ');
 const bookCite = () => 'read';
