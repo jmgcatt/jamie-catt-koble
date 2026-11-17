@@ -988,7 +988,7 @@ body:has(.sheet.book.open) .top{z-index:5}
 /* every button and field: regular weight, never bold */
 html button,html input,html select,html textarea,html .proj-link,html .inline-link,html .link{font-weight:400}
 
-/* menu pages (about, work, digital home, monthly faves): a full-screen page, the top nav stays on top, no outline or shadow */
+/* menu pages (about, work, monthly faves): a full-screen page, the top nav stays on top, no outline or shadow */
 .sheet.page{top:0;left:0;width:100vw;height:100vh;height:100dvh;border:0;border-radius:0;filter:none;transform:none;transition:opacity .3s,visibility 0s .3s}
 .sheet.page.open{transform:none;transition:opacity .3s}
 body:has(.sheet.page.open) .scrim{opacity:0;visibility:hidden}
@@ -1073,7 +1073,6 @@ html .inline-link{text-transform:lowercase}
         <ul class="menu-list" id="menuList" hidden>
           <li><button class="link" id="navAbout" type="button">About</button></li>
           <li><button class="link" id="navWork" type="button">Works</button></li>
-          <li><button class="link" id="navTiny" type="button">Digital Home</button></li>
           <li><button class="link" id="navFaves" type="button">Monthly Faves</button></li>
           <li><button class="link" id="navLetter" type="button">Send Me a Letter</button></li>
         </ul>
@@ -2276,12 +2275,6 @@ function openWork(cat = 'Design') {
     <p class="body-p">${lede}</p>
     ${workList(cat)}`, false, null, '', true);
 }
-function openTiny() {
-  openSheet(`<h2 id="sheetTitle" tabindex="-1">A tiny home that moves with me</h2>
-    <p class="lede">Home is a tiny house in Salida, Colorado, with mountains in every direction.</p>
-    <section><h3>Teo</h3><p>Teo is a 7-month old curly, tri-color Maltipoo. His favorites include going on sniffari walks, being a pocket pup, receiving &ldquo;good boy&rdquo; affirmations, training and treats, forehead kisses and lots of snuggles.</p></section>
-    <section><h3>Where we are</h3><p>Currently back on the road from Colorado to California for the holiday &amp; winter season</p></section>`, false, null, '', true);
-}
 const jobs = [
   ['10kR', 'Lead Designer', '2025 \u2013 Now', 'I work with a team of robots and human designers to build intelligent digital experiences for visionary clients, bringing AI to the forefront of how we design and deliver.'],
   ['Laro Design', 'Founder & Designer', '2024 \u2013 Now', 'I lead across brand, content, and product design and strategy at Laro Design, defining digital product and marketing experiences for Telev\u00EBda, SOONER, The Game Marketer and The Wolfery Company.'],
@@ -2312,7 +2305,7 @@ function setMenu(open) {
 }
 menuBtn.onclick = e => { e.stopPropagation(); setMenu(menuList.hidden); };
 document.addEventListener('click', e => { if (!menuList.hidden && !e.target.closest('.menu')) setMenu(false); });
-$('#navWork').onclick = () => { setMenu(false); openWork(); }; $('#navTiny').onclick = () => { setMenu(false); openTiny(); }; $('#navAbout').onclick = () => { setMenu(false); openAbout(); };
+$('#navWork').onclick = () => { setMenu(false); openWork(); }; $('#navAbout').onclick = () => { setMenu(false); openAbout(); };
 $('#zoomX').onclick = e => {
   if (!menuList.hidden) { e.stopPropagation(); return setMenu(false); }
   if (!$('#tDrawer').hidden) return closeDrawer();
