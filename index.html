@@ -218,8 +218,8 @@ html .sheet.player .sheet-body{padding-left:0!important;padding-right:0!importan
 @media (max-width:760px),(max-width:1100px) and (orientation:portrait){.turntable{width:min(calc(100vw - 12px),560px,calc((100dvh - 250px) * 1.38))!important;max-width:none!important}}
 @media (min-width:900px) and (orientation:landscape){.turntable{width:min(880px,70vw,calc((100vh - 100px - min(200px,22vh) - 22px) * 1.38))!important}}
 /* dish and drink cards in one swipeable stack (phones and tablets; the script decides when) */
-.sheet.menu .dish-grid.stack{display:grid;grid-template-columns:min(360px,68vw);justify-content:center;justify-items:center;gap:0;padding:24px 0 40px}
-.sheet.menu .dish-grid.stack .dish{grid-area:1/1;width:min(360px,68vw);touch-action:pan-y;user-select:none;-webkit-user-select:none;transition:transform .55s cubic-bezier(.34,1.5,.64,1),opacity .3s ease}
+.sheet.menu .dish-grid.stack{display:grid;grid-template-columns:var(--dw);justify-content:center;justify-items:center;gap:0;padding:24px 0 40px}
+.sheet.menu .dish-grid.stack .dish{grid-area:1/1;touch-action:pan-y;user-select:none;-webkit-user-select:none;transition:transform .55s cubic-bezier(.34,1.5,.64,1),opacity .3s ease}
 .sheet.menu .dish-grid.stack .dish img{-webkit-user-drag:none;pointer-events:none}
 .sheet.menu .dish-grid.stack .dish[data-p="0"]{z-index:5;transform:rotate(-1deg)}
 .sheet.menu .dish-grid.stack .dish[data-p="1"]{z-index:4;transform:translate(7px,9px) rotate(3deg)}
@@ -513,7 +513,7 @@ body.playing .turntable .arm{transform:none}
 .letter-field input{width:100%;box-sizing:border-box;padding:10px 14px;background:none;border:0;outline:0;font-family:var(--f-body);font-size:16px;font-weight:500;color:var(--ink)}
 .letter-field input::placeholder{color:var(--ink-soft);font-weight:400}
 .letter-field:focus-within::before{border-color:var(--link)}
-#letterSend{margin:0;flex:none;padding:9px 22px;background:#fffaf0;border:1.5px solid var(--ink);border-radius:14px 11px 15px 10px / 11px 15px 10px 14px;font-family:var(--f-body);font-size:16px;font-weight:500;color:var(--ink)}
+#letterSend{margin:0;flex:none;padding:9px 22px;background:#fffaf0;border:1.5px solid var(--ink);border-radius:14px 11px 15px 10px / 11px 15px 10px 14px;font-family:var(--f-body);font-size:16px;font-weight:400;color:var(--ink)}
 #letterSend:hover{background:#fdf1e2}
 /* the reading stack: the books stand up in a row over the house, angled like the record sleeves */
 .sheet.shelf{background:transparent;border:0;filter:none}
@@ -846,8 +846,8 @@ body:has(.sheet.book.open) .top{z-index:5}
   .sheet.book .sheet-bar{right:16px!important;bottom:calc(max(14px,env(safe-area-inset-bottom,0px)) + 20px)!important;top:auto}
   .jb-no-r{bottom:26px;font-size:13px;color:var(--ink-soft)}
   /* the menu on phones: one dish card on top of a little stack; swipe it away and it tucks back in at the bottom */
-  .sheet.menu .dish-grid.stack{display:grid;grid-template-columns:min(250px,68vw);justify-content:center;justify-items:center;gap:0;padding:24px 0 40px}
-  .sheet.menu .dish-grid.stack .dish{grid-area:1/1;width:min(250px,68vw);touch-action:pan-y;user-select:none;-webkit-user-select:none;transition:transform .55s cubic-bezier(.34,1.5,.64,1),opacity .3s ease}
+  .sheet.menu .dish-grid.stack{display:grid;grid-template-columns:var(--dw);justify-content:center;justify-items:center;gap:0;padding:24px 0 40px}
+  .sheet.menu .dish-grid.stack .dish{grid-area:1/1;touch-action:pan-y;user-select:none;-webkit-user-select:none;transition:transform .55s cubic-bezier(.34,1.5,.64,1),opacity .3s ease}
   .sheet.menu .dish-grid.stack .dish img{-webkit-user-drag:none;pointer-events:none}
   .sheet.menu .dish-grid.stack .dish[data-p="0"]{z-index:5;transform:rotate(-1deg)}
   .sheet.menu .dish-grid.stack .dish[data-p="1"]{z-index:4;transform:translate(7px,9px) rotate(3deg)}
@@ -968,6 +968,22 @@ body:has(.sheet.book.open) .top{z-index:5}
 .stub .fav{margin-top:0;gap:16px}
 .stub .fav-art{width:120px}
 .stub .fav-img{width:100px;max-height:150px}
+
+/* dish and drink cards are one size on every screen */
+.sheet.menu{--dw:min(360px,68vw)}
+@media (max-width:760px),(max-width:1100px) and (orientation:portrait){.sheet.menu{--dw:min(250px,68vw)}}
+.sheet.menu .dish{width:var(--dw)!important;height:calc(var(--dw) * 1.5);box-sizing:border-box;overflow:hidden;align-content:start}
+.sheet.menu .dish b,.sheet.menu .dish span{overflow-wrap:anywhere}
+/* desktop top nav: a little larger (48px, up from 42px) */
+@media (hover:hover) and (min-width:1101px){
+  :root{--btn-h:48px}
+  .stub-btn,.menu-btn,.sheet-x,.zoom-x{width:48px;height:48px}
+  .snd-btn{width:40px;height:40px}
+  .stub-btn svg,.menu-btn svg,.zoom-x svg,.sheet-x svg,.snd-btn svg{transform-origin:center}
+  .stub-btn svg,.snd-btn svg,.sheet-x svg,.zoom-x svg{width:26px;height:26px}
+}
+/* every button and field: regular weight, never bold */
+html button,html input,html select,html textarea,html .proj-link,html .inline-link,html .link{font-weight:400}
 @media (max-width:760px),(max-width:1100px) and (orientation:portrait){:root{--t-title:40px;--t-card:28px;--t-quote:18px;--t-body:18px;--t-meta:14px;--t-btn:18px}}
 html .sheet h2,html .sheet .jb-flow h2,html .sheet .bar-title h2,html .sp-head h3,html .cv-title,html .td-head h2,html .sheet.menu h2,html .sheet.shelf h2,html .sheet.letter h2,html .screen-bar h2{font-family:var(--f-title)!important;font-size:var(--t-title)!important;font-weight:400!important;line-height:1.25!important;text-transform:lowercase}
 html .c-t,html .screen .c-t,html .cv-grid .c-t,html .dish b,html .fave b,html li.book b,html .jams b,html .posts b,html .work-list b,html .cv-cap b,html .jb-toc .jt-t,html .sheet h3,html .post h3,html .post h4,html .spin-title,html .t-no,html .stub-top b{font-family:var(--f-title)!important;font-size:var(--t-card)!important;font-weight:400!important;line-height:1.25!important}
@@ -976,7 +992,7 @@ html body,html .sheet-body,html .body-p,html .post,html .post.jb-flow,html .lede
 html .body-p,html .post,html .lede,html .exp p,html .t-desc,html .stub-d,html .fave span,html .shelf-note,html .meta dd,html .about-tag,html .letter-page{font-weight:400!important}
 html .exp b{font-weight:500!important}
 html .c-m,html .bt-year,html .cv-year,html .jb-flow .jb-date,html .jb-toc .jt-d,html .t-date,html .t-kick,html .kick,html .meta dt,html .stub-top span,html .t-cite,html .t-by,html .stub-by,html .stub-c,html .exp .when,html .year,html .jb-no,html .dish span,html .jams small,html .posts small,html li.book span,html .work-list span,html .cv-cap{font-family:var(--f-body)!important;font-size:var(--t-meta)!important;font-weight:400!important;text-transform:uppercase!important;letter-spacing:.08em!important;font-style:normal!important}
-html .proj-link,html .btn-ink,html .btn-plain,html .bub,html .cmd,html .chip,html .tab,html .seg button,html .link,html .menu-list .link,html .read-on,html #letterSend,html .letter-field input,html .rf-grid input,html .rf-grid select,html .cv-form input,html input::placeholder{font-family:var(--f-body)!important;font-size:var(--t-btn)!important;font-weight:500!important;font-variant-caps:normal!important;text-transform:lowercase!important;letter-spacing:.01em}
+html .proj-link,html .btn-ink,html .btn-plain,html .bub,html .cmd,html .chip,html .tab,html .seg button,html .link,html .menu-list .link,html .read-on,html #letterSend,html .letter-field input,html .rf-grid input,html .rf-grid select,html .cv-form input,html input::placeholder{font-family:var(--f-body)!important;font-size:var(--t-btn)!important;font-weight:400!important;font-variant-caps:normal!important;text-transform:lowercase!important;letter-spacing:.01em}
 html .inline-link{text-transform:lowercase}
 </style>
 
