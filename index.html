@@ -1012,36 +1012,18 @@ body:has(.sheet.page.open) .mark p{color:var(--ink-soft)!important}
 .hello .soc-btn{background:none!important}
 @media (max-width:760px),(max-width:1100px) and (orientation:portrait){.sheet.page .sheet-body{padding:100px 20px 56px!important}}
 
-/* monthly faves: cards like the dish cards, side by side on desktop, stacked on phones; press to turn over */
-.fave-cards{list-style:none;margin:8px 0 28px;padding:0;display:flex;flex-wrap:wrap;gap:28px}
-.fc{--fw:min(340px,calc(100vw - 80px));width:var(--fw);height:calc(var(--fw) * 1.4);perspective:1200px;cursor:pointer;outline:none;-webkit-tap-highlight-color:transparent}
+/* monthly faves: the dish cards' look; the card turns over to show the story */
+.sheet.menu .fave-dish{padding:0;background:none;box-shadow:none;overflow:visible;perspective:1200px;cursor:pointer;outline:none;display:block}
 .fc-in{position:relative;width:100%;height:100%;transform-style:preserve-3d;transition:transform .6s cubic-bezier(.4,.2,.2,1)}
-.fc.flipped .fc-in{transform:rotateY(180deg)}
+.fave-dish.flipped .fc-in{transform:rotateY(180deg)}
 .fc-face{position:absolute;inset:0;box-sizing:border-box;display:flex;flex-direction:column;align-items:center;gap:10px;padding:22px 20px;text-align:center;background:#fffaf0;border-radius:var(--wobble);box-shadow:inset 0 0 0 6px #fffaf0,inset 0 0 0 7.5px rgba(201,102,61,.4);backface-visibility:hidden;-webkit-backface-visibility:hidden;overflow:hidden}
 .fc-back{transform:rotateY(180deg);justify-content:center;overflow-y:auto}
 .fc-face .fav-art,.fc-face .fav-img{display:block;flex:none;width:100%;max-height:none;height:auto;aspect-ratio:1;object-fit:contain;margin:0}
-.fc-face b{display:block;margin:0 6px}
+.fc-face b{display:block;margin:0 6px;padding:0}
 .fc-face b a{color:inherit;text-decoration:none}
 .fc-face b a:hover{color:var(--link)}
-.fc-back p{margin:0;font-size:var(--t-body)}
-.fc:focus-visible .fc-face{outline:2px solid var(--link);outline-offset:2px}
-@media (max-width:760px),(max-width:1100px) and (orientation:portrait){.fave-cards{flex-direction:column;align-items:center;gap:22px}.fc{--fw:min(280px,calc(100vw - 40px))}}
-
-/* the home / back / next buttons on a project page stay fixed to the bottom, over a soft fade when the page scrolls under them */
-.screen-project{--pn-x:22px;--pn-bg:#fdf6e6;display:flex;flex-direction:column;padding-bottom:0}
-.cv-art.has-detail{--pn-x:22px;--pn-bg:#fffdf8}
-.cv-art.has-detail:has(.proj-nav){display:flex;flex-direction:column;align-items:stretch;justify-content:flex-start;padding-bottom:0}
-.screen-project .proj,.cv-art .proj{flex:none}
-.screen-project .proj-nav,.cv-art .proj-nav{position:sticky;bottom:0;z-index:3;margin:auto calc(var(--pn-x) * -1) 0;padding:40px var(--pn-x) 16px;background:linear-gradient(to top,var(--pn-bg) 58%,transparent)}
-@media (max-width:760px),(max-width:1100px) and (orientation:portrait){.screen-project,.cv-art.has-detail{--pn-x:14px}}
-
-/* the easel's canvas keeps a little of its frame showing around the screen, like the laptop's lid */
-.canvas-view::before{content:"";position:absolute;inset:0;z-index:4;pointer-events:none;border:10px solid #4a3a2e;filter:url(#pencil)}
-@container (min-width:700px){.cv-grid{grid-template-columns:repeat(3,minmax(0,1fr))}}
-
-
-/* long dashes in text: a touch narrower (the glyph is scaled and its box trimmed to match) */
-.dash{display:inline-block;transform:scaleX(.78);margin:0 -.11em}
+.fc-back p{margin:0}
+.fave-dish:focus-visible .fc-face{outline:2px solid var(--link);outline-offset:2px}
 @media (max-width:760px),(max-width:1100px) and (orientation:portrait){:root{--t-title:40px;--t-card:28px;--t-quote:18px;--t-body:18px;--t-meta:14px;--t-btn:18px}}
 html .sheet h2,html .sheet .jb-flow h2,html .sheet .bar-title h2,html .sp-head h3,html .cv-title,html .td-head h2,html .sheet.menu h2,html .sheet.shelf h2,html .sheet.letter h2,html .screen-bar h2{font-family:var(--f-title)!important;font-size:var(--t-title)!important;font-weight:400!important;line-height:1.25!important;text-transform:lowercase}
 html .c-t,html .screen .c-t,html .cv-grid .c-t,html .dish b,html .fave b,html .fc-face b,html li.book b,html .jams b,html .posts b,html .work-list b,html .cv-cap b,html .jb-toc .jt-t,html .sheet h3,html .post h3,html .post h4,html .spin-title,html .t-no,html .stub-top b{font-family:var(--f-title)!important;font-size:var(--t-card)!important;font-weight:400!important;line-height:1.25!important}
@@ -2206,6 +2188,7 @@ const sheet = $('#sheet'), scrim = $('#scrim'), app = $('#app'), body = $('#shee
 let lastFocus = null;
 const say = t => { live.textContent = ''; setTimeout(() => live.textContent = t, 30); };
 function openSheet(html, showBack, seg, barTitle, asPage) {
+  favesOpen = false;
   clearTimeout(sheetLookTimer); sheet.classList.remove('book', 'player', 'menu', 'shelf', 'letter', 'page'); book = null; if (asPage) sheet.classList.add('page');
   $('#barTitle').innerHTML = barTitle || ''; $('#barTitle').hidden = !barTitle;
   if (!sheet.classList.contains('open')) lastFocus = document.activeElement;
@@ -2218,7 +2201,7 @@ function openSheet(html, showBack, seg, barTitle, asPage) {
 }
 let sheetLookTimer = null;
 function closeSheet() {
-  readingOpen = false; recordsOpen = false; weeklyOpen = null;
+  readingOpen = false; recordsOpen = false; weeklyOpen = null; favesOpen = false;
   sheet.classList.remove('open'); scrim.classList.remove('open'); app.inert = false; book = null;
   // the special looks stay on until the fade-out has finished, so the plain lined card never flashes through
   clearTimeout(sheetLookTimer); sheetLookTimer = setTimeout(() => { if (!sheet.classList.contains('open')) sheet.classList.remove('book', 'player', 'menu', 'shelf', 'letter', 'page'); }, 450);
@@ -3519,19 +3502,23 @@ function favArtImage(t) {
 }
 /* ---------- monthly faves: grouped by month, newest first ---------- */
 const FAVE_STAR = '<svg class="fav-art" viewBox="0 0 120 150" aria-hidden="true"><path d="M60,44 Q63,72 88,75 Q63,78 60,106 Q57,78 32,75 Q57,72 60,44Z" fill="#f2c45a" stroke="#4a3a2e" stroke-width="2.4" stroke-linejoin="round"/></svg>';
-function favesList() {
+let favesOpen = false;
+// monthly faves are cards like the dish cards: the picture and title on the front, press to turn one over for the story
+function favesDishes() {
   if (FAVES === null) return '<p class="empty-note">Gathering this month\u2019s favorites\u2026</p>';
   if (!FAVES.length) return '<p class="empty-note">No favorites to share just yet. Check back next month.</p>';
-  const groups = [];
-  FAVES.forEach(f => { const label = [f.month, f.year].filter(Boolean).join(' ').toLowerCase() || 'lately'; let g = groups.find(x => x.label === label); if (!g) groups.push(g = { label, items: [] }); g.items.push(f); });
-  return groups.map(g => `<section><h3>${esc(g.label)}</h3><ul class="fave-cards">${g.items.map(f => `<li><div class="fc" role="button" tabindex="0" aria-pressed="false" aria-label="${esc(f.title)}, press to read about it"><div class="fc-in"><div class="fc-face fc-front">${favThumb(f) || FAVE_STAR}<b>${esc(f.title)}</b></div><div class="fc-face fc-back"><b>${linkOr(f.title, f.url)}</b>${f.description ? `<p>${esc(f.description)}</p>` : ''}</div></div></div></li>`).join('')}</ul></section>`).join('');
+  return `<ul class="dish-grid">${FAVES.map(f => { const when = [f.month, f.year].filter(Boolean).join(' ');
+    return `<li class="dish fave-dish" role="button" tabindex="0" aria-pressed="false" aria-label="${esc(f.title)}, press to read about it"><div class="fc-in"><div class="fc-face fc-front">${favThumb(f) || FAVE_STAR}<b>${esc(f.title)}</b></div><div class="fc-face fc-back"><b>${linkOr(f.title, f.url)}</b>${when ? `<span class="fc-when">${esc(when)}</span>` : ''}${f.description ? `<p>${esc(f.description)}</p>` : ''}</div></div></li>`; }).join('')}</ul>`;
 }
-function openFaves() { openSheet(`<h2 id="sheetTitle" tabindex="-1">monthly faves</h2><div id="favesList">${favesList()}</div>`, false, null, '', true); }
-// monthly faves: a card shows the picture and title; press it to turn it over and read about it
+function openFaves() {
+  openSheet(`<h2 id="sheetTitle" tabindex="-1">monthly faves</h2><div id="weeklyList">${favesDishes()}</div>`, false, null);
+  sheet.classList.add('menu'); favesOpen = true; stackDishes();
+}
+// press a monthly fave to turn it over
 function flipFave(c) { const on = !c.classList.contains('flipped'); c.classList.toggle('flipped', on); c.setAttribute('aria-pressed', on); }
-document.addEventListener('click', e => { const c = e.target.closest('.fc'); if (c && !e.target.closest('a')) flipFave(c); });
-document.addEventListener('keydown', e => { const c = e.target.closest && e.target.closest('.fc'); if (c && (e.key === 'Enter' || e.key === ' ')) { e.preventDefault(); flipFave(c); } });
-function refreshFaves() { const el = $('#favesList'); if (el) el.innerHTML = favesList(); }
+document.addEventListener('click', e => { const c = e.target.closest('.fave-dish'); if (c && !e.target.closest('a')) flipFave(c); });
+document.addEventListener('keydown', e => { const c = e.target.closest && e.target.closest('.fave-dish'); if (c && (e.key === 'Enter' || e.key === ' ')) { e.preventDefault(); flipFave(c); } });
+function refreshFaves() { const el = $('#weeklyList'); if (favesOpen && el && sheet.classList.contains('open')) { el.innerHTML = favesDishes(); stackDishes(); } }
 const favCite = t => ['favorite', [t.month.toLowerCase(), t.year].filter(Boolean).join(', ')].filter(Boolean).join(' \u2022 ');
 const bookCite = () => 'read';
 const bookBy = (t, cls) => t.author ? `<p class="${cls}">${esc(t.author)}</p>` : '';
