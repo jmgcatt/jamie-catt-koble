@@ -1034,6 +1034,10 @@ body:has(.sheet.page.open) .mark p{color:var(--ink-soft)!important}
 .screen-project .proj,.cv-art .proj{flex:none}
 .screen-project .proj-nav,.cv-art .proj-nav{position:sticky;bottom:0;z-index:3;margin:auto calc(var(--pn-x) * -1) 0;padding:40px var(--pn-x) 16px;background:linear-gradient(to top,var(--pn-bg) 58%,transparent)}
 @media (max-width:760px),(max-width:1100px) and (orientation:portrait){.screen-project,.cv-art.has-detail{--pn-x:14px}}
+
+/* the easel's canvas keeps a little of its frame showing around the screen, like the laptop's lid */
+.canvas-view::before{content:"";position:absolute;inset:0;z-index:4;pointer-events:none;border:10px solid #4a3a2e;filter:url(#pencil)}
+@container (min-width:700px){.cv-grid{grid-template-columns:repeat(3,minmax(0,1fr))}}
 @media (max-width:760px),(max-width:1100px) and (orientation:portrait){:root{--t-title:40px;--t-card:28px;--t-quote:18px;--t-body:18px;--t-meta:14px;--t-btn:18px}}
 html .sheet h2,html .sheet .jb-flow h2,html .sheet .bar-title h2,html .sp-head h3,html .cv-title,html .td-head h2,html .sheet.menu h2,html .sheet.shelf h2,html .sheet.letter h2,html .screen-bar h2{font-family:var(--f-title)!important;font-size:var(--t-title)!important;font-weight:400!important;line-height:1.25!important;text-transform:lowercase}
 html .c-t,html .screen .c-t,html .cv-grid .c-t,html .dish b,html .fave b,html .fc-face b,html li.book b,html .jams b,html .posts b,html .work-list b,html .cv-cap b,html .jb-toc .jt-t,html .sheet h3,html .post h3,html .post h4,html .spin-title,html .t-no,html .stub-top b{font-family:var(--f-title)!important;font-size:var(--t-card)!important;font-weight:400!important;line-height:1.25!important}
@@ -1467,17 +1471,33 @@ function buildDesk() {
   });
 }
 
+// the painting on the easel is drawn wide on landscape screens and tall on portrait ones, so zooming in to full screen is one smooth step
+var easelG = null, easelGeo = null;
+const portraitNow = () => matchMedia('(max-width: 1100px) and (orientation: portrait)').matches;
+function paintEasel(ea) {
+  const portrait = portraitNow(), cw = portrait ? 68 : 124, ch = portrait ? 104 : 78, cx = 822, x0 = cx - cw / 2, y0 = 536 - ch, ay = y0 - 20, sw = cw - 8, sx = x0 + 4, yh = y0 + Math.round(ch * .5);
+  easelGeo = { cy: y0 + ch / 2, w: cw, h: ch, box: [x0 - 424, y0, x0 + cw - 424, 536] };
+  piece(ea, { line: [`M790,602 L818,${ay}`, `M854,602 L826,${ay}`, `M822,598 L822,${ay + 16}`, 'M800,562 H844'], color: '#8a5532', lw: 3.2 });
+  const ledge = rect(x0 - 8, 536, cw + 16, 8), canvas = rect(x0, y0, cw, ch), sky = rect(sx, y0 + 4, sw, yh - y0 - 4);
+  const hillLine = `M${sx},${yh} Q${sx + sw * .25},${yh - 18} ${sx + sw * .5},${yh - 6} T${sx + sw},${yh - 14}`, hills = `${hillLine} V532 H${sx}Z`;
+  const sun = ell(x0 + cw - 20, y0 + 20, 7), fx = x0 + 18, fy = 536 - 24;
+  piece(ea, { occ: canvas + ledge, fill: [[ledge, '#c99a68', .9], [canvas, '#fffdf6', 1], [sky, '#a9cfe3', .85], [hills, '#86b57a', .9], [sun, '#f6c85a', 1], [ell(fx, fy, 3) + ell(fx + 12, fy + 6, 3) + ell(fx + 6, fy - 6, 2.5), '#e07d55', 1]], line: [canvas, ledge, sun, hillLine, { d: `M${fx - 4},${fy + 6}l5,-12M${fx + 6},${fy + 8}l3,-10M${fx + 16},${fy + 7}l4,-12`, stroke: '#4f7a4c', 'stroke-width': 1.4 }] });
+  piece(ea, { occ: rect(812, y0 - 10, 20, 10), fill: [[rect(812, y0 - 10, 20, 10), '#b0845a', .9]], line: [rect(812, y0 - 10, 20, 10)] });
+  const pal = 'M854,600 Q852,580 874,580 Q896,580 896,592 Q896,604 878,602 Q870,598 866,604 Q856,606 854,600Z';
+  piece(ea, { occ: pal, fill: [[pal, '#e6c79a', .95], [ell(866, 588, 3) + ell(876, 586, 3), '#e07d55', 1], [ell(886, 590, 3), '#6f88bd', 1], [ell(884, 598, 3), '#f2c45a', 1]], line: [pal, { d: 'M870,598 L898,566', stroke: '#8a5532', 'stroke-width': 2.4 }], lw: 1.8 });
+}
+function applyEaselZoom() {
+  if (!easelGeo || typeof ZOOMS === 'undefined') return;
+  const g = easelGeo; Object.assign(ZOOMS.easel, { cx: 398, cy: g.cy, w: g.w, h: g.h, fill: 1, box: g.box, phone: { cy: g.cy, w: g.w, h: g.h, fill: 1 } });
+}
+function repaintEasel() { if (!easelG) return; const was = portraitNow(); if (easelG.dataset.portrait === String(was)) return; easelG.dataset.portrait = String(was); [...easelG.children].forEach(c => c.remove()); paintEasel(easelG); applyEaselZoom(); }
 /* ---------- the easel, and the laptop, books and candle on the desk ---------- */
 function buildWorkDesk() {
   const world = shiftTo(28);
   // painting easel by the archway
   const ea = E('g', { id: 'easel', class: 'hot', tabindex: 0, role: 'button', 'aria-expanded': 'false', 'aria-controls': 'easelView', 'aria-label': 'Painting easel. Press to look closely at my newest illustration work.' }, shiftTo(-424));
-  piece(ea, { line: ['M790,602 L818,432', 'M854,602 L826,432', 'M822,598 L822,448', 'M800,562 H844'], color: '#8a5532', lw: 3.2 });
-  const ledge = rect(776, 536, 92, 8), canvas = rect(784, 452, 76, 84), sky = rect(788, 456, 68, 42), hills = 'M788,500 Q806,482 824,494 T856,486 V532 H788Z';
-  piece(ea, { occ: canvas + ledge, fill: [[ledge, '#c99a68', .9], [canvas, '#fffdf6', 1], [sky, '#a9cfe3', .85], [hills, '#86b57a', .9], [ell(840, 470, 7), '#f6c85a', 1], [ell(800, 514, 3) + ell(812, 520, 3) + ell(806, 508, 2.5), '#e07d55', 1]], line: [canvas, ledge, ell(840, 470, 7), 'M788,500 Q806,482 824,494 T856,486', { d: 'M796,526l5,-12M806,528l3,-10M816,527l4,-12', stroke: '#4f7a4c', 'stroke-width': 1.4 }] });
-  piece(ea, { occ: rect(812, 442, 20, 10), fill: [[rect(812, 442, 20, 10), '#b0845a', .9]], line: [rect(812, 442, 20, 10)] });
-  const pal = 'M854,600 Q852,580 874,580 Q896,580 896,592 Q896,604 878,602 Q870,598 866,604 Q856,606 854,600Z';
-  piece(ea, { occ: pal, fill: [[pal, '#e6c79a', .95], [ell(866, 588, 3) + ell(876, 586, 3), '#e07d55', 1], [ell(886, 590, 3), '#6f88bd', 1], [ell(884, 598, 3), '#f2c45a', 1]], line: [pal, { d: 'M870,598 L898,566', stroke: '#8a5532', 'stroke-width': 2.4 }], lw: 1.8 });
+  paintEasel(ea);
+  easelG = ea; ea.dataset.portrait = String(portraitNow());
 
   // stained-glass lamp
   const shade = 'M450,494 Q452,464 474,460 Q496,464 498,494Z';
@@ -2273,11 +2293,11 @@ const jobs = [
 const hello = cls => `<section class="hello ${cls}"><div class="hello-row"><p class="body-p">Let\u2019s <button class="inline-link" type="button" data-letter>chat for fun</button> or <a href="mailto:laro@laro.design">work with Laro Design</a></p>
     <p class="soc-row"><a class="soc-btn" href="https://www.linkedin.com/in/jamiecatt/" target="_blank" rel="noopener" aria-label="LinkedIn"><svg viewBox="0 0 28 28" aria-hidden="true"><g fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round"><path d="M8 12.4 Q8.3 16.6 8 20.4"/><path d="M12.6 20.4 Q12.4 16.2 12.7 12.6 M12.7 15.6 Q13.4 12.4 16.6 12.5 Q19.8 12.7 19.9 16 Q20.1 18.4 19.9 20.4"/></g><circle cx="8" cy="8.2" r="1.6" fill="currentColor"/></svg></a><a class="soc-btn" href="https://www.instagram.com/jamiecatt" target="_blank" rel="noopener" aria-label="Instagram"><svg viewBox="0 0 28 28" aria-hidden="true"><g fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9.6 6.4 Q14 5.8 18.6 6.4 Q21.4 6.9 21.7 9.6 Q22.2 14 21.6 18.6 Q21.2 21.3 18.4 21.7 Q14 22.2 9.5 21.6 Q6.8 21.2 6.4 18.4 Q5.8 14 6.4 9.5 Q6.9 6.8 9.6 6.4Z"/><circle cx="14" cy="14" r="3.7"/></g><circle cx="18.6" cy="9.5" r="1.1" fill="currentColor"/></svg></a></p></div></section>`;
 function openAbout() {
-  openSheet(`<div class="about-grid"><div class="about-col"><h2 id="sheetTitle" tabindex="-1">manile\u00F1a, pisces, illustration and lead designer based in colorado &amp; California</h2>
+  openSheet(`<div class="about-grid"><div class="about-col"><h2 id="sheetTitle" tabindex="-1">manile\u00F1a, pisces, illustrator and lead designer based in colorado &amp; California</h2>
     <p class="body-p">I thrive in spaces that move with momentum \u2014 where fast learning, exploration, and creative thinking matter. I balance structure with playfulness, and find joy in crafting experiences that feel approachable and delightful.</p>
     <p class="body-p">With over 5 years across startups and global design agencies, I\u2019ve helped shape digital products for industry-leading clients in health, finance, automotive, e-commerce, and marketing \u2014 from mobile and web apps to large-scale design systems.</p>
     ${hello('hello-d')}</div>
-    <section class="about-col"><h3>Experience</h3><ul class="exp">${jobs.map(([co, role, when, t]) => `<li><b>${esc(co)}</b><span class="when">${esc(role)} \u00B7 ${when}</span><p>${esc(t)}</p></li>`).join('')}</ul></section>${hello('hello-m')}</div>`, false, null, '', true);
+    <section class="about-col"><ul class="exp">${jobs.map(([co, role, when, t]) => `<li><b>${esc(co)}</b><span class="when">${esc(role)} \u00B7 ${when}</span><p>${esc(t)}</p></li>`).join('')}</ul></section>${hello('hello-m')}</div>`, false, null, '', true);
 }
 document.addEventListener('click', e => {
   const o = e.target.closest('[data-open]');
@@ -3767,6 +3787,7 @@ const ZOOMS = {
   machine: { cx: 940, cy: 420, w: 260, h: 250, box: [920, 326, 984, 456], view: () => machineView },
   pan: { cx: 1513, cy: 490, w: 170, h: 90, box: [1471, 470, 1565, 510], view: () => machineView }
 };
+applyEaselZoom();
 const machineView = document.createElement('div');
 // objects that open a sheet: frame the drawing as it sits now, stored unslid like the others
 const SHEET_ZOOMS = ['pan', 'teabar', 'vinyl', 'books', 'journal', 'typewriter', 'sofaBook'];
@@ -4499,6 +4520,7 @@ function placeControls() {
 function setMode() {
   texBase = phone.matches ? stopW() : VB0[2];
   svg.setAttribute('preserveAspectRatio', phone.matches ? 'xMidYMax slice' : 'xMidYMid meet');
+  repaintEasel();
   layoutStrip(false); if (phone.matches) layoutStrip(true);
   setLong(phone.matches && placeIdx !== 2);
   // small screens: a gentler pencil grain, so the drawing reads cleaner
