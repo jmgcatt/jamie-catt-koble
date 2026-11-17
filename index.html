@@ -975,9 +975,9 @@ body:has(.sheet.book.open) .top{z-index:5}
 /* dish and drink cards are one size on every screen */
 .sheet.menu{--dw:min(320px,68vw);width:100vw;max-width:none}
 @media (max-width:760px),(max-width:1100px) and (orientation:portrait){.sheet.menu{--dw:min(250px,68vw)}}
-.sheet.menu .dish{width:var(--dw)!important;height:auto;box-sizing:border-box;overflow:hidden;align-content:start;align-self:start}
+.sheet.menu .dish{width:var(--dw)!important;height:auto;box-sizing:border-box;overflow:hidden;align-content:center;align-self:stretch}
 /* desktop: dishes, drinks and faves sit in one row side by side (scrolls sideways if there are more than fit) */
-.sheet.menu .dish-grid:not(.stack){width:100%;box-sizing:border-box;flex-wrap:nowrap;justify-content:safe center;align-items:flex-start;overflow-x:auto;overflow-y:hidden;padding:28px 28px 36px;scrollbar-width:none}
+.sheet.menu .dish-grid:not(.stack){width:100%;box-sizing:border-box;flex-wrap:nowrap;justify-content:safe center;align-items:stretch;overflow-x:auto;overflow-y:hidden;padding:28px 28px 36px;scrollbar-width:none}
 .sheet.menu .dish-grid:not(.stack)::-webkit-scrollbar{display:none}
 .sheet.menu .dish-grid:not(.stack) .dish{flex:none}
 .sheet.menu .dish b,.sheet.menu .dish span{overflow-wrap:anywhere}
@@ -1018,9 +1018,10 @@ body:has(.sheet.page.open) .mark p{color:var(--ink-soft)!important}
 
 /* monthly faves: the dish cards' look; the card turns over to show the story */
 .sheet.menu .fave-dish{padding:0;background:none;box-shadow:none;overflow:visible;perspective:1200px;cursor:pointer;outline:none;display:block}
-.fc-in{position:relative;display:grid;width:100%;transform-style:preserve-3d;transition:transform .6s cubic-bezier(.4,.2,.2,1)}
+.fc-in{position:relative;display:grid;width:100%;height:100%;transform-style:preserve-3d;transition:transform .6s cubic-bezier(.4,.2,.2,1)}
 .fave-dish.flipped .fc-in{transform:rotateY(180deg)}
 .fc-face{grid-area:1/1;position:relative;box-sizing:border-box;display:flex;flex-direction:column;align-items:center;gap:10px;padding:22px 20px;text-align:center;background:#fffaf0;border-radius:var(--wobble);box-shadow:inset 0 0 0 6px #fffaf0,inset 0 0 0 7.5px rgba(201,102,61,.4);backface-visibility:hidden;-webkit-backface-visibility:hidden;overflow:hidden}
+.fc-front{justify-content:center}
 .fc-back{transform:rotateY(180deg);justify-content:center}
 .fc-face .fav-art,.fc-face .fav-img{display:block;flex:none;width:100%;height:auto;max-height:none;aspect-ratio:1;object-fit:contain;margin:0}
 .fc-face b{flex:none}
