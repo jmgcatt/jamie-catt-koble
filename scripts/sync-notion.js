@@ -85,6 +85,20 @@ const DATABASES = [
     sort: (a, b) => (b.date || '').localeCompare(a.date || '') || b._created.localeCompare(a._created),
   },
   {
+    env: 'NOTION_FAVORITES_DB', file: 'favorites.json', key: 'favorites', label: 'Favorites (the stack of books)', optional: true,
+    // Item (title); optional: Link (url), Description (text), Image (files, or the page cover), Art (select), Color (text, like #3f6aa0)
+    row: (p) => ({
+      title: text(p, 'Item') || text(p, 'Name') || text(p, 'Title'),
+      url: url(p, 'Link'),
+      description: text(p, 'Description'),
+      art: text(p, 'Art').toLowerCase(),
+      color: text(p, 'Color'),
+      image: files(p, 'Image')[0] || cover(p),
+    }),
+    keep: (r) => r.title,
+    sort: (a, b) => b._created.localeCompare(a._created),
+  },
+  {
     env: 'NOTION_BOOKS_DB', file: 'books.json', key: 'books', label: 'Reads (book recommendations)', optional: true,
     // Book Title (title), Author (text), Description (text); optional: Goodreads (url, overrides the one found automatically)
     row: (p) => ({

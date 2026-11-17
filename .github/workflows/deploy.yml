@@ -48,6 +48,7 @@ jobs:
           NOTION_FAVES_DB: ${{ secrets.NOTION_FAVES_DB || '4176e7463165806284c9e8ea8825805c' }}
           NOTION_COOKING_DB: ${{ secrets.NOTION_COOKING_DB || '4176e7463165803aa174eaf587d2b804' }}
           NOTION_DRINKS_DB: ${{ secrets.NOTION_DRINKS_DB || '4186e746316581e4bdddc5bb8decc128' }}
+          NOTION_FAVORITES_DB: ${{ secrets.NOTION_FAVORITES_DB || '' }}
           NOTION_BOOKS_DB: ${{ secrets.NOTION_BOOKS_DB || '4176e746316580cabfcaf1d45eed169e' }}
 
       - name: Gather the published files

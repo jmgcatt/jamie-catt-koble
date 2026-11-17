@@ -3510,16 +3510,23 @@ function favArtImage(t) {
 }
 /* ---------- monthly faves: grouped by month, newest first ---------- */
 const FAVE_STAR = '<svg class="fav-art" viewBox="0 0 120 150" aria-hidden="true"><path d="M60,44 Q63,72 88,75 Q63,78 60,106 Q57,78 32,75 Q57,72 60,44Z" fill="#f2c45a" stroke="#4a3a2e" stroke-width="2.4" stroke-linejoin="round"/></svg>';
-let favesOpen = false;
+let favesOpen = false, faveView = 'monthly', FAVLIST = null;
+// the stack of books: my favorites, from the Favorites list in Notion (data/favorites.json)
+loadData('data/favorites.json', 'favorites').then(list => {
+  FAVLIST = (list || []).filter(f => f && typeof f.title === 'string' && f.title.trim()).map(f => ({ kind: 'favorite', title: f.title.trim(), url: safeUrl(f.url), art: FAV_ART.includes(String(f.art || '').toLowerCase()) ? String(f.art).toLowerCase() : '', color: /^#[0-9a-f]{3,8}$/i.test(f.color || '') ? f.color : '', image: safeImg(f.image), description: String(f.description || '').trim(), month: '', year: '' }));
+  refreshFaves();
+});
 // monthly faves are cards like the dish cards: the picture and title on the front, press to turn one over for the story
 function favesDishes() {
-  if (FAVES === null) return '<p class="empty-note">Gathering this month\u2019s favorites\u2026</p>';
-  if (!FAVES.length) return '<p class="empty-note">No favorites to share just yet. Check back next month.</p>';
-  return `<ul class="dish-grid">${FAVES.map(f => { const when = [f.month, f.year].filter(Boolean).join(' ');
+  const all = faveView === 'all', list = all ? FAVLIST : FAVES;
+  if (list === null) return `<p class="empty-note">Gathering ${all ? 'my' : 'this month\u2019s'} favorites\u2026</p>`;
+  if (!list.length) return `<p class="empty-note">${all ? 'Nothing here yet. New favorites are on their way.' : 'No favorites to share just yet. Check back next month.'}</p>`;
+  return `<ul class="dish-grid">${list.map(f => { const when = [f.month, f.year].filter(Boolean).join(' ');
     return `<li class="dish fave-dish" role="button" tabindex="0" aria-pressed="false" aria-label="${esc(f.title)}, press to read about it"><div class="fc-in"><div class="fc-face fc-front">${favThumb(f) || FAVE_STAR}<b>${esc(f.title)}</b></div><div class="fc-face fc-back"><b>${linkOr(f.title, f.url)}</b>${when ? `<span class="fc-when">${esc(when)}</span>` : ''}${f.description ? `<p>${esc(f.description)}</p>` : ''}</div></div></li>`; }).join('')}</ul>`;
 }
-function openFaves() {
-  openSheet(`<h2 id="sheetTitle" tabindex="-1">monthly faves</h2><div id="weeklyList">${favesDishes()}</div>`, false, null);
+function openFaves(view = 'monthly') {
+  faveView = view;
+  openSheet(`<h2 id="sheetTitle" tabindex="-1">${view === 'all' ? 'favorites' : 'monthly faves'}</h2><div id="weeklyList">${favesDishes()}</div>`, false, null);
   sheet.classList.add('menu'); favesOpen = true; stackDishes();
 }
 // press a monthly fave to turn it over
@@ -4550,7 +4557,7 @@ function setNight(on) {
   sunEl.setAttribute('aria-label', on ? 'Moon. Press to make it daytime.' : 'Sun. Press to make it nighttime.');
   say(on ? 'It is nighttime. The lamps are on.' : 'It is daytime again.');
 }
-const actions = { sofaBook: () => zoomThen('sofaBook', openReading), typewriter: () => zoomThen('typewriter', openLetter), pan: () => openCooking(), teabar: () => zoomThen('teabar', () => openWeekly('drinks')), crate: () => TEO.cave ? command('come') : command('cave'), vinyl: () => zoomThen('vinyl', openRecords), books: () => zoomThen('books', openReading), journal: () => zoomThen('journal', openJournal), toy: () => bounceBall(), door: () => placeIdx === 2 ? goInside() : goOutside(), easel: () => zoomed === 'easel' ? closeEasel() : openEasel(), candle: () => toggleCandle(), sun: () => setNight(!svg.classList.contains('night')), ticketMachine: issueTicket, laptop: () => setDrawer(laptopState === 'closed'), teo: () => bubbles.hidden ? openBubbles() : closeBubbles(), win: nextScene };
+const actions = { sofaBook: () => zoomThen('sofaBook', openReading), typewriter: () => zoomThen('typewriter', openLetter), pan: () => openCooking(), teabar: () => zoomThen('teabar', () => openWeekly('drinks')), crate: () => TEO.cave ? command('come') : command('cave'), vinyl: () => zoomThen('vinyl', openRecords), books: () => zoomThen('books', () => openFaves('all')), journal: () => zoomThen('journal', openJournal), toy: () => bounceBall(), door: () => placeIdx === 2 ? goInside() : goOutside(), easel: () => zoomed === 'easel' ? closeEasel() : openEasel(), candle: () => toggleCandle(), sun: () => setNight(!svg.classList.contains('night')), ticketMachine: issueTicket, laptop: () => setDrawer(laptopState === 'closed'), teo: () => bubbles.hidden ? openBubbles() : closeBubbles(), win: nextScene };
 document.querySelectorAll('.hot').forEach(h => {
   h.addEventListener('click', () => actions[h.id]());
   h.addEventListener('keydown', e => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); actions[h.id](); } });
