@@ -218,8 +218,8 @@ html .sheet.player .sheet-body{padding-left:0!important;padding-right:0!importan
 @media (max-width:760px),(max-width:1100px) and (orientation:portrait){.turntable{width:min(calc(100vw - 12px),560px,calc((100dvh - 250px) * 1.38))!important;max-width:none!important}}
 @media (min-width:900px) and (orientation:landscape){.turntable{width:min(880px,70vw,calc((100vh - 100px - min(200px,22vh) - 22px) * 1.38))!important}}
 /* dish and drink cards in one swipeable stack (phones and tablets; the script decides when) */
-.sheet.menu .dish-grid.stack{display:grid;grid-template-columns:min(270px,68vw);justify-content:center;justify-items:center;gap:0;padding:24px 0 40px}
-.sheet.menu .dish-grid.stack .dish{grid-area:1/1;width:min(270px,68vw);touch-action:pan-y;user-select:none;-webkit-user-select:none;transition:transform .55s cubic-bezier(.34,1.5,.64,1),opacity .3s ease}
+.sheet.menu .dish-grid.stack{display:grid;grid-template-columns:min(360px,68vw);justify-content:center;justify-items:center;gap:0;padding:24px 0 40px}
+.sheet.menu .dish-grid.stack .dish{grid-area:1/1;width:min(360px,68vw);touch-action:pan-y;user-select:none;-webkit-user-select:none;transition:transform .55s cubic-bezier(.34,1.5,.64,1),opacity .3s ease}
 .sheet.menu .dish-grid.stack .dish img{-webkit-user-drag:none;pointer-events:none}
 .sheet.menu .dish-grid.stack .dish[data-p="0"]{z-index:5;transform:rotate(-1deg)}
 .sheet.menu .dish-grid.stack .dish[data-p="1"]{z-index:4;transform:translate(7px,9px) rotate(3deg)}
@@ -393,7 +393,6 @@ body.zoomed .edge-tab,.edge-tab[hidden]{display:none}
 .t-x{position:absolute;top:8px;right:8px;display:grid;place-items:center;width:28px;height:28px;padding:0;color:var(--ink-soft);background:none;border:0;border-radius:50%}
 .t-x:hover{color:var(--ink);background:#f6ead0}
 .t-x svg{width:18px;height:18px}
-.t-top{padding-right:30px}
 .ticket-wrap:focus{outline:none}
 .ticket-fly{position:fixed;z-index:30;pointer-events:none;margin:0;transition:transform .75s cubic-bezier(.5,0,.2,1),opacity .75s ease}
 .btn-ink{border:2px solid var(--ink);border-radius:var(--wobble);background:#f7d9c4;padding:6px 14px;cursor:pointer;font-family:var(--f-hand);font-size:16px;font-weight:700}
@@ -460,7 +459,7 @@ body.playing .disc{animation:spin 6s linear infinite}
 .post a{color:var(--link)}
 .post h3,.post h4{margin:1.4em 0 .4em;font-family:var(--f-title);font-weight:400;font-size:28px;line-height:1.25}
 .post blockquote{position:relative;margin:1.3em .4em 1.3em 1.5em;padding:0;border:0;font-family:inherit;font-style:italic;font-size:1.07em;line-height:1.65;color:var(--ink)}
-.post blockquote::before{content:"\201C";position:absolute;left:-.62em;top:-.3em;font-family:var(--f-title);font-style:normal;font-size:2.4em;line-height:1;color:var(--persimmon);opacity:.75}
+.post blockquote::before{content:"";position:absolute;left:-1.3em;top:.36em;width:1.05em;height:.83em;background:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 28 22'%3E%3Cg fill='%232b2420'%3E%3Cpath d='M9.4 2.6C4.6 4.4 1.8 8.6 2 13.8c.1 3.2 2.3 5.4 5.2 5.3 2.9-.1 4.6-2.3 4.4-5-.2-2.6-2.1-3.8-4.2-3.7.2-2.2 1.6-4.1 4.2-5.4z'/%3E%3Cpath d='M23 2.4c-4.6 1.9-7.4 6.1-7.2 11.3.1 3.2 2.4 5.4 5.3 5.3 2.8-.1 4.5-2.3 4.3-5-.2-2.6-2-3.8-4.2-3.7.3-2.1 1.7-4 4.3-5.2z'/%3E%3C/g%3E%3C/svg%3E") center/contain no-repeat;filter:url(#pencil)}
 .post blockquote p{margin:0 0 .5em}
 .post blockquote p:last-child{margin-bottom:0}
 /* a Substack post, read as a journal: plum cover, a chunky block of blank cream pages, pages that turn */
@@ -506,13 +505,15 @@ body.playing .turntable .arm{transform:none}
 .letter-tw{position:relative;z-index:1;display:block;width:100%;height:auto;overflow:visible}
 .letter-tw.clack{animation:clack .09s ease}
 @keyframes clack{50%{transform:translateY(1.5px)}}
-.letter-from{display:flex;gap:10px;width:92%;margin-top:14px}
+.letter-from{display:flex;flex-wrap:wrap;justify-content:center;align-items:center;gap:12px 10px;width:92%;margin-top:14px}
+.letter-from .letter-field{flex:1 1 40%}
+@media (min-width:1101px) and (hover:hover){.letter-wrap{width:min(700px,100%)}.letter-page{width:76%;max-height:34vh}.letter-from{flex-wrap:nowrap;width:96%}.letter-from .letter-field{flex:1 1 0}}
 .letter-field{position:relative;flex:1;min-width:0;display:block;background:#fffaf0;border-radius:14px 11px 15px 10px / 11px 15px 10px 14px}
 .letter-field::before{content:"";position:absolute;inset:-2px;border:2.2px solid var(--ink);border-radius:inherit;pointer-events:none;filter:url(#ink)}
 .letter-field input{width:100%;box-sizing:border-box;padding:10px 14px;background:none;border:0;outline:0;font-family:var(--f-body);font-size:16px;font-weight:500;color:var(--ink)}
 .letter-field input::placeholder{color:var(--ink-soft);font-weight:400}
 .letter-field:focus-within::before{border-color:var(--link)}
-#letterSend{margin-top:12px;padding:9px 22px;background:#fffaf0;border:1.5px solid var(--ink);border-radius:14px 11px 15px 10px / 11px 15px 10px 14px;font-family:var(--f-body);font-size:16px;font-weight:500;color:var(--ink)}
+#letterSend{margin:0;flex:none;padding:9px 22px;background:#fffaf0;border:1.5px solid var(--ink);border-radius:14px 11px 15px 10px / 11px 15px 10px 14px;font-family:var(--f-body);font-size:16px;font-weight:500;color:var(--ink)}
 #letterSend:hover{background:#fdf1e2}
 /* the reading stack: the books stand up in a row over the house, angled like the record sleeves */
 .sheet.shelf{background:transparent;border:0;filter:none}
@@ -937,6 +938,36 @@ body:has(.sheet.book.open) .top{z-index:5}
    1 titles 48/40 script   2 card titles 32/28 script   3 quotes 20/18 sans
    4 body 20/18 sans regular   5 metadata 16/14 sans all caps   6 buttons and inputs 20/18 sans lowercase medium */
 :root{--t-title:48px;--t-card:32px;--t-quote:20px;--t-body:20px;--t-meta:16px;--t-btn:20px}
+
+/* project pages (laptop and easel): pictures side by side, title and year beside the words; stacked on narrow screens */
+.screen-project,.cv-art.has-detail{container-type:inline-size}
+.proj{display:grid;gap:22px;margin:0 0 6px}
+.proj .proj-shots{display:grid;grid-template-columns:minmax(0,1fr);gap:18px;margin:0}
+.proj .proj-shots img,.proj .proj-shots video{display:block;width:100%;height:auto}
+.proj-info{display:grid;grid-template-columns:minmax(0,1fr);gap:10px}
+.proj .cv-title{margin:0;text-align:left}
+.proj .bt-year{display:block;margin-top:4px}
+.proj .body-p{margin:0}
+.proj-link{display:inline-block;margin-top:16px;color:var(--link);text-decoration:none;cursor:pointer}
+.proj-link:hover{text-decoration:underline}
+@container (min-width:600px){.proj .proj-shots img,.proj .proj-shots video{aspect-ratio:5/3;object-fit:cover}.proj .proj-shots{grid-template-columns:repeat(2,minmax(0,1fr));gap:24px}.proj-info{grid-template-columns:repeat(2,minmax(0,1fr));gap:24px}.proj{gap:30px}}
+/* the easel's canvas fills the whole screen, like the laptop's */
+.canvas-view{position:fixed!important;inset:0!important;left:0!important;top:0!important;width:auto!important;height:auto!important;z-index:18;border-radius:0}
+.canvas-view .cv-art.has-detail{padding:92px 22px 22px}
+.screen-project{padding:18px 22px 6px}
+@media (max-width:760px),(max-width:1100px) and (orientation:portrait){.canvas-view .cv-art.has-detail{padding:84px 14px 18px}}
+
+/* a ticket and its stub in the ephemera stack are the same card: same padding, same type, same size; a hand-drawn line runs edge to edge under the number */
+.ticket,.stubs .stub{padding:20px 28px 22px}
+.t-top,.stub-top{position:relative;padding:0 0 12px}
+.stub-top b{font-size:34px;line-height:1.1}
+.t-top::after,.stub-top::after{content:"";position:absolute;left:-28px;right:-28px;bottom:0;height:7px;filter:url(#pencil);background:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 400 7' preserveAspectRatio='none'%3E%3Cpath d='M0 3.6 C40 2.4 70 4.6 120 3.4 S200 2.6 250 3.8 S340 4.4 400 3.2' fill='none' stroke='%234a3a2e' stroke-width='1.7' stroke-linecap='round'/%3E%3C/svg%3E") 0 0/100% 100% no-repeat}
+.stubs .stub .stub-body{padding-top:0;margin-top:12px}
+.stub .stub-q{margin:0}
+.stub .stub-c{margin:12px 0 0}
+.stub .fav{margin-top:0;gap:16px}
+.stub .fav-art{width:120px}
+.stub .fav-img{width:100px;max-height:150px}
 @media (max-width:760px),(max-width:1100px) and (orientation:portrait){:root{--t-title:40px;--t-card:28px;--t-quote:18px;--t-body:18px;--t-meta:14px;--t-btn:18px}}
 html .sheet h2,html .sheet .jb-flow h2,html .sheet .bar-title h2,html .sp-head h3,html .cv-title,html .td-head h2,html .sheet.menu h2,html .sheet.shelf h2,html .sheet.letter h2,html .screen-bar h2{font-family:var(--f-title)!important;font-size:var(--t-title)!important;font-weight:400!important;line-height:1.25!important;text-transform:lowercase}
 html .c-t,html .screen .c-t,html .cv-grid .c-t,html .dish b,html .fave b,html li.book b,html .jams b,html .posts b,html .work-list b,html .cv-cap b,html .jb-toc .jt-t,html .sheet h3,html .post h3,html .post h4,html .spin-title,html .t-no,html .stub-top b{font-family:var(--f-title)!important;font-size:var(--t-card)!important;font-weight:400!important;line-height:1.25!important}
@@ -945,7 +976,7 @@ html body,html .sheet-body,html .body-p,html .post,html .post.jb-flow,html .lede
 html .body-p,html .post,html .lede,html .exp p,html .t-desc,html .stub-d,html .fave span,html .shelf-note,html .meta dd,html .about-tag,html .letter-page{font-weight:400!important}
 html .exp b{font-weight:500!important}
 html .c-m,html .bt-year,html .cv-year,html .jb-flow .jb-date,html .jb-toc .jt-d,html .t-date,html .t-kick,html .kick,html .meta dt,html .stub-top span,html .t-cite,html .t-by,html .stub-by,html .stub-c,html .exp .when,html .year,html .jb-no,html .dish span,html .jams small,html .posts small,html li.book span,html .work-list span,html .cv-cap{font-family:var(--f-body)!important;font-size:var(--t-meta)!important;font-weight:400!important;text-transform:uppercase!important;letter-spacing:.08em!important;font-style:normal!important}
-html .btn-ink,html .btn-plain,html .bub,html .cmd,html .chip,html .tab,html .seg button,html .link,html .menu-list .link,html .read-on,html #letterSend,html .letter-field input,html .rf-grid input,html .rf-grid select,html .cv-form input,html input::placeholder{font-family:var(--f-body)!important;font-size:var(--t-btn)!important;font-weight:500!important;font-variant-caps:normal!important;text-transform:lowercase!important;letter-spacing:.01em}
+html .proj-link,html .btn-ink,html .btn-plain,html .bub,html .cmd,html .chip,html .tab,html .seg button,html .link,html .menu-list .link,html .read-on,html #letterSend,html .letter-field input,html .rf-grid input,html .rf-grid select,html .cv-form input,html input::placeholder{font-family:var(--f-body)!important;font-size:var(--t-btn)!important;font-weight:500!important;font-variant-caps:normal!important;text-transform:lowercase!important;letter-spacing:.01em}
 html .inline-link{text-transform:lowercase}
 </style>
 
@@ -982,8 +1013,7 @@ html .inline-link{text-transform:lowercase}
 
   <main class="scroller" id="scroller">
     <div class="stage" id="stage">
-      <svg id="scene" viewBox="-24 0 1248 764" preserveAspectRatio="xMidYMid meet" role="group" aria-label="A small studio room inside our tiny house">
-        <defs>
+      <svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false"><defs>
           <filter id="pencil" x="-15%" y="-15%" width="130%" height="130%" color-interpolation-filters="sRGB">
             <feTurbulence type="fractalNoise" baseFrequency="0.035" numOctaves="2" seed="3" result="w"/>
             <feDisplacementMap in="SourceGraphic" in2="w" scale="3" xChannelSelector="R" yChannelSelector="G" result="d"/>
@@ -992,6 +1022,22 @@ html .inline-link{text-transform:lowercase}
             <feComposite in="d" in2="ga" operator="in"/>
           </filter>
           <filter id="crayon" x="-15%" y="-15%" width="130%" height="130%" color-interpolation-filters="sRGB">
+            <feTurbulence type="fractalNoise" baseFrequency="0.03" numOctaves="2" seed="11" result="w"/>
+            <feDisplacementMap in="SourceGraphic" in2="w" scale="6" xChannelSelector="R" yChannelSelector="G" result="d"/>
+            <feTurbulence type="fractalNoise" baseFrequency="0.75 1.3" numOctaves="2" seed="4" result="g"/>
+            <feColorMatrix in="g" type="matrix" values="0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  -3 0 0 0 2.15" result="ga"/>
+            <feComposite in="d" in2="ga" operator="in"/>
+          </filter></defs></svg>
+      <svg id="scene" viewBox="-24 0 1248 764" preserveAspectRatio="xMidYMid meet" role="group" aria-label="A small studio room inside our tiny house">
+        <defs>
+          <filter id="pencilS" x="-15%" y="-15%" width="130%" height="130%" color-interpolation-filters="sRGB">
+            <feTurbulence type="fractalNoise" baseFrequency="0.035" numOctaves="2" seed="3" result="w"/>
+            <feDisplacementMap in="SourceGraphic" in2="w" scale="3" xChannelSelector="R" yChannelSelector="G" result="d"/>
+            <feTurbulence type="fractalNoise" baseFrequency="0.9" numOctaves="2" seed="8" result="g"/>
+            <feColorMatrix in="g" type="matrix" values="0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  -2.4 0 0 0 1.95" result="ga"/>
+            <feComposite in="d" in2="ga" operator="in"/>
+          </filter>
+          <filter id="crayonS" x="-15%" y="-15%" width="130%" height="130%" color-interpolation-filters="sRGB">
             <feTurbulence type="fractalNoise" baseFrequency="0.03" numOctaves="2" seed="11" result="w"/>
             <feDisplacementMap in="SourceGraphic" in2="w" scale="6" xChannelSelector="R" yChannelSelector="G" result="d"/>
             <feTurbulence type="fractalNoise" baseFrequency="0.75 1.3" numOctaves="2" seed="4" result="g"/>
@@ -1149,15 +1195,15 @@ function fluff(cx, cy, rx, ry, n, amp, seed = 1, rot = 0) {
 }
 
 // One drawn object: a paper occluder, colored-pencil fills, then pencil lines.
-function piece(parent, { occ, fill = [], line = [], lw = 2.4, color = INK, cls, attrs } = {}) {
+function piece(parent, { occ, fill = [], line = [], lw = 2.4, color = INK, cls, attrs, still } = {}) {
   const g = E('g', Object.assign(cls ? { class: cls } : {}, attrs || {}), parent);
   if (occ) E('path', { d: occ, fill: PAPER }, g);
   if (fill.length) {
-    const f = E('g', { filter: 'url(#crayon)' }, g);
+    const f = E('g', { filter: still ? 'url(#crayon)' : 'url(#crayonS)' }, g);
     fill.forEach(([d, c, o = .85, extra]) => E('path', Object.assign({ d, fill: c, 'fill-opacity': o }, extra || {}), f));
   }
   if (line.length) {
-    const l = E('g', { filter: 'url(#pencil)', fill: 'none', stroke: color, 'stroke-width': lw, 'stroke-linecap': 'round', 'stroke-linejoin': 'round' }, g);
+    const l = E('g', { filter: still ? 'url(#pencil)' : 'url(#pencilS)', fill: 'none', stroke: color, 'stroke-width': lw, 'stroke-linecap': 'round', 'stroke-linejoin': 'round' }, g);
     line.forEach(x => E('path', typeof x === 'string' ? { d: x } : x, l));
   }
   return g;
@@ -1839,7 +1885,7 @@ function buildLantern() {
 const rr = (x, y, w, h, r) => `M${x + r},${y}h${w - 2 * r}q${r},0 ${r},${r}v${h - 2 * r}q0,${r} ${-r},${r}h${2 * r - w}q${-r},0 ${-r},${-r}v${2 * r - h}q0,${-r} ${r},${-r}Z`;
 function buildArt() {
   const defs = $('#artDefs');
-  const sym = (id, wash) => { const s = E('symbol', { id: 'art-' + id, viewBox: '0 0 600 300' }, defs); piece(s, { fill: [[rect(0, 0, 600, 300), wash, .5]] }); return s; };
+  const sym = (id, wash) => { const s = E('symbol', { id: 'art-' + id, viewBox: '0 0 600 300' }, defs); piece(s, { fill: [[rect(0, 0, 600, 300), wash, .5]], still: true }); return s; };
   const spark = (s, pts, c = '#d9a441') => piece(s, { line: [pts.map(([x, y, r]) => star(x, y, r)).join('')], color: c, lw: 2 });
   const phone = (s, x, y, c, light, rot) => {
     const g = E('g', { transform: `rotate(${rot} ${x + 65} ${y + 110})` }, s);
@@ -2043,10 +2089,14 @@ const media = p => MEDIA[p.id].map((id, k) => {
   const video = k === 1 && !!videos[p.id];
   return { url: staticSite ? `media/${p.id}-${k + 1}.${video ? 'mp4' : 'png'}` : '/_blob/' + id, video };
 });
-function shots(p) {
+function shots(p, bare) {
   const v = reduceMotion.matches ? 'controls muted playsinline' : 'autoplay muted loop playsinline';
-  return `<div class="shots">${media(p).map((m, k) => m.video ? `<video src="${m.url}" ${v} aria-label="${esc(p.title)}, video"></video>` : `<img src="${m.url}" alt="${esc(p.title)}, image ${k + 1}" loading="lazy">`).join('')}</div>`;
+  const inner = `${media(p).map((m, k) => m.video ? `<video src="${m.url}" ${v} aria-label="${esc(p.title)}, video"></video>` : `<img src="${m.url}" alt="${esc(p.title)}, image ${k + 1}" loading="lazy">`).join('')}`;
+  return bare ? inner : `<div class="shots">${inner}</div>`;
 }
+// a project page: its pictures side by side (stacked on narrow screens), then the title and year beside the words and any links
+const projLinks = p => (p.links || []).filter(l => /^https?:\/\//.test(l.url)).map(l => `<a class="proj-link" href="${esc(l.url)}" target="_blank" rel="noopener">${esc(l.label)} \u2192</a>`).join('');
+const projBlock = p => `<div class="proj"><div class="shots proj-shots">${shots(p, true)}</div><div class="proj-info"><div class="proj-id"><h3 class="cv-title" tabindex="-1">${esc(p.title)}</h3><span class="bt-year">${p.year}</span></div><div class="proj-body"><p class="body-p">${esc(p.text)}</p>${projLinks(p)}</div></div></div>`;
 const thumb = id => `<svg viewBox="0 0 600 300" aria-hidden="true"><use href="#art-${id}" width="600" height="300"/></svg>`;
 const KINDS = { avis: ['systems', 'mobile'], mayo: ['systems'], rcp: ['web'], onepass: ['mobile'], ally: ['web'], kaiser: ['web'], shore: ['web'], albertsons: ['mobile'], climatebase: ['web', 'systems'] };
 // work is listed newest year first; projects from the same year keep their order
@@ -2120,8 +2170,7 @@ $('#screenProject').addEventListener('click', e => {
 });
 function showOnScreen(i) {
   const p = projects[i], pane = $('#screenProject');
-  pane.innerHTML = `<div class="sp-head"><h3>${esc(p.title)}</h3><span class="bt-year">${p.year}</span></div>
-    <p class="body-p">${esc(p.text)}</p>${shots(p)}${PROJ_NAV}`;
+  pane.innerHTML = projBlock(p) + PROJ_NAV;
   screenAt = i;
   $('#cards').hidden = true; $('#screenSeg').hidden = true; $('#screen').classList.add('viewing'); pane.hidden = false; pane.scrollTop = 0;
   pane.querySelector('h3').setAttribute('tabindex', '-1'); pane.querySelector('h3').focus({ preventScroll: true });
@@ -2277,8 +2326,7 @@ function openLetter() {
   openSheet(`<h2 id="sheetTitle" tabindex="-1">send me a letter</h2><div class="letter-wrap">
     <div class="letter-page" id="letterPage"><div class="letter-mirror" id="letterMirror" aria-hidden="true"></div><textarea class="letter-paper" id="letterText" aria-label="Your letter" spellcheck="false"></textarea></div>
     <svg class="letter-tw" id="letterTw" viewBox="0 30 320 120" aria-hidden="true"></svg>
-    <div class="letter-from"><span class="letter-field"><input id="letterName" type="text" placeholder="name" aria-label="Your name, optional" autocomplete="name" maxlength="80"></span><span class="letter-field"><input id="letterEmail" type="email" placeholder="e-mail" aria-label="Your e-mail, optional" autocomplete="email" maxlength="120"></span></div>
-    <button class="btn-ink" id="letterSend" type="button">Send</button></div>`, false, null);
+    <div class="letter-from"><span class="letter-field"><input id="letterName" type="text" placeholder="name" aria-label="Your name, optional" autocomplete="name" maxlength="80"></span><span class="letter-field"><input id="letterEmail" type="email" placeholder="e-mail" aria-label="Your e-mail, optional" autocomplete="email" maxlength="120"></span><button class="btn-ink" id="letterSend" type="button">Send</button></div></div>`, false, null);
   sheet.classList.add('letter');
   const g = E('g', {}, $('#letterTw')), ta = $('#letterText');
   const body = 'M30,74 Q30,60 46,60 H274 Q290,60 290,74 L300,132 Q301,142 290,142 H30 Q19,142 20,132Z', panel = rr(52, 82, 216, 52, 8), roller = rr(14, 44, 292, 16, 7);
@@ -3400,7 +3448,7 @@ function refreshFaves() { const el = $('#favesList'); if (el) el.innerHTML = fav
 const favCite = t => ['favorite', [t.month.toLowerCase(), t.year].filter(Boolean).join(', ')].filter(Boolean).join(' \u2022 ');
 const bookCite = () => 'read';
 const bookBy = (t, cls) => t.author ? `<p class="${cls}">${esc(t.author)}</p>` : '';
-const quoteCite = t => ['quote', t.source ? linkOr(t.source, t.source_url) : '', t.author ? linkOr(t.author, t.author_url) : ''].filter(Boolean).join(' \u2022 ');
+const quoteCite = t => [t.source ? linkOr(t.source, t.source_url) : '', t.author ? linkOr(t.author, t.author_url) : ''].filter(Boolean).join(' \u2022 ');
 function ticketBody(t) {
   if (t.kind === 'favorite') return `<div class="fav">${favThumb(t)}<div><p class="t-quote fav-t">${linkOr(t.title, t.url)}</p>${t.description ? `<p class="t-desc">${esc(t.description)}</p>` : ''}<p class="t-cite">${favCite(t)}</p></div></div>`;
   if (t.kind === 'book') return `<div class="fav">${bookThumb(t)}<div><p class="t-quote fav-t">${linkOr(t.title, t.url)}</p>${bookBy(t, 't-by')}${t.description ? `<p class="t-desc">${esc(t.description)}</p>` : ''}<p class="t-cite">${bookCite(t)}</p></div></div>`;
@@ -3666,11 +3714,11 @@ async function zoomThen(name, open) {
 }
 let laptopState = 'closed', zoomed = null, zooming = false, vb = VB0.slice();
 // keep the pencil texture the same size on screen at any zoom
-const TEXTURE = [...document.querySelectorAll('#pencil feTurbulence, #crayon feTurbulence, #pencil feDisplacementMap, #crayon feDisplacementMap')]
+const TEXTURE = [...document.querySelectorAll('#pencilS feTurbulence, #crayonS feTurbulence, #pencilS feDisplacementMap, #crayonS feDisplacementMap')]
   .map(n => [n, n.tagName === 'feTurbulence' ? 'baseFrequency' : 'scale', n.getAttribute(n.tagName === 'feTurbulence' ? 'baseFrequency' : 'scale').split(' ').map(Number)]);
 let textureK = 1;
 function scaleTexture(k) {
-  k = Math.min(k, 3.2);
+  k = Math.min(k, 60);
   if (Math.abs(k - textureK) < .01) return; textureK = k;
   TEXTURE.forEach(([n, attr, base]) => n.setAttribute(attr, base.map(x => attr === 'scale' ? x / k : x * k).join(' ')));
 }
@@ -3843,7 +3891,7 @@ function renderEasel() {
     art.classList.add('has-detail'); art.scrollTop = 0; return;
   }
   const p = projects.find(q => q.id === it.projectId);
-  art.innerHTML = `<h3 class="cv-title" tabindex="-1">${esc((p || it).title || 'Untitled')}</h3><p class="cv-year">${esc((p || it).year || '')}</p>` + (p ? `${shots(p)}<p class="body-p">${esc(p.text)}</p>` : `<div class="shots"><img src="${it.url}" alt=""></div>`) + (easelItems.length > 1 ? PROJ_NAV : '');
+  art.innerHTML = (p ? projBlock(p) : `<div class="proj"><div class="shots proj-shots"><img src="${it.url}" alt=""></div><div class="proj-info"><div class="proj-id"><h3 class="cv-title" tabindex="-1">${esc(it.title || 'Untitled')}</h3><span class="bt-year">${esc(it.year || '')}</span></div></div></div>`) + (easelItems.length > 1 ? PROJ_NAV : '');
   art.classList.add('has-detail'); art.scrollTop = 0;
 }
 async function initEasel() {
@@ -4385,8 +4433,8 @@ function setMode() {
   setLong(phone.matches && placeIdx !== 2);
   // small screens: a gentler pencil grain, so the drawing reads cleaner
   const soft = smallScreen.matches;
-  document.querySelector('#pencil feColorMatrix').setAttribute('values', `0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  ${soft ? '-1.9 0 0 0 1.7' : '-2.4 0 0 0 1.95'}`);
-  document.querySelector('#crayon feColorMatrix').setAttribute('values', `0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  ${soft ? '-2.4 0 0 0 1.85' : '-3 0 0 0 2.15'}`);
+  document.querySelectorAll('#pencil feColorMatrix, #pencilS feColorMatrix').forEach(m => m.setAttribute('values', `0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  ${soft ? '-1.9 0 0 0 1.7' : '-2.4 0 0 0 1.95'}`));
+  document.querySelectorAll('#crayon feColorMatrix, #crayonS feColorMatrix').forEach(m => m.setAttribute('values', `0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  ${soft ? '-2.4 0 0 0 1.85' : '-3 0 0 0 2.15'}`));
   // and steadier edges: less wobble in the pencil lines
   TEXTURE.forEach(t => { if (t[1] === 'scale') { t[3] = t[3] || t[2]; t[2] = t[3].slice(); } }); textureK = 0;
   placeControls();
