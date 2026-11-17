@@ -1039,8 +1039,9 @@ body:has(.sheet.page.open) .mark p{color:var(--ink-soft)!important}
 .canvas-view::before{content:"";position:absolute;inset:0;z-index:4;pointer-events:none;border:10px solid #4a3a2e;filter:url(#pencil)}
 @container (min-width:700px){.cv-grid{grid-template-columns:repeat(3,minmax(0,1fr))}}
 
-/* the logo's hyphen: a little longer than the script's own, in a stroke as heavy as the body copy */
-.mark h1 .hy{display:inline-block;width:.55em;height:0;margin:0 .16em 0 .12em;vertical-align:.3em;border-top:2.4px solid currentColor;border-radius:2px;transform:rotate(-2deg)}
+
+/* long dashes in text: a touch narrower (the glyph is scaled and its box trimmed to match) */
+.dash{display:inline-block;transform:scaleX(.78);margin:0 -.11em}
 @media (max-width:760px),(max-width:1100px) and (orientation:portrait){:root{--t-title:40px;--t-card:28px;--t-quote:18px;--t-body:18px;--t-meta:14px;--t-btn:18px}}
 html .sheet h2,html .sheet .jb-flow h2,html .sheet .bar-title h2,html .sp-head h3,html .cv-title,html .td-head h2,html .sheet.menu h2,html .sheet.shelf h2,html .sheet.letter h2,html .screen-bar h2{font-family:var(--f-title)!important;font-size:var(--t-title)!important;font-weight:400!important;line-height:1.25!important;text-transform:lowercase}
 html .c-t,html .screen .c-t,html .cv-grid .c-t,html .dish b,html .fave b,html .fc-face b,html li.book b,html .jams b,html .posts b,html .work-list b,html .cv-cap b,html .jb-toc .jt-t,html .sheet h3,html .post h3,html .post h4,html .spin-title,html .t-no,html .stub-top b{font-family:var(--f-title)!important;font-size:var(--t-card)!important;font-weight:400!important;line-height:1.25!important}
@@ -1056,7 +1057,7 @@ html .inline-link{text-transform:lowercase}
 <div class="app" id="app">
   <header class="top">
     <div class="mark">
-      <h1 aria-label="jamie catt-koble">jamie catt<span class="hy" aria-hidden="true"></span>koble</h1>
+      <h1>jamie catt-koble</h1>
     </div>
     <div class="top-right">
       <div class="sound" role="group" aria-label="Music">
@@ -4656,4 +4657,19 @@ addEventListener('load', () => setTimeout(addHitAreas, 300));
 setTimeout(addHitAreas, 1200);
 // local previews: the plain page is the desktop view
 if (/^(localhost|127\.0\.0\.1)$/.test(location.hostname) && window.top === window) document.title = 'Desktop';
+
+// every long dash in the page's text becomes a slightly narrower one, including text added later (posts, sheets, cards)
+function shortenDashes(root) {
+  if (!root || root.nodeType === 8) return;
+  const base = root.nodeType === 3 ? root.parentNode : root; if (!base || (base.closest && base.closest('script,style,textarea,input,svg,.dash'))) return;
+  const w = document.createTreeWalker(root, NodeFilter.SHOW_TEXT, { acceptNode: n => n.nodeValue.includes('\u2014') && !(n.parentElement && n.parentElement.closest('script,style,textarea,input,svg,.dash')) ? 1 : 2 }), list = [];
+  if (root.nodeType === 3) { if (root.nodeValue.includes('\u2014')) list.push(root); } else while (w.nextNode()) list.push(w.currentNode);
+  list.forEach(n => {
+    const f = document.createDocumentFragment();
+    n.nodeValue.split('\u2014').forEach((p, i) => { if (i) { const d = document.createElement('span'); d.className = 'dash'; d.textContent = '\u2014'; f.appendChild(d); } if (p) f.appendChild(document.createTextNode(p)); });
+    n.replaceWith(f);
+  });
+}
+new MutationObserver(ms => ms.forEach(m => m.addedNodes.forEach(shortenDashes))).observe(document.body, { childList: true, subtree: true });
+shortenDashes(document.body);
 </script>
