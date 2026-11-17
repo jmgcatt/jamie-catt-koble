@@ -156,8 +156,8 @@ input[type="text"],input[type="url"]{cursor:text}
 body.night{background:#3d4357}
 body.night .top{color:#efe6d2}
 .mark h1,.mark p{transition:color .35s ease}
-body:has(.sheet.menu.open) .mark h1,body:has(.sheet.shelf.open) .mark h1,body:has(.sheet.letter.open) .mark h1,body:has(#tdScrim:not([hidden])) .mark h1,body.drawer-open .mark h1{color:#fffaf0}
-body:has(.sheet.menu.open) .mark p,body:has(.sheet.shelf.open) .mark p,body:has(.sheet.letter.open) .mark p,body:has(#tdScrim:not([hidden])) .mark p,body.drawer-open .mark p{color:#efe6d2}
+body:has(.sheet.menu.open) .mark h1,body:has(.sheet.shelf.open) .mark h1,body:has(.sheet.letter.open) .mark h1,body:has(.sheet.paper.open) .mark h1,body:has(#tdScrim:not([hidden])) .mark h1,body.drawer-open .mark h1{color:#fffaf0}
+body:has(.sheet.menu.open) .mark p,body:has(.sheet.shelf.open) .mark p,body:has(.sheet.letter.open) .mark p,body:has(.sheet.paper.open) .mark p,body:has(#tdScrim:not([hidden])) .mark p,body.drawer-open .mark p{color:#efe6d2}
 body.night .mark h1,body.logo-light .mark h1{color:#fffaf0}
 body.logo-light .mark p{color:#efe6d2}
 body.night .mark p{color:#d9cfb9}
@@ -539,7 +539,7 @@ body.playing .turntable .arm{transform:none}
 /* the cards sit dead centre on the screen: no notebook margin on one side */
 .sheet.menu .sheet-body,.sheet.shelf .sheet-body,.sheet.player .sheet-body{padding-left:16px!important;padding-right:16px!important}
 .sheet.menu h2,.sheet.shelf h2,.sheet.letter h2{position:static;flex:none;margin:0 0 18px;text-align:center;font-size:40px;line-height:1.2;color:#fffaf0;filter:none;pointer-events:none}
-body:has(.sheet.menu.open) .scrim,body:has(.sheet.shelf.open) .scrim,body:has(.sheet.letter.open) .scrim{background:rgba(30,21,16,.55)}
+body:has(.sheet.menu.open) .scrim,body:has(.sheet.shelf.open) .scrim,body:has(.sheet.letter.open) .scrim,body:has(.sheet.paper.open) .scrim{background:rgba(30,21,16,.55)}
 .sheet.menu #weeklyList{width:100%}
 .sheet.menu .dish-grid{display:flex;flex-wrap:wrap;justify-content:center;gap:24px;margin:0}
 .sheet.menu .dish{width:min(200px,42vw);box-sizing:border-box;padding:18px 16px 20px;gap:8px;background:#fffaf0;border-radius:var(--wobble);box-shadow:inset 0 0 0 6px #fffaf0,inset 0 0 0 7.5px rgba(201,102,61,.4)}
@@ -838,8 +838,8 @@ body:has(.sheet.book.open) .top{z-index:5}
   body.playing .notes .note{animation-duration:6s}
   .sheet{top:0;left:0;width:100vw;height:100vh;height:100dvh;max-height:none;border:0;border-radius:0;transform:translateY(4%)}
   .sheet.open{transform:none}
-  .sheet:not(.book):not(.menu):not(.shelf):not(.player):not(.letter):not(.page){top:auto;bottom:0;height:88vh;height:88dvh;border-radius:18px 18px 0 0;transform:translateY(8%)}
-  .sheet.open:not(.book):not(.menu):not(.shelf):not(.player):not(.letter):not(.page){transform:none}
+  .sheet:not(.book):not(.menu):not(.shelf):not(.player):not(.letter):not(.page):not(.paper){top:auto;bottom:0;height:88vh;height:88dvh;border-radius:18px 18px 0 0;transform:translateY(8%)}
+  .sheet.open:not(.book):not(.menu):not(.shelf):not(.player):not(.letter):not(.page):not(.paper){transform:none}
   .sheet.book{border-radius:0}
   .fave-grid{grid-template-columns:1fr}
   .fave .fav-art,.fave .fav-img{width:78px}
@@ -1030,6 +1030,27 @@ body:has(.sheet.page.open) .mark p{color:var(--ink-soft)!important}
 .fc-face b a:hover{color:var(--link)}
 .fc-back p{margin:0}
 .fave-dish:focus-visible .fc-face{outline:2px solid var(--link);outline-offset:2px}
+
+/* crumpled paper pages: a portrait sheet of paper floating in the middle of the screen */
+.sheet.paper{background:transparent;border:0;filter:none}
+.sheet.paper .sheet-bar{display:none}
+.sheet.paper .sheet-body{min-height:100%;box-sizing:border-box;display:flex;align-items:center;justify-content:center;padding:84px 16px 24px!important}
+.paper-page{position:relative;width:min(360px,86vw,calc((100dvh - 150px) / 1.4));aspect-ratio:300/420}
+.paper-page>svg{position:absolute;inset:0;width:100%;height:100%;overflow:visible}
+.paper-content{position:absolute;inset:15% 13% 12%;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:14px;text-align:center}
+.sheet.paper h2{margin:0;color:var(--ink);text-align:center;position:static}
+.sticker{display:block;width:100%;max-height:78%;object-fit:contain;border:0!important;border-radius:0!important}
+.paper-btn{position:relative;display:inline-block;padding:9px 22px;background:#fffaf0;border:1.5px solid transparent;border-radius:14px 11px 15px 10px / 11px 15px 10px 14px;color:var(--ink);text-decoration:none;cursor:pointer}
+.paper-btn::before{content:"";position:absolute;inset:-2px;border:2.2px solid var(--ink);border-radius:inherit;pointer-events:none;filter:url(#ink)}
+.paper-btn:hover{background:#fdf1e2}
+.routine{list-style:none;margin:8px 0 0;padding:0;display:grid;gap:9px;text-align:left;align-self:stretch}
+.routine li{position:relative;padding-left:24px}
+.routine li::before{content:"";position:absolute;left:2px;top:.55em;width:9px;height:9px;border:1.7px solid var(--ink);border-radius:50%;filter:url(#pencil)}
+
+/* all work page: the pill toggle is 14px, and the cards match the laptop and the easel */
+html .sheet.page .seg button{font-size:14px!important}
+.sheet.page .work-grid{margin:20px 0 0;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:18px}
+.sheet.page .work-grid .c-t{font-size:var(--t-card)}
 @media (max-width:760px),(max-width:1100px) and (orientation:portrait){:root{--t-title:40px;--t-card:28px;--t-quote:18px;--t-body:18px;--t-meta:14px;--t-btn:18px}}
 html .sheet h2,html .sheet .jb-flow h2,html .sheet .bar-title h2,html .sp-head h3,html .cv-title,html .td-head h2,html .sheet.menu h2,html .sheet.shelf h2,html .sheet.letter h2,html .screen-bar h2{font-family:var(--f-title)!important;font-size:var(--t-title)!important;font-weight:400!important;line-height:1.25!important;text-transform:lowercase}
 html .c-t,html .screen .c-t,html .cv-grid .c-t,html .dish b,html .fave b,html .fc-face b,html li.book b,html .jams b,html .posts b,html .work-list b,html .cv-cap b,html .jb-toc .jt-t,html .sheet h3,html .post h3,html .post h4,html .spin-title,html .t-no,html .stub-top b{font-family:var(--f-title)!important;font-size:var(--t-card)!important;font-weight:400!important;line-height:1.25!important}
@@ -1038,7 +1059,7 @@ html body,html .sheet-body,html .body-p,html .post,html .post.jb-flow,html .lede
 html .body-p,html .post,html .lede,html .exp p,html .t-desc,html .stub-d,html .fave span,html .shelf-note,html .meta dd,html .about-tag,html .letter-page{font-weight:400!important}
 html .exp b{font-weight:500!important}
 html .c-m,html .bt-year,html .cv-year,html .jb-flow .jb-date,html .jb-toc .jt-d,html .t-date,html .t-kick,html .kick,html .meta dt,html .stub-top span,html .t-cite,html .t-by,html .stub-by,html .stub-c,html .exp .when,html .year,html .jb-no,html .dish span,html .jams small,html .posts small,html li.book span,html .work-list span,html .cv-cap{font-family:var(--f-body)!important;font-size:var(--t-meta)!important;font-weight:400!important;text-transform:uppercase!important;letter-spacing:.08em!important;font-style:normal!important}
-html .proj-link,html .btn-ink,html .btn-plain,html .bub,html .cmd,html .chip,html .tab,html .seg button,html .link,html .menu-list .link,html .read-on,html #letterSend,html .letter-field input,html .rf-grid input,html .rf-grid select,html .cv-form input,html input::placeholder{font-family:var(--f-body)!important;font-size:var(--t-btn)!important;font-weight:400!important;font-variant-caps:normal!important;text-transform:lowercase!important;letter-spacing:.01em}
+html .proj-link,html .paper-btn,html .btn-ink,html .btn-plain,html .bub,html .cmd,html .chip,html .tab,html .seg button,html .link,html .menu-list .link,html .read-on,html #letterSend,html .letter-field input,html .rf-grid input,html .rf-grid select,html .cv-form input,html input::placeholder{font-family:var(--f-body)!important;font-size:var(--t-btn)!important;font-weight:400!important;font-variant-caps:normal!important;text-transform:lowercase!important;letter-spacing:.01em}
 html .inline-link{text-transform:lowercase}
 </style>
 
@@ -1485,6 +1506,16 @@ function repaintEasel() { if (!easelG) return; const was = portraitNow(); if (ea
 /* ---------- the easel, and the laptop, books and candle on the desk ---------- */
 function buildWorkDesk() {
   const world = shiftTo(28);
+  // a wall of polaroids taped up behind the easel, under the hanging plant: overlapping, tilted, not neat
+  const wall = shiftTo(-424);
+  const polaroid = (x, y, rot, k, tone, tape, who) => {
+    const frame = rect(-13, -15, 26, 31), photo = rect(-10.5, -12.5, 21, 21);
+    const subject = who ? ell(0, -4, 5.4, 6.2) + 'M-9,8 Q0,-3 9,8Z' : 'M-10.5,6 Q-4,-4 2,2 T10.5,-2 V8.5 H-10.5Z';
+    const g = piece(wall, { occ: frame, fill: [[frame, '#fffdf8', 1], [photo, tone, .95], [subject, '#3a3430', .62]], line: [frame, photo, { d: 'M-10.5,10.5H8', stroke: '#9a9288', 'stroke-width': .6 }], lw: 1.1, attrs: { transform: `translate(${x},${y}) rotate(${rot}) scale(${k})` } });
+    if (tape) piece(g, { fill: [[rect(-6, -18, 12, 5), '#ead8a6', .8]], line: [rect(-6, -18, 12, 5)], lw: .5, attrs: { transform: `rotate(${(x * 7) % 9 - 4})` } });
+  };
+  [[-34, -26, -9, 1, '#8c8782', 1, 1], [-4, -32, 5, 1, '#aaa59e', 0, 0], [28, -24, -4, .95, '#706b67', 1, 1], [-40, 6, 7, .95, '#b4afa7', 0, 0], [-12, 2, -3, 1.08, '#7d7873', 1, 1], [20, 4, 6, 1, '#9c968f', 0, 1], [46, -2, -8, .9, '#aaa59e', 1, 0], [-24, 36, -5, 1, '#86817c', 0, 1], [8, 36, 4, 1, '#b8b3ab', 1, 0], [36, 32, -7, .92, '#77726d', 0, 1]]
+    .forEach(([dx, dy, r, k, tone, tape, who]) => polaroid(836 + dx, 392 + dy, r, k, tone, tape, who));
   // painting easel by the archway
   const ea = E('g', { id: 'easel', class: 'hot', tabindex: 0, role: 'button', 'aria-expanded': 'false', 'aria-controls': 'easelView', 'aria-label': 'Painting easel. Press to look closely at my newest illustration work.' }, shiftTo(-424));
   paintEasel(ea);
@@ -1717,12 +1748,12 @@ function buildKitchen() {
 const TAN = '#dba06a', DARK = '#3d2f27';
 function buildTeo() {
   // mid-century dog bed tucked under the desk: grey bolsters, walnut frame on turned legs
-  const BED_AT = 'translate(400,-46)', bed = E('g', { class: 'fixed', transform: BED_AT }, world), GREY = '#b9bcbd';
+  const BED_AT = 'translate(400,-24)', bed = E('g', { class: 'fixed', transform: BED_AT }, world), GREY = '#b9bcbd';
   const backB = rr(118, 600, 164, 32, 16), sideL = rr(110, 608, 36, 40, 16), sideR = rr(254, 608, 36, 40, 16), mat = rr(128, 628, 144, 18, 7);
   piece(bed, { occ: backB, fill: [[backB, GREY, .95]], line: [backB, { d: 'M150,606q50,-4 100,0', stroke: '#9a9d9e', 'stroke-width': 1.1 }] });
   [sideL, sideR].forEach(d => piece(bed, { occ: d, fill: [[d, GREY, .95]], line: [d] }));
   piece(bed, { occ: mat, fill: [[mat, '#cfd2d3', .95]], line: [mat] });
-  const g = E('g', { id: 'teo', class: 'hot fixed', 'data-pose': 'sleep', transform: 'translate(600,600) scale(.82,.82) translate(-104,-98)', tabindex: 0, role: 'button', 'aria-expanded': 'false', 'aria-controls': 'teoCard', 'aria-label': 'Teo. Press to pet him, give him a treat, or train together.' }, world);
+  const g = E('g', { id: 'teo', class: 'hot fixed', 'data-pose': 'sleep', transform: 'translate(600,622) scale(.82,.82) translate(-104,-98)', tabindex: 0, role: 'button', 'aria-expanded': 'false', 'aria-controls': 'teoCard', 'aria-label': 'Teo. Press to pet him, give him a treat, or train together.' }, world);
   const fur = (d, extra = {}) => Object.assign({ d, stroke: BROWN }, extra);
   const coat = (parent, capeD, cordD, label) => piece(parent, { occ: capeD + cordD, fill: [[capeD, '#7c7a4a', .92], [cordD, '#a8653d', .95], [label, BLACK, 1]], line: [capeD, cordD, label], lw: 2.2 });
   const collar = (parent, d, bx, by) => piece(parent, { line: [{ d, stroke: '#4a3426', 'stroke-width': 5.5 }, { d: rect(bx, by, 10, 9), stroke: '#a7a49c', 'stroke-width': 2 }, { d: ell(bx + 5, by + 15, 3.4), stroke: '#a7a49c', 'stroke-width': 1.8 }] });
@@ -1822,6 +1853,63 @@ function buildTeo() {
   piece(bedFront, { occ: flap, fill: [[flap, '#cfd2d3', .95]], line: [flap] });
   [124, 276].forEach(x => { const leg = ell(x, 670, 6, 4) + ell(x, 678, 7.5, 5) + ell(x, 686, 4, 2.5); piece(bedFront, { occ: leg, fill: [[leg, '#8a5532', 1]], line: [leg], lw: 1.5 }); });
 
+}
+
+/* ---------- crumpled paper on the floor ---------- */
+function buildPaper() {
+  const crumple = (id, x, y, rot, seed, label) => {
+    const r = rng(seed), g = E('g', { id, class: 'hot', tabindex: 0, role: 'button', 'aria-label': label }, shiftTo(0));
+    const pts = []; for (let i = 0; i < 11; i++) { const a = i / 11 * Math.PI * 2, rr2 = 11.5 * (.78 + r() * .38); pts.push([Math.cos(a) * rr2 * 1.12, Math.sin(a) * rr2 * .86]); }
+    const outline = 'M' + pts.map(p => p.map(n => n.toFixed(1)).join(',')).join('L') + 'Z';
+    const facet = (i, j) => `M0,-1L${pts[i][0].toFixed(1)},${pts[i][1].toFixed(1)}L${pts[j][0].toFixed(1)},${pts[j][1].toFixed(1)}Z`;
+    const dark = [facet(1, 2) + facet(5, 6) + facet(8, 9), '#cfc6b3', .55], light = [facet(3, 4) + facet(10, 0), '#ffffff', .7];
+    piece(g, { fill: [[ell(x + 1, y + 10, 18, 4.4), '#4a3a2e', .2]], attrs: {} });
+    const inner = piece(g, { occ: outline, fill: [[outline, '#f7f2e7', 1], dark, light], line: [outline, 'M0,-1L' + pts[2][0].toFixed(1) + ',' + pts[2][1].toFixed(1), 'M0,-1L' + pts[6][0].toFixed(1) + ',' + pts[6][1].toFixed(1), 'M0,-1L' + pts[9][0].toFixed(1) + ',' + pts[9][1].toFixed(1)], lw: 1.1, color: '#7a6858', attrs: { transform: `translate(${x},${y}) rotate(${rot}) scale(1.3)` } });
+    return g;
+  };
+  crumple('paperTeo', 152, 628, -14, 7, 'A crumpled piece of paper on the floor by the daybed. Press to open it.');
+  crumple('paperRoutine', 808, 628, 22, 13, 'A crumpled piece of paper on the floor by Teo\u2019s crate. Press to open it.');
+}
+// the paper that opens: a portrait sheet of crumpled paper in the middle of the screen
+function paperSvg(seed) {
+  const r = rng(seed), W = 300, H = 420, cols = 5, rows = 7, P = [];
+  for (let j = 0; j <= rows; j++) { const row = []; for (let i = 0; i <= cols; i++) { const edge = i === 0 || j === 0 || i === cols || j === rows; row.push([(W - 28) * i / cols + 14 + (r() - .5) * (edge ? 9 : 26), (H - 28) * j / rows + 14 + (r() - .5) * (edge ? 9 : 26)]); } P.push(row); }
+  const f = p => p[0].toFixed(1) + ',' + p[1].toFixed(1), out = [];
+  for (let i = 0; i <= cols; i++) out.push(P[0][i]); for (let j = 1; j <= rows; j++) out.push(P[j][cols]); for (let i = cols - 1; i >= 0; i--) out.push(P[rows][i]); for (let j = rows - 1; j >= 1; j--) out.push(P[j][0]);
+  const outline = 'M' + out.map(f).join('L') + 'Z'; let tris = '', creases = '';
+  for (let j = 0; j < rows; j++) for (let i = 0; i < cols; i++) {
+    const a = P[j][i], b = P[j][i + 1], c = P[j + 1][i], d = P[j + 1][i + 1], flip = r() < .5, t = flip ? [[a, b, c], [b, d, c]] : [[a, b, d], [a, d, c]];
+    t.forEach(tr => { const light = r() < .45, o = light ? .1 + r() * .35 : .03 + r() * .12; tris += `<path d="M${tr.map(f).join('L')}Z" fill="${light ? '#fff' : '#8a7656'}" fill-opacity="${o.toFixed(2)}"/>`; });
+    creases += `M${f(a)}L${f(b)}M${f(a)}L${f(c)}M${flip ? f(b) + 'L' + f(c) : f(a) + 'L' + f(d)}`;
+  }
+  return `<svg viewBox="0 0 300 420" aria-hidden="true"><defs><clipPath id="paperClip"><path d="${outline}"/></clipPath></defs><path d="${outline}" fill="#faf5ea"/><g clip-path="url(#paperClip)">${tris}</g><path d="${creases}" fill="none" stroke="#a8a08c" stroke-width=".9" opacity=".6" clip-path="url(#paperClip)" filter="url(#pencil)"/><path d="${outline}" fill="none" stroke="#6f5d4c" stroke-width="1.8" stroke-linejoin="round" filter="url(#pencil)"/></svg>`;
+}
+// Teo as a cut-out sticker: his sitting pose, redrawn at full size with a white die-cut edge, saved as a PNG with a clear background
+let teoStickerURL = null;
+async function makeTeoSticker() {
+  if (teoStickerURL) return teoStickerURL;
+  const src = document.querySelector('#teo .p-sit'); if (!src) return null;
+  const clone = src.cloneNode(true); clone.querySelectorAll('.paw-up,.paw-high,.eyes-happy,.tongue').forEach(n => n.remove());
+  const size = 1024, vb = [26, -44, 160, 160], k = size / vb[2] / 1.12, B = n => n.split(' ').map(x => (+x * k).toFixed(3)).join(' ');
+  const inner = new XMLSerializer().serializeToString(clone).replace(/url\(#pencilS\)/g, 'url(#pencilK)').replace(/url\(#crayonS\)/g, 'url(#crayonK)');
+  const defs = `<filter id="pencilK" x="-15%" y="-15%" width="130%" height="130%" color-interpolation-filters="sRGB"><feTurbulence type="fractalNoise" baseFrequency="${B('0.035')}" numOctaves="2" seed="3" result="w"/><feDisplacementMap in="SourceGraphic" in2="w" scale="${(3 / k).toFixed(3)}" xChannelSelector="R" yChannelSelector="G" result="d"/><feTurbulence type="fractalNoise" baseFrequency="${B('0.9')}" numOctaves="2" seed="8" result="g"/><feColorMatrix in="g" type="matrix" values="0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  -2.4 0 0 0 1.95" result="ga"/><feComposite in="d" in2="ga" operator="in"/></filter>
+    <filter id="crayonK" x="-15%" y="-15%" width="130%" height="130%" color-interpolation-filters="sRGB"><feTurbulence type="fractalNoise" baseFrequency="${B('0.03')}" numOctaves="2" seed="11" result="w"/><feDisplacementMap in="SourceGraphic" in2="w" scale="${(6 / k).toFixed(3)}" xChannelSelector="R" yChannelSelector="G" result="d"/><feTurbulence type="fractalNoise" baseFrequency="${B('0.75 1.3')}" numOctaves="2" seed="4" result="g"/><feColorMatrix in="g" type="matrix" values="0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  -3 0 0 0 2.15" result="ga"/><feComposite in="d" in2="ga" operator="in"/></filter>
+    <filter id="die" x="-12%" y="-12%" width="124%" height="124%" color-interpolation-filters="sRGB"><feMorphology in="SourceAlpha" operator="dilate" radius="4.2" result="d"/><feGaussianBlur in="d" stdDeviation="1.5" result="b"/><feComponentTransfer in="b" result="w"><feFuncA type="linear" slope="14" intercept="-5"/></feComponentTransfer><feFlood flood-color="#ffffff" result="f"/><feComposite in="f" in2="w" operator="in" result="white"/><feMerge><feMergeNode in="white"/><feMergeNode in="SourceGraphic"/></feMerge></filter>`;
+  const svgStr = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="${vb.join(' ')}" width="${size}" height="${size}"><defs>${defs}</defs><g filter="url(#die)">${inner}</g></svg>`;
+  const img = new Image(); img.src = 'data:image/svg+xml;charset=utf-8,' + encodeURIComponent(svgStr);
+  try { await img.decode(); } catch (e) { return null; }
+  const c = document.createElement('canvas'); c.width = c.height = size; c.getContext('2d').drawImage(img, 0, 0, size, size);
+  const blob = await new Promise(res => c.toBlob(res, 'image/png')); if (!blob) return null;
+  return teoStickerURL = URL.createObjectURL(blob);
+}
+const ROUTINE = ['skincare: moisturizer & spf', 'drink a glass of water', 'read for 15 mins', 'journal for 15 mins', 'breakfast', '30mins movement of the day'];
+function openPaper(kind) {
+  const teo = kind === 'teo';
+  openSheet(`<div class="paper-page">${paperSvg(teo ? 11 : 23)}<div class="paper-content">${teo
+    ? `<h2 id="sheetTitle" class="sr-only" tabindex="-1">Teo, as a sticker</h2><img class="sticker" id="teoSticker" alt="Teo, as a sticker" hidden><a class="paper-btn" id="paperDl" download="teo-sticker.png" hidden>download</a>`
+    : `<h2 id="sheetTitle" tabindex="-1">morning routine</h2><ul class="routine">${ROUTINE.map(t => `<li>${esc(t)}</li>`).join('')}</ul>`}</div></div>`, false, null);
+  sheet.classList.add('paper');
+  if (teo) makeTeoSticker().then(url => { if (!url || !sheet.classList.contains('paper')) return; const im = $('#teoSticker'), dl = $('#paperDl'); if (!im) return; im.src = url; im.hidden = false; dl.href = url; dl.hidden = false; });
 }
 
 /* ---------- Teo's crate, his ball, and your arm ---------- */
@@ -2098,7 +2186,7 @@ function decorate() {
   });
 }
 
-buildOutside(); const outsideCount = world.children.length; buildShell(); buildDoor(); buildTicket(); buildWindow(); buildDesk(); buildWorkDesk(); buildDecor(); buildArch(); buildCozy(); buildKitchen(); buildTeo(); buildNight(); buildLantern(); spreadRoom(); buildRecords(); buildPlay(); buildFrameFront(); buildFrameFront('frameFrontLong', 510); piece(E('g', { id: 'longOcc', class: 'fixed' }, world), { occ: rect(1130, 204, 520, 538) }); buildSun(); buildArt();
+buildOutside(); const outsideCount = world.children.length; buildShell(); buildDoor(); buildTicket(); buildWindow(); buildDesk(); buildWorkDesk(); buildDecor(); buildArch(); buildCozy(); buildKitchen(); buildTeo(); buildNight(); buildLantern(); spreadRoom(); buildRecords(); buildPlay(); buildPaper(); buildFrameFront(); buildFrameFront('frameFrontLong', 510); piece(E('g', { id: 'longOcc', class: 'fixed' }, world), { occ: rect(1130, 204, 520, 538) }); buildSun(); buildArt();
 // everything inside the house goes in one layer, clipped to the frame's window
 const roomClip = E('rect', { x: 80, y: 201, width: 1040, height: 487 }, E('clipPath', { id: 'roomClip', clipPathUnits: 'userSpaceOnUse' }, $('#scene defs')));
 const rooms = E('g', { id: 'rooms', 'clip-path': 'url(#roomClip)' });
@@ -2143,7 +2231,7 @@ const projects = [
   { id: 'ally', cat: 'Design', title: 'Ally\u2019s Conversationally', year: '2022', text: 'Conversationally transforms financial information into approachable, exciting stories. I led the visual design to create an engaging, interactive content hub for sharing money insights, guidance and inspiration.', links: [{ label: 'Visit the Conversationally', url: 'https://www.ally.com/stories/' }] },
   { id: 'kaiser', cat: 'Design', title: 'Kaiser Permanente', year: '2021', text: 'I led the design of a proactive care dashboard that helps Kaiser Permanente members manage their health and access care at every stage \u2014 from prescriptions to appointments to urgent and ongoing care. I also supported on the front door re-design to create a more unified, consistent experience.', links: [{ label: 'See Kaiser Permanente', url: 'https://healthy.kaiserpermanente.org/colorado/front-door' }] },
   { id: 'shore', cat: 'Design', title: 'Shore Capital', year: '2023', text: 'When Shore Capital set out to modernize their outdated website, I supported design on the visual refresh \u2014 rethinking the architecture, tone, and overall look and feel to create a cohesive and contemporary digital presence.', links: [{ label: 'Visit Shore Capital', url: 'https://www.shorecp.com/' }] },
-  { id: 'albertsons', cat: 'Design', title: 'Albertsons Health & Wellness', year: '2021', text: 'I supported in exploring a mobile app concept for Albertsons that unites pharmacy, health and grocery into one seamless experience.' },
+  { id: 'albertsons', cat: 'Design', title: 'Albertsons Wellness', year: '2021', text: 'I supported in exploring a mobile app concept for Albertsons that unites pharmacy, health and grocery into one seamless experience.' },
   { id: 'climatebase', cat: 'Design', title: 'Climatebase', year: '2021', text: 'Climatebase is a platform that connects job seekers and organizations to find impact-driven opportunities and communities in the climate industry. I led and shipped several core features \u2014 including site navigation, job and organization search, and community profiles \u2014 while building a cohesive brand identity and design system to bring consistency across Climatebase\u2019s visual and product experience.' },
   { id: 'candle', cat: 'Illustration', title: 'Siblings Candle', year: '2021', text: 'To celebrate the season, I designed the packaging for Siblings Candle\u2019s 2020 holiday scent \u2014 bringing the winter spices to life for their limited-edition release.' },
   { id: 'maps', cat: 'Illustration', title: 'The Maps That Contain Us', year: '2017', text: 'The Maps That Contain Us is the second poetry companion to In Case You Come Back. I designed the book cover and selected watercolor illustrations to accompany and bring visual depth to the writing.' },
@@ -2195,7 +2283,7 @@ let lastFocus = null;
 const say = t => { live.textContent = ''; setTimeout(() => live.textContent = t, 30); };
 function openSheet(html, showBack, seg, barTitle, asPage) {
   favesOpen = false;
-  clearTimeout(sheetLookTimer); sheet.classList.remove('book', 'player', 'menu', 'shelf', 'letter', 'page'); book = null; if (asPage) sheet.classList.add('page');
+  clearTimeout(sheetLookTimer); sheet.classList.remove('book', 'player', 'menu', 'shelf', 'letter', 'page', 'paper'); book = null; if (asPage) sheet.classList.add('page');
   $('#barTitle').innerHTML = barTitle || ''; $('#barTitle').hidden = !barTitle;
   if (!sheet.classList.contains('open')) lastFocus = document.activeElement;
   body.innerHTML = html; sheet.scrollTop = 0;
@@ -2210,7 +2298,7 @@ function closeSheet() {
   readingOpen = false; recordsOpen = false; weeklyOpen = null; favesOpen = false;
   sheet.classList.remove('open'); scrim.classList.remove('open'); app.inert = false; book = null;
   // the special looks stay on until the fade-out has finished, so the plain lined card never flashes through
-  clearTimeout(sheetLookTimer); sheetLookTimer = setTimeout(() => { if (!sheet.classList.contains('open')) sheet.classList.remove('book', 'player', 'menu', 'shelf', 'letter', 'page'); }, 450);
+  clearTimeout(sheetLookTimer); sheetLookTimer = setTimeout(() => { if (!sheet.classList.contains('open')) sheet.classList.remove('book', 'player', 'menu', 'shelf', 'letter', 'page', 'paper'); }, 450);
   if (lastFocus && lastFocus.isConnected) lastFocus.focus({ preventScroll: true });
   if (SHEET_ZOOMS.includes(zoomed)) closeZoom();
 }
@@ -2260,13 +2348,15 @@ function showCards() {
   const c = $('#cards .card'); if (c) c.focus({ preventScroll: true });
 }
 function workList(cat) {
-  return `<ul class="work-list">${byYear.map(i => [projects[i], i]).map(([p, i]) => p.cat !== cat ? '' : `<li><button type="button" data-open="${i}">${thumb(p.id)}<span><b>${esc(p.title)}</b><span>${p.year}</span></span></button></li>`).join('')}</ul>`;
+  // the same cards as the laptop and the easel: picture, title and year, centred, all one height
+  return `<ul class="cv-grid work-grid">${byYear.map(i => [projects[i], i]).map(([p, i]) => p.cat !== cat ? '' : `<li><button class="card" type="button" data-open="${i}">${thumb(p.id)}<span class="c-t">${esc(p.title)}</span><span class="c-m">${p.year}</span></button></li>`).join('')}</ul>`;
 }
 function openWork(cat = 'Design') {
   const lede = cat === 'Design' ? 'Design systems, product and brand work for health, finance, travel and climate.' : 'Book covers, packaging and watercolor illustration.';
   openSheet(`<div class="title-row"><h2 id="sheetTitle" tabindex="-1">All work</h2><div class="seg" role="group" aria-label="Kind of work">${['Design', 'Illustration'].map(c => `<button type="button" data-seg="${c}" aria-pressed="${c === cat}">${c.toLowerCase()}</button>`).join('')}</div></div>
     <p class="body-p">${lede}</p>
     ${workList(cat)}`, false, null, '', true);
+  requestAnimationFrame(() => equalCards(document.querySelector('.work-grid')));
 }
 const jobs = [
   ['10kR', 'Lead Designer', '2025 \u2013 Now', 'I work with a team of robots and human designers to build intelligent digital experiences for visionary clients, bringing AI to the forefront of how we design and deliver.'],
@@ -3019,7 +3109,7 @@ sheet.addEventListener('pointerup', dishDragEnd); sheet.addEventListener('pointe
 sheet.addEventListener('click', e => { if (dishDragged && e.target.closest('.dish-grid.stack')) { e.preventDefault(); e.stopPropagation(); } }, true);
 sheet.addEventListener('keydown', e => { if (dishOrder.length && (e.key === 'ArrowLeft' || e.key === 'ArrowRight')) { e.preventDefault(); throwDish(e.key === 'ArrowRight' ? 1 : -1); } });
 dishStackMQ.addEventListener('change', stackDishes);
-sheet.addEventListener('click', e => { if ((sheet.classList.contains('menu') || sheet.classList.contains('player') || sheet.classList.contains('shelf') || sheet.classList.contains('letter')) && (e.target === sheet || e.target === body || e.target.classList.contains('letter-wrap') || e.target.id === 'weeklyList' || e.target.id === 'readingLists' || e.target.classList.contains('shelf-row') || e.target.classList.contains('dish-grid') || e.target.classList.contains('player-deck') || e.target.classList.contains('crate'))) closeSheet(); });
+sheet.addEventListener('click', e => { if ((sheet.classList.contains('menu') || sheet.classList.contains('player') || sheet.classList.contains('shelf') || sheet.classList.contains('letter') || sheet.classList.contains('paper')) && (e.target === sheet || e.target === body || e.target.classList.contains('letter-wrap') || e.target.id === 'weeklyList' || e.target.id === 'readingLists' || e.target.classList.contains('shelf-row') || e.target.classList.contains('dish-grid') || e.target.classList.contains('player-deck') || e.target.classList.contains('crate'))) closeSheet(); });
 function refreshWeekly() { const el = $('#weeklyList'); if (weeklyOpen && el && sheet.classList.contains('open')) { el.innerHTML = weeklyList(weeklyOpen); stackDishes(); } }
 async function initWeekly() {
   if (staticSite || !window.claude || !window.claude.use) { if (!staticSite) Object.values(WEEKLY).forEach(w => { w.state = 'error'; }); return; }
@@ -3728,7 +3818,7 @@ renderStubCount();
 // rule (two for big titles) and is nudged down so its first baseline sits just on a rule, like handwriting.
 // Pictures and cards in between can be any height; the text after them still lands on the lines.
 const RULED = [
-  { scroller: () => sheet, root: () => body, rule: 32, skip: () => ['book', 'player', 'menu'].some(c => sheet.classList.contains(c)) },
+  { scroller: () => sheet, root: () => body, rule: 32, skip: () => ['book', 'player', 'menu', 'paper'].some(c => sheet.classList.contains(c)) },
   { scroller: () => $('#teoCard'), root: () => $('#teoCard'), rule: 28 },
 ];
 const INLINE = new Set(['inline', 'contents']);
@@ -4044,8 +4134,8 @@ initEasel();
 
 /* ---------- Teo: pets, treats, training, roaming ---------- */
 const teo = $('#teo'), fx = $('#fx'), card = $('#teoCard');
-const HOME = [600, 600], YARD = [1340, 754], TEO_SCALE = .82;
-const TEO = { x: 600, y: 600, f: 1, s: 1, pose: 'sleep', busy: false, cave: false, carrying: false, outside: false, last: Date.now() };
+const HOME = [600, 622], YARD = [1340, 754], TEO_SCALE = .82;
+const TEO = { x: 600, y: 622, f: 1, s: 1, pose: 'sleep', busy: false, cave: false, carrying: false, outside: false, last: Date.now() };
 // points on Teo's drawing, per pose (drawing units, before he is placed in the room)
 const LOCAL = {
   head: { lie: [54, 26], sit: [78, 4], stand: [46, 22], sleep: [50, 74], beg: [80, -14] },
@@ -4291,7 +4381,7 @@ const stopW = () => {
   const r = stage.getBoundingClientRect(), a = r.width && r.height ? r.width / r.height : .6;
   return Math.round(Math.max(380, Math.min(720, 640 * a)));
 };
-const STOP_DEFS = [['books', ['books', 'typewriter', 'sofaBook']], ['easel', ['easel']], ['desk & window', ['laptop', 'candle', 'win']], ['entrance', ['door', 'ticketMachine', 'crate']], ['tea bar', ['teabar'], 0, 1], ['stove', ['pan'], 0, 1]];
+const STOP_DEFS = [['books', ['books', 'typewriter', 'sofaBook', 'paperTeo']], ['easel', ['easel']], ['desk & window', ['laptop', 'candle', 'win']], ['entrance', ['door', 'ticketMachine', 'crate', 'paperRoutine']], ['tea bar', ['teabar'], 0, 1], ['stove', ['pan'], 0, 1]];
 let STOPS = [], stopIdx = 0, placeIdx = 0, moving = false, edgeTimer = null;
 const placeOf = x => x > 1120 ? 1 : 0; // for things inside the house
 // an element's box in scene coordinates
@@ -4557,7 +4647,7 @@ function setNight(on) {
   sunEl.setAttribute('aria-label', on ? 'Moon. Press to make it daytime.' : 'Sun. Press to make it nighttime.');
   say(on ? 'It is nighttime. The lamps are on.' : 'It is daytime again.');
 }
-const actions = { sofaBook: () => zoomThen('sofaBook', openReading), typewriter: () => zoomThen('typewriter', openLetter), pan: () => openCooking(), teabar: () => zoomThen('teabar', () => openWeekly('drinks')), crate: () => TEO.cave ? command('come') : command('cave'), vinyl: () => zoomThen('vinyl', openRecords), books: () => zoomThen('books', () => openFaves('all')), journal: () => zoomThen('journal', openJournal), toy: () => bounceBall(), door: () => placeIdx === 2 ? goInside() : goOutside(), easel: () => zoomed === 'easel' ? closeEasel() : openEasel(), candle: () => toggleCandle(), sun: () => setNight(!svg.classList.contains('night')), ticketMachine: issueTicket, laptop: () => setDrawer(laptopState === 'closed'), teo: () => bubbles.hidden ? openBubbles() : closeBubbles(), win: nextScene };
+const actions = { paperTeo: () => openPaper('teo'), paperRoutine: () => openPaper('routine'), sofaBook: () => zoomThen('sofaBook', openReading), typewriter: () => zoomThen('typewriter', openLetter), pan: () => openCooking(), teabar: () => zoomThen('teabar', () => openWeekly('drinks')), crate: () => TEO.cave ? command('come') : command('cave'), vinyl: () => zoomThen('vinyl', openRecords), books: () => zoomThen('books', () => openFaves('all')), journal: () => zoomThen('journal', openJournal), toy: () => bounceBall(), door: () => placeIdx === 2 ? goInside() : goOutside(), easel: () => zoomed === 'easel' ? closeEasel() : openEasel(), candle: () => toggleCandle(), sun: () => setNight(!svg.classList.contains('night')), ticketMachine: issueTicket, laptop: () => setDrawer(laptopState === 'closed'), teo: () => bubbles.hidden ? openBubbles() : closeBubbles(), win: nextScene };
 document.querySelectorAll('.hot').forEach(h => {
   h.addEventListener('click', () => actions[h.id]());
   h.addEventListener('keydown', e => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); actions[h.id](); } });
