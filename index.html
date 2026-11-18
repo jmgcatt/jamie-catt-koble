@@ -1137,7 +1137,7 @@ html body .post blockquote,html body .jb-flow blockquote{font-size:18px!importan
 
 /* full-page menu pages never bounce or show the scene behind when scrolled past the top or bottom */
 .sheet.page{overscroll-behavior:none;-webkit-overflow-scrolling:auto;background-color:#fffdf8;background-attachment:scroll!important}
-.sheet.page::before{content:"";position:fixed;inset:0;z-index:-1;background:#fffdf8}
+.sheet.page::before{content:"";position:fixed;inset:0;z-index:-1;background:var(--paper-tex),#fffdf8}
 html:has(.sheet.page.open),body:has(.sheet.page.open){overscroll-behavior:none}
 @media (max-width:760px),(max-width:1100px) and (orientation:portrait){:root{--t-title:40px;--t-card:28px;--t-quote:18px;--t-body:18px;--t-meta:14px;--t-btn:18px}}
 html .sheet h2,html .sheet .jb-flow h2,html .sheet .bar-title h2,html .sp-head h3,html .cv-title,html .td-head h2,html .sheet.menu h2,html .sheet.shelf h2,html .sheet.letter h2,html .screen-bar h2{font-family:var(--f-title)!important;font-size:var(--t-title)!important;font-weight:400!important;line-height:1.25!important;text-transform:lowercase}
