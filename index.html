@@ -1661,8 +1661,6 @@ function buildDecor() {
   // pressed flower print
   const petals = [0, 1, 2, 3, 4, 5, 6, 7].map(i => fluff(688 + Math.cos(i * .785) * 18, 386 + Math.sin(i * .785) * 18, 14, 5, 6, 1.5, 310 + i, i * .785)).join('');
   piece(shiftTo(112), { occ: rect(648, 338, 80, 98), fill: [[rect(648, 338, 80, 98), '#c99a68', .85], [rect(656, 346, 64, 82), '#f6ecd8', 1], [petals, '#c87d6a', .85], [fluff(688, 386, 10, 10, 7, 3, 320), '#fff6e6', 1]], line: [rect(648, 338, 80, 98), rect(656, 346, 64, 82), { d: petals, stroke: '#9a5a4a', 'stroke-width': 1.2 }, fluff(688, 386, 10, 10, 7, 3, 320)], lw: 1.8 });
-  // jade lucky cat on the sill
-  piece(shiftTo(70), { occ: rr(448, 376, 24, 24, 9) + ell(460, 372, 11), fill: [[rr(448, 376, 24, 24, 9) + ell(460, 372, 11), '#d7ead9', .95], [ell(460, 384, 4), '#c0503a', .9]], line: [rr(448, 376, 24, 24, 9), ell(460, 372, 11), 'M451,366l2,-9l6,6M469,366l-2,-9l-6,6', 'M470,378q8,-4 6,-14', { d: ell(456, 371, 1.2) + ell(464, 371, 1.2), fill: INK }], lw: 1.5 });
   // pueblo pot on the floor
   const pot = 'M900,688 Q886,664 902,650 Q898,642 908,640 H932 Q942,642 938,650 Q954,664 940,688Z';
   piece(shiftTo(-50, -172), { occ: pot, fill: [[pot, '#e3c39a', .9], ['M890,660H950V672H890Z', '#c0503a', .8]], line: [pot, { d: 'M894,668l6,-6l6,6l6,-6l6,6l6,-6l6,6l6,-6l6,6', 'stroke-width': 1.6 }], lw: 2 });
