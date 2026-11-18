@@ -1910,12 +1910,15 @@ function buildTeo() {
 function buildPaper() {
   const crumple = (id, x, y, rot, seed, label) => {
     const r = rng(seed), g = E('g', { id, class: 'hot', tabindex: 0, role: 'button', 'aria-label': label }, shiftTo(0));
-    const pts = []; for (let i = 0; i < 11; i++) { const a = i / 11 * Math.PI * 2, rr2 = 11.5 * (.78 + r() * .38); pts.push([Math.cos(a) * rr2 * 1.12, Math.sin(a) * rr2 * .86]); }
-    const outline = 'M' + pts.map(p => p.map(n => n.toFixed(1)).join(',')).join('L') + 'Z';
-    const facet = (i, j) => `M0,-1L${pts[i][0].toFixed(1)},${pts[i][1].toFixed(1)}L${pts[j][0].toFixed(1)},${pts[j][1].toFixed(1)}Z`;
-    const dark = [facet(1, 2) + facet(5, 6) + facet(8, 9), '#cfc6b3', .55], light = [facet(3, 4) + facet(10, 0), '#ffffff', .7];
-    piece(g, { fill: [[ell(x + 1, y + 10, 18, 4.4), '#4a3a2e', .2]], attrs: {} });
-    const inner = piece(g, { occ: outline, fill: [[outline, '#f7f2e7', 1], dark, light], line: [outline, 'M0,-1L' + pts[2][0].toFixed(1) + ',' + pts[2][1].toFixed(1), 'M0,-1L' + pts[6][0].toFixed(1) + ',' + pts[6][1].toFixed(1), 'M0,-1L' + pts[9][0].toFixed(1) + ',' + pts[9][1].toFixed(1)], lw: 1.1, color: '#7a6858', attrs: { transform: `translate(${x},${y}) rotate(${rot}) scale(1.3)` } });
+    // a wadded sheet: a lumpy, flattened, many-cornered shape with angular folds across it, not a round ball
+    const N = 13, pts = []; for (let i = 0; i < N; i++) { const a = i / N * Math.PI * 2 + (r() - .5) * .3, k = i % 3 === 0 ? 1.12 + r() * .25 : .7 + r() * .3; pts.push([Math.cos(a) * 14 * k * 1.25, Math.sin(a) * 14 * k * .78]); }
+    const P = v => v[0].toFixed(1) + ',' + v[1].toFixed(1), outline = 'M' + pts.map(P).join('L') + 'Z';
+    const hub = [[-3, -1], [3, 2], [-1, 4], [4, -3]].map(([u, v]) => [u + (r() - .5) * 3, v + (r() - .5) * 3]);
+    const shards = [], lights = [], lines = [];
+    for (let i = 0; i < N; i++) { const h = hub[i % hub.length], p = pts[i], q = pts[(i + 1) % N], tri = `M${P(h)}L${P(p)}L${P(q)}Z`; (i % 3 === 1 ? shards : i % 3 === 2 ? lights : []).push(tri); if (i % 2 === 0) lines.push(`M${P(h)}L${P(p)}`); }
+    for (let i = 0; i < hub.length; i++) lines.push(`M${P(hub[i])}L${P(hub[(i + 1) % hub.length])}`);
+    piece(g, { fill: [[ell(x + 1, y + 9, 19, 4.4), '#4a3a2e', .2]] });
+    piece(g, { occ: outline, fill: [[outline, '#f7f2e7', 1], [shards.join(''), '#b9b09c', .6], [lights.join(''), '#ffffff', .75]], line: [outline, ...lines], lw: 1.1, color: '#7a6858', attrs: { transform: `translate(${x},${y}) rotate(${rot}) scale(1.15)` } });
     return g;
   };
   crumple('paperTeo', 152, 628, -14, 7, 'A crumpled piece of paper on the floor by the daybed. Press to open it.');
