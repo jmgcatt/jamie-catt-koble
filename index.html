@@ -1108,6 +1108,12 @@ body:has(.sheet.book.open) .jb-arrows{right:32px!important;bottom:34px!important
   .about-grid>.about-col:first-child{padding-bottom:120px}
   .hello.hello-d{position:fixed;left:34px;bottom:30px;width:calc((100vw - 54px - 64px) / 2);margin:0;padding-top:26px;background:none}
 }
+
+/* menu items and the morning routine list: 16px on desktop */
+@media (min-width:1101px) and (hover:hover){
+html body .menu-list .link,html body .menu-list button{font-size:16px!important}
+html body .routine li{font-size:16px!important}
+}
 @media (max-width:760px),(max-width:1100px) and (orientation:portrait){:root{--t-title:40px;--t-card:28px;--t-quote:18px;--t-body:18px;--t-meta:14px;--t-btn:18px}}
 html .sheet h2,html .sheet .jb-flow h2,html .sheet .bar-title h2,html .sp-head h3,html .cv-title,html .td-head h2,html .sheet.menu h2,html .sheet.shelf h2,html .sheet.letter h2,html .screen-bar h2{font-family:var(--f-title)!important;font-size:var(--t-title)!important;font-weight:400!important;line-height:1.25!important;text-transform:lowercase}
 html .c-t,html .screen .c-t,html .cv-grid .c-t,html .dish b,html .fave b,html .fc-face b,html li.book b,html .jams b,html .posts b,html .work-list b,html .cv-cap b,html .jb-toc .jt-t,html .sheet h3,html .post h3,html .post h4,html .spin-title,html .t-no,html .stub-top b{font-family:var(--f-title)!important;font-size:var(--t-card)!important;font-weight:400!important;line-height:1.25!important}
