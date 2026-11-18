@@ -1926,7 +1926,7 @@ function paperSvg(seed) {
   let lit = '', shade = '';
   for (let j = 0; j < rows; j++) for (let i = 0; i < cols; i++) {
     const a = P[j][i], b = P[j][i + 1], c = P[j + 1][i], d = P[j + 1][i + 1], flip = r() < .5, t = flip ? [[a, b, c], [b, d, c]] : [[a, b, d], [a, d, c]];
-    t.forEach(tr => { const v = r() - .42, d2 = `M${tr.map(f).join('L')}Z`; if (v > 0) lit += `<path d="${d2}" fill-opacity="${(v * .55).toFixed(3)}"/>`; else shade += `<path d="${d2}" fill-opacity="${(-v * .3).toFixed(3)}"/>`; });
+    t.forEach(tr => { const v = r() - .42, d2 = `M${tr.map(f).join('L')}Z`; if (v > 0) lit += `<path d="${d2}" fill-opacity="${(v * .3).toFixed(3)}"/>`; else shade += `<path d="${d2}" fill-opacity="${(-v * .12).toFixed(3)}"/>`; });
   }
   // a few long soft folds, drawn as thin pencil strokes with a pale edge beside them
   let dark = '', pale = '';
@@ -1936,7 +1936,7 @@ function paperSvg(seed) {
     let d = 'M' + f(pts[0]); for (let q = 1; q < pts.length - 1; q++) d += `Q${f(pts[q])} ${f(mid(pts[q], pts[q + 1]))}`; d += 'L' + f(pts[pts.length - 1]);
     dark += `<path d="${d}" stroke-width="${(.5 + r() * .5).toFixed(2)}" opacity="${(.14 + r() * .16).toFixed(2)}"/>`; pale += `<path d="${d}" transform="translate(1.2,1.4)"/>`;
   }
-  return `<svg viewBox="0 0 300 420" aria-hidden="true"><defs><clipPath id="paperClip"><path d="${outline}"/></clipPath><filter id="paperSoft" x="-5%" y="-5%" width="110%" height="110%"><feGaussianBlur stdDeviation="1"/></filter></defs><path d="${outline}" fill="#faf6ec"/><g clip-path="url(#paperClip)"><g filter="url(#paperSoft)"><g fill="#8f8068">${shade}</g><g fill="#ffffff">${lit}</g></g><g filter="url(#pencil)"><g fill="none" stroke="#fff" stroke-width="1.3" opacity=".6" stroke-linecap="round">${pale}</g><g fill="none" stroke="#9c8f78" stroke-linecap="round">${dark}</g></g><rect width="300" height="420" fill="#8f8068" opacity=".06" filter="url(#pencil)"/></g><path d="${outline}" fill="none" stroke="#85745f" stroke-width="1.2" stroke-linejoin="round" opacity=".75" filter="url(#pencil)"/></svg>`;
+  return `<svg viewBox="0 0 300 420" aria-hidden="true"><defs><clipPath id="paperClip"><path d="${outline}"/></clipPath><filter id="paperGrain" x="0" y="0" width="100%" height="100%"><feTurbulence type="fractalNoise" baseFrequency="1.1" numOctaves="2" seed="5" result="g"/><feColorMatrix in="g" values="0 0 0 0 .62  0 0 0 0 .55  0 0 0 0 .46  3.2 0 0 0 -1.7"/></filter><filter id="paperSoft" x="-5%" y="-5%" width="110%" height="110%"><feGaussianBlur stdDeviation="2.4"/></filter></defs><path d="${outline}" fill="#faf6ec"/><g clip-path="url(#paperClip)"><g filter="url(#paperSoft)"><g fill="#8f8068">${shade}</g><g fill="#ffffff">${lit}</g></g><rect width="300" height="420" filter="url(#paperGrain)" opacity=".5"/></g><path d="${outline}" fill="none" stroke="#85745f" stroke-width="1.2" stroke-linejoin="round" opacity=".75" filter="url(#pencil)"/></svg>`;
 }
 // Teo as a cut-out sticker: his sitting pose, redrawn at full size with a white die-cut edge, saved as a PNG with a clear background
 let teoStickerURL = null;
