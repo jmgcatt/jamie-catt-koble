@@ -578,9 +578,9 @@ body:has(.sheet.menu.open) .scrim,body:has(.sheet.shelf.open) .scrim,body:has(.s
 .post.jb-flow{position:absolute;margin:0;max-width:none;column-fill:auto;font-size:16px;line-height:1.75}
 .jb-flow .jb-date{margin:0 0 22px;text-align:center;font-family:var(--f-body);font-size:13px;letter-spacing:.04em;color:var(--ink-soft)}
 .sheet .jb-flow h2{margin:0 0 6px;font-size:46px;text-align:center}
-.jb-flow img,.jb-flow video{width:100%;height:auto;max-height:calc(var(--colh) - 30px);object-fit:cover}
+.jb-flow img,.jb-flow video{width:100%;height:auto;max-height:calc(var(--colh) - 30px);object-fit:contain;object-position:center top}
 .shots img,.shots video,.post img,.post video,.posts img,.fav-img,.dish-photo,.jb-flow img,.jb-flow video,.cv-detail img,.cv-detail video,.screen-project img,.screen-project video,.art img{border:0!important;border-radius:2px!important}
-.post video,.jb-flow video,.shots video{background:none!important}
+.post video,.jb-flow video,.shots video,.jb-flow img{background:none!important}
 .jb-flow figure,.jb-flow blockquote,.jb-flow img,.jb-flow video,.jb-flow h3,.jb-flow h4{break-inside:avoid}
 .jb-flow h3,.jb-flow h4{break-after:avoid}
 .jb-flow p{orphans:2;widows:2}
@@ -2731,7 +2731,7 @@ function fillGaps(flow, P, colH) {
       const gap = colH - bottom - 26;
       if (gap < 80) continue;
       const m = media(b)[0]; if (!m || m.style.height) continue;
-      media(b).forEach(x => { x.style.height = Math.floor(gap) + 'px'; });
+      media(b).forEach(x => { x.style.height = Math.floor(gap) + 'px'; x.style.objectFit = 'contain'; });
       changed = true; break;
     }
     if (!changed) break;
