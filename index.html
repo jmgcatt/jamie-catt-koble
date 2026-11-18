@@ -1039,12 +1039,12 @@ body:has(.sheet.page.open) .mark p{color:var(--ink-soft)!important}
 /* crumpled paper pages: a portrait sheet of paper floating in the middle of the screen */
 .sheet.paper{background:transparent;border:0;filter:none}
 .sheet.paper .sheet-bar{display:none}
-.sheet.paper .sheet-body{min-height:100%;box-sizing:border-box;display:flex;align-items:center;justify-content:center;padding:84px 16px 24px!important}
-.paper-page{position:relative;width:min(360px,86vw,calc((100dvh - 150px) / 1.4));aspect-ratio:300/420}
+.sheet.paper .sheet-body{min-height:100%;box-sizing:border-box;display:flex;flex-direction:column;gap:22px;align-items:center;justify-content:center;padding:84px 16px 24px!important}
+.paper-page{position:relative;width:min(360px,86vw,calc((100dvh - 230px) / 1.4));aspect-ratio:300/420}
 .paper-page>svg{position:absolute;inset:0;width:100%;height:100%;overflow:visible}
 .paper-content{position:absolute;inset:15% 13% 12%;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:14px;text-align:center}
 .sheet.paper h2{margin:0;color:var(--ink);text-align:center;position:static}
-.sticker{display:block;width:100%;max-height:78%;object-fit:contain;border:0!important;border-radius:0!important}
+.sticker{display:block;width:100%;max-height:100%;object-fit:contain;border:0!important;border-radius:0!important}
 .paper-btn{position:relative;display:inline-block;padding:9px 22px;background:#fffaf0;border:1.5px solid transparent;border-radius:14px 11px 15px 10px / 11px 15px 10px 14px;color:var(--ink);text-decoration:none;cursor:pointer}
 .paper-btn::before{content:"";position:absolute;inset:-2px;border:2.2px solid var(--ink);border-radius:inherit;pointer-events:none;filter:url(#ink)}
 .paper-btn:hover{background:#fdf1e2}
@@ -1053,7 +1053,7 @@ body:has(.sheet.page.open) .mark p{color:var(--ink-soft)!important}
 .routine li::before{content:"";position:absolute;left:2px;top:.55em;width:9px;height:9px;border:1.7px solid var(--ink);border-radius:50%;filter:url(#pencil)}
 
 /* all work page: the pill toggle is 14px, and the cards match the laptop and the easel */
-html .sheet.page .seg button{font-size:14px!important}
+html body .sheet.page .title-row .seg button{font-size:14px!important}
 .sheet.page .work-grid{margin:20px 0 0;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:18px}
 .sheet.page .work-grid .c-t{font-size:var(--t-card)}
 
@@ -1976,7 +1976,7 @@ async function makeTeoSticker() {
   const defs = `<filter id="pencilK" x="-15%" y="-15%" width="130%" height="130%" color-interpolation-filters="sRGB"><feTurbulence type="fractalNoise" baseFrequency="${B('0.035')}" numOctaves="2" seed="3" result="w"/><feDisplacementMap in="SourceGraphic" in2="w" scale="${(3 / k).toFixed(3)}" xChannelSelector="R" yChannelSelector="G" result="d"/><feTurbulence type="fractalNoise" baseFrequency="${B('0.9')}" numOctaves="2" seed="8" result="g"/><feColorMatrix in="g" type="matrix" values="0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  -2.4 0 0 0 1.95" result="ga"/><feComposite in="d" in2="ga" operator="in"/></filter>
     <filter id="crayonK" x="-15%" y="-15%" width="130%" height="130%" color-interpolation-filters="sRGB"><feTurbulence type="fractalNoise" baseFrequency="${B('0.03')}" numOctaves="2" seed="11" result="w"/><feDisplacementMap in="SourceGraphic" in2="w" scale="${(6 / k).toFixed(3)}" xChannelSelector="R" yChannelSelector="G" result="d"/><feTurbulence type="fractalNoise" baseFrequency="${B('0.75 1.3')}" numOctaves="2" seed="4" result="g"/><feColorMatrix in="g" type="matrix" values="0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  -3 0 0 0 2.15" result="ga"/><feComposite in="d" in2="ga" operator="in"/></filter>
     <filter id="die" x="-12%" y="-12%" width="124%" height="124%" color-interpolation-filters="sRGB"><feMorphology in="SourceAlpha" operator="dilate" radius="4.2" result="d"/><feGaussianBlur in="d" stdDeviation="1.5" result="b"/><feComponentTransfer in="b" result="w"><feFuncA type="linear" slope="14" intercept="-5"/></feComponentTransfer><feFlood flood-color="#ffffff" result="f"/><feComposite in="f" in2="w" operator="in" result="white"/><feMerge><feMergeNode in="white"/><feMergeNode in="SourceGraphic"/></feMerge></filter>`;
-  const svgStr = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="${vb.join(' ')}" width="${size}" height="${size}"><defs>${defs}</defs><g filter="url(#die)">${inner}</g></svg>`;
+  const svgStr = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="${vb.join(' ')}" width="${size}" height="${size}"><defs>${defs}</defs><g>${inner}</g></svg>`;
   const img = new Image(); img.src = 'data:image/svg+xml;charset=utf-8,' + encodeURIComponent(svgStr);
   try { await img.decode(); } catch (e) { return null; }
   const c = document.createElement('canvas'); c.width = c.height = size; c.getContext('2d').drawImage(img, 0, 0, size, size);
@@ -1987,8 +1987,8 @@ const ROUTINE = ['skincare: moisturizer & spf', 'drink a glass of water', 'read 
 function openPaper(kind) {
   const teo = kind === 'teo';
   openSheet(`<div class="paper-page">${paperSvg(teo ? 11 : 23)}<div class="paper-content">${teo
-    ? `<h2 id="sheetTitle" class="sr-only" tabindex="-1">Teo, as a sticker</h2><img class="sticker" id="teoSticker" alt="Teo, as a sticker" hidden><a class="paper-btn" id="paperDl" download="teo-sticker.png" hidden>download</a>`
-    : `<h2 id="sheetTitle" tabindex="-1">morning routine</h2><ul class="routine">${ROUTINE.map(t => `<li>${esc(t)}</li>`).join('')}</ul>`}</div></div>`, false, null);
+    ? `<h2 id="sheetTitle" class="sr-only" tabindex="-1">Teo, as a sticker</h2><img class="sticker" id="teoSticker" alt="Teo, as a sticker" hidden>`
+    : `<h2 id="sheetTitle" tabindex="-1">morning routine</h2><ul class="routine">${ROUTINE.map(t => `<li>${esc(t)}</li>`).join('')}</ul>`}</div></div>${teo ? '<a class="paper-btn" id="paperDl" download="teo-sticker.png" hidden>download</a>' : ''}`, false, null);
   sheet.classList.add('paper'); app.inert = false;
   if (teo) makeTeoSticker().then(url => { if (!url || !sheet.classList.contains('paper')) return; const im = $('#teoSticker'), dl = $('#paperDl'); if (!im) return; im.src = url; im.hidden = false; dl.href = url; dl.hidden = false; });
 }
@@ -2438,7 +2438,7 @@ function openWork(cat = 'Design') {
   requestAnimationFrame(() => equalCards(document.querySelector('.work-grid')));
 }
 const jobs = [
-  ['10kR', 'Lead Designer', '2025 \u2013 Now', 'I work with a team of robots and human designers to build intelligent digital experiences for visionary clients, bringing AI to the forefront of how we design and deliver.'],
+  ['10kR', 'Lead Designer', '2025 \u2013 Now', 'I work with a team of robots and human designers to build intelligent digital experiences, bringing AI to the forefront of how we design and deliver for ADT, Target, Volvo Trucks, Auberge, and others.'],
   ['Laro Design', 'Founder & Designer', '2024 \u2013 Now', 'I lead across brand, content, and product design and strategy at Laro Design, defining digital product and marketing experiences for Telev\u00EBda, SOONER, The Game Marketer and The Wolfery Company.'],
   ['Code & Theory', 'Senior Designer', '2023 \u2013 2025', 'I led on visual design and design systems work, crafting digital experiences for Chase, Clover, Avis & Budget, T. Rowe Price, Philadelphia Flyers, Shore Capital Partners, Port Authority, Volvo Trucks and Prologis.'],
   ['Y Media Labs', 'Designer', '2021 \u2013 2023', 'I worked across user experience, visual design, and design systems, shaping digital products for Kaiser Permanente, Ally Bank, Twitter, Outdoorsy, Mayo Clinic, Albertsons, Under Armour, and WeTransfer.'],
