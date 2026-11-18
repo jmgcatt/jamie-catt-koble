@@ -2974,12 +2974,10 @@ sheet.addEventListener('pointerup', pageDragEnd); sheet.addEventListener('pointe
 sheet.addEventListener('click', e => { if (pageDragged && e.target.closest('#jbPages')) { e.preventDefault(); e.stopPropagation(); } }, true);
 sheet.addEventListener('dragstart', e => { if (e.target.closest && e.target.closest('#jbPages')) e.preventDefault(); });
 addEventListener('resize', () => { if (book) layoutBook(); });
-// back and next arrows at the foot of the notebook walk through the journal: contents, then each entry in turn
+// back and next arrows at the foot of the notebook turn one page, the same as clicking the page or the arrow keys
 body.addEventListener('click', e => {
-  const st = e.target.closest('[data-jbstep]'); if (!st || !book || postsState !== 'ready') return;
-  const d = +st.dataset.jbstep, cur = book.toc ? -1 : book.post;
-  const to = cur + d; if (to < -1) return openWriting(); if (to >= POSTS.length) return openWriting();
-  to === -1 ? openWriting() : openPost(to);
+  const st = e.target.closest('[data-jbstep]'); if (!st || !book) return;
+  turnPage(+st.dataset.jbstep);
 });
 body.addEventListener('click', e => { const b = e.target.closest('[data-post]'); if (b) return openPost(+b.dataset.post); if (e.target.closest('[data-journal]')) openWriting(); });
 
