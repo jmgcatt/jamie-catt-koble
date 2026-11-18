@@ -1153,10 +1153,6 @@ body:has(#easelView:not([hidden])) :is(.menu-btn,.stub-btn,.sound,.zoom-x){backg
 /* over every dim overlay (monthly faves, dishes, books, the typewriter, the record player) the logo and top buttons stay on top */
 body:has(.sheet.open) .top{z-index:23!important}
 
-/* the laptop while it boots and zooms: no per-shape pencil grain, just clean shapes under one soft grain overlay */
-body.z-laptop #laptop [filter]{filter:none!important}
-body.z-laptop #laptop .lid-open{filter:none}
-body.z-laptop .grain{opacity:.16}
 
 /* laptop screen: the whole page (title bar, cards or project) scrolls as one, with no fixed band at the top; the keyboard stays at the bottom */
 .screen{overflow:hidden}
@@ -1179,6 +1175,25 @@ body:has(.sheet.book.open) .top,body:has(.sheet.book.open) .zoom-x{animation:top
   body:has(.sheet.book.open) .zoom-x{top:32px!important}
   .mark h1{transform:none}
 }
+
+/* desktop: a project page always fits the window, nothing scrolls or is cut off; the pictures just get smaller */
+@media (min-width:1101px) and (hover:hover){
+  .screen-project{--fit:calc(100dvh - 470px)}
+  .cv-art.has-detail{--fit:calc(100dvh - 400px)}
+  .proj .proj-shots{align-items:start;justify-items:center}
+  .proj .proj-shots img,.proj .proj-shots video{width:auto!important;max-width:100%;height:auto!important;max-height:max(180px,var(--fit));aspect-ratio:auto!important;object-fit:contain!important}
+  .proj-info .body-p{font-size:16px!important;line-height:1.5!important}
+  .proj{gap:18px}
+  #lapScroll:has(.screen-project:not([hidden])){overflow-y:hidden}
+}
+
+/* while a project's picture or video loads, its space is held by a soft paper tint (never an empty gap) */
+.shots img,.shots video,.proj-shots img,.proj-shots video{background:#f0e8d6!important}
+
+/* the close button sits exactly where the menu button does, on the same centre line as the other top buttons, in every view */
+.zoom-x{top:24px!important}
+body:has(.sheet.book.open) .zoom-x{top:38px!important}
+@media (max-width:760px),(max-width:1100px) and (orientation:portrait){body:has(.sheet.book.open) .zoom-x{top:32px!important}}
 @media (max-width:760px),(max-width:1100px) and (orientation:portrait){:root{--t-title:40px;--t-card:28px;--t-quote:18px;--t-body:18px;--t-meta:14px;--t-btn:18px}}
 html .sheet h2,html .sheet .jb-flow h2,html .sheet .bar-title h2,html .sp-head h3,html .cv-title,html .td-head h2,html .sheet.menu h2,html .sheet.shelf h2,html .sheet.letter h2,html .screen-bar h2{font-family:var(--f-title)!important;font-size:var(--t-title)!important;font-weight:400!important;line-height:1.25!important;text-transform:lowercase}
 html .c-t,html .screen .c-t,html .cv-grid .c-t,html .dish b,html .fave b,html .fc-face b,html li.book b,html .jams b,html .posts b,html .work-list b,html .cv-cap b,html .jb-toc .jt-t,html .sheet h3,html .post h3,html .post h4,html .spin-title,html .t-no,html .stub-top b{font-family:var(--f-title)!important;font-size:var(--t-card)!important;font-weight:400!important;line-height:1.25!important}
@@ -2395,6 +2410,9 @@ const projects = [
 ];
 const esc = t => t.replace(/&/g, '&amp;').replace(/"/g, '&quot;');
 const videos = { mayo: 1, onepass: 1, kaiser: 1, albertsons: 1 };
+const POSTERS = { kaiser: 1, albertsons: 1, mayo: 1, onepass: 1 };
+// each picture's shape, so its space is held (a soft paper tint) while it loads and the page never shows an empty gap
+const SHAPES = {"albertsons-1": "907/1024", "ally-1": "1024/576", "ally-2": "1024/576", "avis-1": "1024/576", "avis-2": "1024/576", "candle-1": "768/470", "candle-2": "1024/684", "climatebase-1": "1024/626", "climatebase-2": "1024/627", "incase-1": "750/500", "incase-2": "1024/683", "kaiser-1": "768/470", "maps-1": "1024/615", "maps-2": "1024/683", "mayo-1": "1024/576", "onepass-1": "1024/627", "rcp-1": "1024/627", "rcp-2": "1024/627", "shore-1": "1024/627", "shore-2": "1024/627", "kaiser-2": "3440/2160", "albertsons-2": "1240/1720", "mayo-2": "1920/1080", "onepass-2": "1920/1080"};
 // project images and videos from jamie-catt.com, kept in this page's asset store
 const MEDIA = {
   avis: ['4b8af363627fd7d8319af36ca5c220a0', '5bdd6b7c9bfe95b16ab7fa5abb50c3d5'], mayo: ['539185c334ecf96759675d02f5bedca2', '5e325662bb5e51e28602cc58d3a0ac49'],
@@ -2412,7 +2430,7 @@ const media = p => MEDIA[p.id].map((id, k) => {
 });
 function shots(p, bare) {
   const v = reduceMotion.matches ? 'controls muted playsinline' : 'autoplay muted loop playsinline';
-  const inner = `${media(p).map((m, k) => m.video ? `<video src="${m.url}" ${v} aria-label="${esc(p.title)}, video"></video>` : `<img src="${m.url}" alt="${esc(p.title)}, image ${k + 1}" loading="lazy">`).join('')}`;
+  const inner = `${media(p).map((m, k) => m.video ? `<video src="${m.url}" ${staticSite && POSTERS[p.id] ? `poster="media/${p.id}-2-poster.jpg"` : ''} preload="auto" style="aspect-ratio:${SHAPES[p.id + '-2'] || '16/9'}" ${v} aria-label="${esc(p.title)}, video"></video>` : `<img src="${m.url}" alt="${esc(p.title)}, image ${k + 1}" style="aspect-ratio:${SHAPES[p.id + '-' + (k + 1)] || '16/10'}">`).join('')}`;
   return bare ? inner : `<div class="shots">${inner}</div>`;
 }
 // a project page: its pictures side by side (stacked on narrow screens), then the title and year beside the words and any links
