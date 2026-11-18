@@ -1118,11 +1118,6 @@ html body .routine li{font-size:16px!important}
 /* journal quotes: 18px on every screen */
 html body .post blockquote,html body .jb-flow blockquote{font-size:18px!important}
 
-/* opening and closing the journal: the logo and buttons glide to their new spots instead of jumping */
-.top{transition:padding .45s cubic-bezier(.4,0,.2,1)}
-.zoom-x{transition:opacity .25s ease,transform .3s ease,top .45s cubic-bezier(.4,0,.2,1),right .45s cubic-bezier(.4,0,.2,1)!important}
-.mark,.top-right{transition:opacity .3s ease}
-
 /* shelf books turn over to show the description on the back, like the monthly faves cards */
 .shelf-book{aspect-ratio:82/128;perspective:1200px}
 .shelf-book .sb-in{position:relative;display:block;width:100%;height:100%;transform-style:preserve-3d;transition:transform .6s cubic-bezier(.4,.2,.2,1)}
@@ -1157,6 +1152,26 @@ body:has(#easelView:not([hidden])) :is(.menu-btn,.stub-btn,.sound,.zoom-x){backg
 
 /* over every dim overlay (monthly faves, dishes, books, the typewriter, the record player) the logo and top buttons stay on top */
 body:has(.sheet.open) .top{z-index:23!important}
+
+/* the laptop while it boots and zooms: no per-shape pencil grain, just clean shapes under one soft grain overlay */
+body.z-laptop #laptop [filter]{filter:none!important}
+body.z-laptop #laptop .lid-open{filter:none}
+body.z-laptop .grain{opacity:.16}
+
+/* laptop screen: the whole page (title bar, cards or project) scrolls as one, with no fixed band at the top; the keyboard stays at the bottom */
+.screen{overflow:hidden}
+.screen>.screen-bar,.screen>.cards,.screen>.screen-project{background-color:transparent}
+.screen{display:block}
+.screen .scrollpane{position:absolute;left:12px;right:12px;top:12px;bottom:calc(clamp(52px,10vh,96px) + 6px);overflow-y:auto;overscroll-behavior:none;background:#fdf6e6;z-index:1}
+.screen .scrollpane>.screen-bar{position:static}
+.screen .scrollpane>.cards,.screen .scrollpane>.screen-project{max-height:none;overflow:visible;flex:none}
+.screen .lap-kb{position:absolute;left:0;right:0;bottom:0;margin:0}
+
+/* the journal: the logo and top buttons simply fade between their two places, they don't slide */
+.top{transition:none!important}
+.zoom-x{transition:opacity .35s ease!important}
+body:has(.sheet.book.open) .top,body:has(.sheet.book.open) .zoom-x{animation:topFade .5s ease}
+@keyframes topFade{from{opacity:0}to{opacity:1}}
 @media (max-width:760px),(max-width:1100px) and (orientation:portrait){:root{--t-title:40px;--t-card:28px;--t-quote:18px;--t-body:18px;--t-meta:14px;--t-btn:18px}}
 html .sheet h2,html .sheet .jb-flow h2,html .sheet .bar-title h2,html .sp-head h3,html .cv-title,html .td-head h2,html .sheet.menu h2,html .sheet.shelf h2,html .sheet.letter h2,html .screen-bar h2{font-family:var(--f-title)!important;font-size:var(--t-title)!important;font-weight:400!important;line-height:1.25!important;text-transform:lowercase}
 html .c-t,html .screen .c-t,html .cv-grid .c-t,html .dish b,html .fave b,html .fc-face b,html li.book b,html .jams b,html .posts b,html .work-list b,html .cv-cap b,html .jb-toc .jt-t,html .sheet h3,html .post h3,html .post h4,html .spin-title,html .t-no,html .stub-top b{font-family:var(--f-title)!important;font-size:var(--t-card)!important;font-weight:400!important;line-height:1.25!important}
@@ -1255,12 +1270,14 @@ html .inline-link{text-transform:lowercase}
       </div>
 
       <section class="screen" id="screen" aria-label="My work, on the laptop" hidden>
+        <div class="scrollpane" id="lapScroll">
         <div class="screen-bar">
           <div class="title-row"><h2><span class="h-wide">Design work</span><span class="h-phone">Designs</span></h2><div class="seg" id="screenSeg" role="group" aria-label="Filter by kind of work"><button type="button" data-cat="systems" aria-pressed="false">design systems</button><button type="button" data-cat="web" aria-pressed="false">web design</button><button type="button" data-cat="mobile" aria-pressed="false">mobile app design</button></div></div>
           <button class="t-x fs-x" id="screenX" type="button" aria-label="Close my design work"><svg viewBox="0 0 24 24" aria-hidden="true"><g fill="none" stroke="currentColor" stroke-linecap="round"><path d="M6.4 7.2 Q11.6 11.4 17.2 17.4" stroke-width="2.3"/><path d="M17.4 6.6 Q12.4 11.8 6.8 17.2" stroke-width="2.3"/><path d="M7.6 6.4 Q12.2 10.8 16.4 16.4" stroke-width="1" opacity=".4"/></g></svg></button>
         </div>
         <ul class="cards" id="cards"></ul>
         <div class="screen-project" id="screenProject" hidden></div>
+        </div>
         <div class="lap-kb" id="lapKb" aria-hidden="true"></div>
       </section>
 
@@ -2404,7 +2421,7 @@ function renderCards(kind) {
   workFilter = kind || null;
   document.querySelectorAll('#screenSeg [data-cat]').forEach(t => t.setAttribute('aria-pressed', t.dataset.cat === workFilter));
   $('#cards').innerHTML = byYear.map(i => [projects[i], i]).map(([p, i]) => p.cat !== 'Design' || (workFilter && !(KINDS[p.id] || []).includes(workFilter)) ? '' : `<li><button class="card" type="button" data-open="${i}">${thumb(p.id)}<span class="c-t">${esc(p.title)}</span><span class="c-m">${p.year}</span></button></li>`).join('');
-  $('#cards').scrollTop = 0;
+  $('#lapScroll').scrollTop = 0;
 }
 document.querySelectorAll('#screenSeg [data-cat]').forEach(t => t.addEventListener('click', () => renderCards(workFilter === t.dataset.cat ? null : t.dataset.cat)));
 renderCards(null);
@@ -2470,7 +2487,7 @@ function showOnScreen(i) {
   const p = projects[i], pane = $('#screenProject');
   pane.innerHTML = projBlock(p) + PROJ_NAV;
   screenAt = i;
-  $('#cards').hidden = true; $('#screenSeg').hidden = true; $('#screen').classList.add('viewing'); pane.hidden = false; pane.scrollTop = 0;
+  $('#cards').hidden = true; $('#screenSeg').hidden = true; $('#screen').classList.add('viewing'); pane.hidden = false; $('#lapScroll').scrollTop = 0;
   pane.querySelector('h3').setAttribute('tabindex', '-1'); pane.querySelector('h3').focus({ preventScroll: true });
   say(`${p.title}, on the laptop screen.`);
 }
@@ -4199,7 +4216,7 @@ async function zoomOut() {
 }
 async function openLaptop() {
   if (laptopState !== 'closed' || zoomed || zooming) return;
-  laptopState = 'opening'; laptop.setAttribute('aria-expanded', 'true');
+  laptopState = 'opening'; document.body.classList.add('z-laptop'); laptop.setAttribute('aria-expanded', 'true');
   laptop.classList.add('opened'); await pause(500);
   laptop.classList.add('booting'); await pause(1600);
   laptop.classList.add('ready');
@@ -4213,7 +4230,7 @@ async function closeLaptop() {
   $('#screenProject').hidden = true; $('#screenProject').innerHTML = ''; $('#cards').hidden = false; $('#screenSeg').hidden = false; $('#screen').classList.remove('viewing');
   laptop.classList.remove('ready', 'booting'); await pause(200);
   laptop.classList.remove('opened'); await pause(450);
-  laptop.setAttribute('aria-expanded', 'false'); laptopState = 'closed';
+  laptop.setAttribute('aria-expanded', 'false'); laptopState = 'closed'; document.body.classList.remove('z-laptop');
   laptop.focus({ preventScroll: true });
 }
 async function openEasel() {
@@ -4965,12 +4982,10 @@ function shortenDashes(root) {
 new MutationObserver(ms => ms.forEach(m => m.addedNodes.forEach(shortenDashes))).observe(document.body, { childList: true, subtree: true });
 shortenDashes(document.body);
 
-// on the laptop screen the logo and top buttons scroll away with the content instead of staying put
+// on the laptop screen the logo and top buttons scroll away with the content (one scroller holds the whole page)
 (() => {
-  const top = document.querySelector('.top');
-  const follow = el => el.addEventListener('scroll', () => { if (!$('#screen').hidden) top.style.transform = `translateY(${-el.scrollTop}px)`; }, { passive: true });
-  ['#cards', '#screenProject'].forEach(q => follow($(q)));
-  new MutationObserver(() => { if ($('#screen').hidden) top.style.transform = ''; else if (!$('#screenProject').hidden) top.style.transform = `translateY(${-$('#screenProject').scrollTop}px)`; else top.style.transform = `translateY(${-$('#cards').scrollTop}px)`; })
-    .observe($('#screen'), { attributes: true, subtree: true, attributeFilter: ['hidden', 'class'] });
+  const top = document.querySelector('.top'), pane = $('#lapScroll');
+  pane.addEventListener('scroll', () => { top.style.transform = `translateY(${-pane.scrollTop}px)`; }, { passive: true });
+  new MutationObserver(() => { if ($('#screen').hidden) top.style.transform = ''; else top.style.transform = `translateY(${-pane.scrollTop}px)`; }).observe($('#screen'), { attributes: true, attributeFilter: ['hidden'] });
 })();
 </script>
