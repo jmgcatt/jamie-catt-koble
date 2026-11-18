@@ -526,10 +526,15 @@ body.playing .turntable .arm{transform:none}
 .shelf-row{list-style:none;display:flex;flex-wrap:wrap;justify-content:center;align-items:flex-end;gap:34px;margin:0;padding:24px 0 30px}
 .shelf-row li{position:relative;display:grid;justify-items:center;gap:8px}
 .shelf-row li:hover,.shelf-row li:focus-within{z-index:2}
-.shelf-book{display:block;width:210px;transform:perspective(900px) rotateY(24deg);transform-origin:left center;transition:transform .45s cubic-bezier(.2,.8,.2,1)}
-.shelf-book:hover,.shelf-book:focus-visible{transform:perspective(800px) rotateY(0) translateY(-10px) scale(1.05)}
+.shelf-book{display:block;width:210px;transform:none;transform-origin:center bottom;transition:transform .45s cubic-bezier(.2,.8,.2,1)}
+.shelf-book:hover,.shelf-book:focus-visible{transform:translateY(-10px) scale(1.04)}
 .shelf-book svg{display:block;width:100%;height:auto;overflow:visible}
-.shelf-note{max-width:200px;margin:0;padding:8px 12px;background:#fffaf0;border-radius:var(--wobble);font-size:13px;line-height:1.45;text-align:center;color:var(--ink-soft)}
+.shelf-book{padding:0;background:none;border:0;cursor:pointer}
+.shelf-row li.open .shelf-book{transform:translateY(-6px) scale(1.04)}
+.shelf-note{max-width:260px;padding:12px 16px;background:#fffaf0;border-radius:var(--wobble);line-height:1.45;text-align:center;color:var(--ink)}
+.shelf-note[hidden]{display:none}
+.shelf-note p{margin:0 0 8px}
+.shelf-note .proj-link{margin-top:4px}
 .sheet.shelf .empty-note{padding:18px 24px;background:#fffaf0;border-radius:var(--wobble);text-align:center}
 @media (hover:none){.shelf-book{transform:none;width:min(160px,36vw)}.shelf-row{gap:18px;flex-wrap:nowrap}}
 @media (prefers-reduced-motion:reduce){.shelf-book{transition:none}}
@@ -2989,10 +2994,21 @@ function shelfArt(b) {
     <text x="66" y="${62 - lines.length * 4}" text-anchor="middle" font-family="La Belle Aurore, cursive" font-size="12" fill="#fffaf0">${ts}</text>
     ${b.author ? `<text x="66" y="114" text-anchor="middle" font-family="Zen Maru Gothic, sans-serif" font-size="7" fill="#fffaf0" opacity=".85">${esc(b.author)}</text>` : ''}<use href="#fav-book-front" x="0" y="0" width="120" height="150"/></svg>`;
 }
+// each book stands on the shelf; press it to open it and read what I wrote, with a link to its page
+function shelfRow(list) {
+  return `<ul class="shelf-row">${list.map(b => { const url = safeUrl(b.url);
+    return `<li><button class="shelf-book" type="button" aria-expanded="false" aria-label="${esc(b.title + (b.author ? ' by ' + b.author : ''))}, press to read about it">${shelfArt(b)}</button><div class="shelf-note" hidden>${b.description ? `<p>${esc(b.description)}</p>` : ''}${url ? `<a class="proj-link" href="${esc(url)}" target="_blank" rel="noopener">view on goodreads \u2192</a>` : ''}</div></li>`; }).join('')}</ul>`;
+}
+document.addEventListener('click', e => {
+  const b = e.target.closest('.shelf-book'); if (!b) return;
+  const li = b.closest('li'), note = li.querySelector('.shelf-note'), on = note.hidden;
+  li.parentNode.querySelectorAll('li.open').forEach(x => { if (x !== li) { x.classList.remove('open'); x.querySelector('.shelf-note').hidden = true; x.querySelector('.shelf-book').setAttribute('aria-expanded', 'false'); } });
+  note.hidden = !on; li.classList.toggle('open', on); b.setAttribute('aria-expanded', on);
+});
 function shelfBooks() {
   if (readState === 'loading') return '<p class="empty-note">Finding the books\u2026</p>';
   if (readState === 'error' || !SHELF.length) return '<p class="empty-note">The reading stack is out of reach right now. Try again in a little while.</p>';
-  return `<ul class="shelf-row">${SHELF.map(b => `<li><a class="shelf-book" href="${esc(safeUrl(b.url) || 'https://www.goodreads.com')}" target="_blank" rel="noopener" aria-label="${esc(b.title + (b.author ? ' by ' + b.author : ''))}">${shelfArt(b)}</a>${b.description ? `<p class="shelf-note">${esc(b.description)}</p>` : ''}</li>`).join('')}</ul>`;
+  return shelfRow(SHELF);
 }
 if (staticSite) {
   readState = 'loading';
@@ -3554,7 +3570,7 @@ const FAV_DEFAULT = { book: '#c9663d', lotion: '#e9b8a8', balm: '#e3b29a', tea: 
   const steam = (g, x, y) => piece(g, { line: [`M${x - 8},${y} q-4,-7 0,-13 q4,-6 0,-13M${x + 6},${y - 2} q-4,-7 0,-13 q4,-6 0,-13`], color: '#b9b2a6', lw: 2 });
   let g = sym('book', '#f3e6d0');
   const cover = rr(28, 22, 64, 104, 4), edge = 'M92,28 Q98,30 98,36 V118 Q98,124 92,126Z';
-  piece(g, { occ: cover + edge, fill: [[cover, FAV_DEFAULT.book, .9, V], [rect(28, 22, 11, 104), INK, .22], [edge, '#fffdf6', 1]], line: [cover, edge, 'M39,22V126', 'M94,40V112', { d: 'M50,46H80M50,56H74', stroke: '#fffaf0', 'stroke-width': 3 }] });
+  piece(g, { occ: cover + edge, fill: [[cover, FAV_DEFAULT.book, .9, V], [edge, '#fffdf6', 1]], line: [cover, edge, 'M94,40V112', { d: 'M50,46H80M50,56H74', stroke: '#fffaf0', 'stroke-width': 3 }] });
   piece(g, { fill: [['M70,124 v16 l5,-5 l5,5 v-16Z', '#d9a441', 1]], line: ['M70,124 v16 l5,-5 l5,5 v-16'], lw: 1.8 });
   piece(g, { line: [star(64, 90, 9)], color: '#fffaf0', lw: 2 });
   // book recommendations: the real cover sits between these two layers (see bookThumb)
@@ -3562,7 +3578,7 @@ const FAV_DEFAULT = { book: '#c9663d', lotion: '#e9b8a8', balm: '#e3b29a', tea: 
   piece(g, { occ: cover + edge, fill: [[cover, '#e6d3ae', 1], [edge, '#fffdf6', 1]], line: [edge, 'M94,40V112'] });
   piece(g, { fill: [['M70,124 v16 l5,-5 l5,5 v-16Z', '#c9663d', 1]], line: ['M70,124 v16 l5,-5 l5,5 v-16'], lw: 1.8 });
   g = E('symbol', { id: 'fav-book-front', viewBox: '0 0 120 150' }, defs);
-  piece(g, { fill: [[rect(28, 22, 11, 104), INK, .25], [rect(39, 22, 2, 104), '#fffaf0', .35], [cover, '#fff3dc', .12]], line: [cover, 'M39,22V126'] });
+  piece(g, { fill: [[cover, '#fff3dc', .12]], line: [cover] });
   g = sym('lotion', '#e8eef0');
   const bottle = rr(38, 54, 44, 80, 10), pump = rect(53, 38, 14, 16), label = rr(45, 78, 30, 34, 4);
   piece(g, { occ: bottle + pump, fill: [[bottle, FAV_DEFAULT.lotion, .9, V], [pump, '#f6f3ec', 1], [label, '#fffdf6', 1]], line: [bottle, pump, { d: 'M60,38 V28 H84 V34', 'stroke-width': 4 }, label, 'M51,88H69M51,96H65'] });
@@ -3668,6 +3684,11 @@ loadData('data/favorites.json', 'favorites').then(list => {
   refreshFaves();
 });
 // monthly faves are cards like the dish cards: the picture and title on the front, press to turn one over for the story
+function favBooks() {
+  if (FAVLIST === null) return '<p class="empty-note">Gathering my favorites\u2026</p>';
+  if (!FAVLIST.length) return '<p class="empty-note">Nothing here yet. New favorites are on their way.</p>';
+  return shelfRow(FAVLIST);
+}
 function favesDishes() {
   const all = faveView === 'all', list = all ? FAVLIST : FAVES;
   if (list === null) return `<p class="empty-note">Gathering ${all ? 'my' : 'this month\u2019s'} favorites\u2026</p>`;
@@ -3677,6 +3698,11 @@ function favesDishes() {
 }
 function openFaves(view = 'monthly') {
   faveView = view;
+  if (view === 'all') {
+    favesOpen = true;
+    openSheet(`<h2 id="sheetTitle" tabindex="-1">favorites</h2><div id="readingLists">${favBooks()}</div>`, false, null);
+    sheet.classList.add('shelf'); return;
+  }
   openSheet(`<h2 id="sheetTitle" tabindex="-1">${view === 'all' ? 'favorites' : 'monthly faves'}</h2><div id="weeklyList">${favesDishes()}</div>`, false, null);
   sheet.classList.add('menu'); favesOpen = true; stackDishes();
 }
@@ -3684,7 +3710,7 @@ function openFaves(view = 'monthly') {
 function flipFave(c) { const on = !c.classList.contains('flipped'); c.classList.toggle('flipped', on); c.setAttribute('aria-pressed', on); }
 document.addEventListener('click', e => { const c = e.target.closest('.fave-dish'); if (c && !e.target.closest('a')) flipFave(c); });
 document.addEventListener('keydown', e => { const c = e.target.closest && e.target.closest('.fave-dish'); if (c && (e.key === 'Enter' || e.key === ' ')) { e.preventDefault(); flipFave(c); } });
-function refreshFaves() { const el = $('#weeklyList'); if (favesOpen && el && sheet.classList.contains('open')) { el.innerHTML = favesDishes(); stackDishes(); } }
+function refreshFaves() { const bl = $('#readingLists'); if (favesOpen && faveView === 'all' && bl && sheet.classList.contains('open')) { bl.innerHTML = favBooks(); return; } const el = $('#weeklyList'); if (favesOpen && el && sheet.classList.contains('open')) { el.innerHTML = favesDishes(); stackDishes(); } }
 const favCite = t => ['favorite', [t.month.toLowerCase(), t.year].filter(Boolean).join(', ')].filter(Boolean).join(' \u2022 ');
 const bookCite = () => 'read';
 const bookBy = (t, cls) => t.author ? `<p class="${cls}">${esc(t.author)}</p>` : '';
