@@ -4081,7 +4081,12 @@ function scaleTexture(k) {
   k = Math.min(k, 60);
   if (Math.abs(k - textureK) < .01) return; textureK = k;
   TEXTURE.forEach(([n, attr, base]) => n.setAttribute(attr, base.map(x => attr === 'scale' ? x / k : x * k).join(' ')));
+  // zoomed right in, the grain is made gentler so close-up surfaces (the laptop screen booting up) don't look like static
+  const calm = Math.min(1, Math.max(0, (k - 1.5) / 3)), mix = (a, b) => (a + (b - a) * calm).toFixed(2);
+  document.querySelectorAll('#pencilS feColorMatrix').forEach(m => m.setAttribute('values', `0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  ${mix(soft0 ? -1.9 : -2.4, -1.15)} 0 0 0 ${mix(soft0 ? 1.7 : 1.95, 1.2)}`));
+  document.querySelectorAll('#crayonS feColorMatrix').forEach(m => m.setAttribute('values', `0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  ${mix(soft0 ? -2.4 : -3, -1.4)} 0 0 0 ${mix(soft0 ? 1.85 : 2.15, 1.45)}`));
 }
+let soft0 = false;
 let strip = null; // { x0, w, k, W, H } while the strip camera is on
 const STRIP_X0 = -160, STRIP_W = 2080;
 function layoutStrip(on) {
@@ -4805,7 +4810,7 @@ function setMode() {
   layoutStrip(false); if (phone.matches) layoutStrip(true);
   setLong(phone.matches && placeIdx !== 2);
   // small screens: a gentler pencil grain, so the drawing reads cleaner
-  const soft = smallScreen.matches;
+  const soft = smallScreen.matches; soft0 = soft;
   document.querySelectorAll('#pencil feColorMatrix, #pencilS feColorMatrix').forEach(m => m.setAttribute('values', `0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  ${soft ? '-1.9 0 0 0 1.7' : '-2.4 0 0 0 1.95'}`));
   document.querySelectorAll('#crayon feColorMatrix, #crayonS feColorMatrix').forEach(m => m.setAttribute('values', `0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  ${soft ? '-2.4 0 0 0 1.85' : '-3 0 0 0 2.15'}`));
   // and steadier edges: less wobble in the pencil lines
