@@ -42,7 +42,7 @@ Everything in a database is published (there's no "show on site" checkbox). All 
   1. Titles (modal titles, journal entry and project titles): script, 48 / 40px (`--t-title`)
   2. Card titles (project, dish and drink cards, ticket numbers, section headings): script, 32 / 28px (`--t-card`)
   3. Quotes (tickets, pull quotes): sans, 20 / 18px (`--t-quote`)
-  4. Body text: sans regular, 16 / 18px (`--t-body`)
+  4. Body text: sans regular, 18px everywhere (`--t-body`). Exceptions on desktop: the menu items and the morning-routine list are 16px. Quotes inside journal posts are 18px.
   5. Metadata (years, dates, eyebrows, supporting labels): sans, ALL CAPS, 16 / 14px (`--t-meta`)
   6. Buttons, pills, links, input text and placeholders: sans regular, lowercase (no small caps), 20 / 18px (`--t-btn`)
   New text must use one of these groups; add its selector to the matching rule in that block rather than giving it its own size. Images and videos have no borders and 2px corners.
