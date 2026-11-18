@@ -1134,8 +1134,7 @@ html .inline-link{text-transform:lowercase}
         <ul class="menu-list" id="menuList" hidden>
           <li><button class="link" id="navAbout" type="button">About</button></li>
           <li><button class="link" id="navWork" type="button">Works</button></li>
-          <li><button class="link" id="navFaves" type="button">Monthly Faves</button></li>
-          <li><button class="link" id="navLetter" type="button">Send Me a Letter</button></li>
+          <li><button class="link" id="navLetter" type="button">Contact</button></li>
         </ul>
       </div>
     </div>
@@ -1555,7 +1554,7 @@ function repaintEasel() { if (!easelG) return; const was = portraitNow(); if (ea
 function buildWorkDesk() {
   const world = shiftTo(28);
   // a wall of polaroids taped up behind the easel, under the hanging plant: overlapping, tilted, not neat
-  const wall = shiftTo(-424);
+  const wall = shiftTo(-424); wall.id = 'polaroids'; wall.setAttribute('class', 'hot fixed'); wall.setAttribute('tabindex', '0'); wall.setAttribute('role', 'button'); wall.setAttribute('aria-label', 'A wall of polaroids. Press to see my monthly faves.');
   const polaroid = (x, y, rot, k, scene, tape) => {
     const frame = rect(-13, -15, 26, 31), photo = rect(-10.5, -12.5, 21, 21), P = {
       teo: { bg: '#f6e4c8', fill: [[ell(-6.6, -1, 2.6, 4.6) + ell(6.6, -1, 2.6, 4.6), '#dba06a', 1], [ell(0, -2, 6.4, 6), '#fffdf7', 1], [ell(0, 0.4, 1.4, 1), '#3d2f27', 1], [ell(-2.4, -2.6, .9) + ell(2.4, -2.6, .9), '#3d2f27', 1]], line: [ell(0, -2, 6.4, 6), ell(-6.6, -1, 2.6, 4.6), ell(6.6, -1, 2.6, 4.6), 'M-1.4,2.6 q1.4,1.2 2.8,0'] },
@@ -2471,7 +2470,6 @@ $('#zoomX').onclick = e => {
   if (zoomed === 'easel' && easelMode === 'detail' && easelItems.length > 1) { easelMode = 'grid'; return renderEasel(); }
   closeZoom();
 };
-$('#navFaves').onclick = () => { setMenu(false); openFaves(); };
 async function goLetter() {
   if (sheet.classList.contains('open')) { closeSheet(); await new Promise(r => setTimeout(r, 500)); }
   if (zoomed) { closeZoom(); await new Promise(r => setTimeout(r, 1400)); }
@@ -4760,7 +4758,7 @@ function setNight(on) {
   sunEl.setAttribute('aria-label', on ? 'Moon. Press to make it daytime.' : 'Sun. Press to make it nighttime.');
   say(on ? 'It is nighttime. The lamps are on.' : 'It is daytime again.');
 }
-const actions = { paperTeo: () => openPaper('teo'), paperRoutine: () => openPaper('routine'), sofaBook: () => zoomThen('sofaBook', openReading), typewriter: () => zoomThen('typewriter', openLetter), pan: () => openCooking(), teabar: () => zoomThen('teabar', () => openWeekly('drinks')), crate: () => TEO.cave ? command('come') : command('cave'), vinyl: () => zoomThen('vinyl', openRecords), books: () => zoomThen('books', () => openFaves('all')), journal: () => zoomThen('journal', openJournal), toy: () => bounceBall(), door: () => placeIdx === 2 ? goInside() : goOutside(), easel: () => zoomed === 'easel' ? closeEasel() : openEasel(), candle: () => toggleCandle(), sun: () => setNight(!svg.classList.contains('night')), ticketMachine: issueTicket, laptop: () => setDrawer(laptopState === 'closed'), teo: () => bubbles.hidden ? openBubbles() : closeBubbles(), win: nextScene };
+const actions = { polaroids: () => { if (zoomed) return; openFaves(); }, paperTeo: () => openPaper('teo'), paperRoutine: () => openPaper('routine'), sofaBook: () => zoomThen('sofaBook', openReading), typewriter: () => zoomThen('typewriter', openLetter), pan: () => openCooking(), teabar: () => zoomThen('teabar', () => openWeekly('drinks')), crate: () => TEO.cave ? command('come') : command('cave'), vinyl: () => zoomThen('vinyl', openRecords), books: () => zoomThen('books', () => openFaves('all')), journal: () => zoomThen('journal', openJournal), toy: () => bounceBall(), door: () => placeIdx === 2 ? goInside() : goOutside(), easel: () => zoomed === 'easel' ? closeEasel() : openEasel(), candle: () => toggleCandle(), sun: () => setNight(!svg.classList.contains('night')), ticketMachine: issueTicket, laptop: () => setDrawer(laptopState === 'closed'), teo: () => bubbles.hidden ? openBubbles() : closeBubbles(), win: nextScene };
 document.querySelectorAll('.hot').forEach(h => {
   h.addEventListener('click', () => actions[h.id]());
   h.addEventListener('keydown', e => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); actions[h.id](); } });
