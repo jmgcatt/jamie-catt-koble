@@ -1983,7 +1983,7 @@ async function makeTeoSticker() {
   const blob = await new Promise(res => c.toBlob(res, 'image/png')); if (!blob) return null;
   return teoStickerURL = URL.createObjectURL(blob);
 }
-const ROUTINE = ['skincare: moisturizer & spf', 'drink a glass of water', 'read for 15 mins', 'journal for 15 mins', 'breakfast', '30mins movement of the day'];
+const ROUTINE = ['skincare: moisturizer & spf', 'drink a glass of water', 'read for 15 mins', 'journal for 15 mins', 'breakfast', '30 mins of movement'];
 function openPaper(kind) {
   const teo = kind === 'teo';
   openSheet(`<div class="paper-page">${paperSvg(teo ? 11 : 23)}<div class="paper-content">${teo
