@@ -1197,6 +1197,11 @@ body:has(.sheet.book.open) .top,body:has(.sheet.book.open) .zoom-x{animation:top
 .zoom-x{top:24px!important}
 body:has(.sheet.book.open) .zoom-x{top:38px!important}
 @media (max-width:760px),(max-width:1100px) and (orientation:portrait){body:has(.sheet.book.open) .zoom-x{top:32px!important}}
+
+/* the home / back / next row always sits in the same place at the foot of the page, whatever the project */
+.screen .scrollpane>.screen-project:not([hidden]){min-height:calc(100% - var(--sbh,86px));box-sizing:border-box;display:flex;flex-direction:column}
+.screen-project .proj-nav,.cv-art .proj-nav{margin-top:auto!important}
+.cv-art.has-detail:has(.proj-nav){min-height:100%;box-sizing:border-box}
 @media (max-width:760px),(max-width:1100px) and (orientation:portrait){:root{--t-title:40px;--t-card:28px;--t-quote:18px;--t-body:18px;--t-meta:14px;--t-btn:18px}}
 html .sheet h2,html .sheet .jb-flow h2,html .sheet .bar-title h2,html .sp-head h3,html .cv-title,html .td-head h2,html .sheet.menu h2,html .sheet.shelf h2,html .sheet.letter h2,html .screen-bar h2{font-family:var(--f-title)!important;font-size:var(--t-title)!important;font-weight:400!important;line-height:1.25!important;text-transform:lowercase}
 html .c-t,html .screen .c-t,html .cv-grid .c-t,html .dish b,html .fave b,html .fc-face b,html li.book b,html .jams b,html .posts b,html .work-list b,html .cv-cap b,html .jb-toc .jt-t,html .sheet h3,html .post h3,html .post h4,html .spin-title,html .t-no,html .stub-top b{font-family:var(--f-title)!important;font-size:var(--t-card)!important;font-weight:400!important;line-height:1.25!important}
@@ -2536,6 +2541,7 @@ function showOnScreen(i) {
   screenAt = i;
   $('#cards').hidden = true; $('#screenSeg').hidden = true; $('#screen').classList.add('viewing'); pane.hidden = false; $('#lapScroll').scrollTop = 0;
   pane.querySelector('h3').setAttribute('tabindex', '-1'); pane.querySelector('h3').focus({ preventScroll: true });
+  { const sb = document.querySelector('.screen-bar'); document.getElementById('screen').style.setProperty('--sbh', (sb ? sb.offsetHeight : 86) + 'px'); }
   fitProj(pane); requestAnimationFrame(() => fitProj(pane));
   say(`${p.title}, on the laptop screen.`);
 }
