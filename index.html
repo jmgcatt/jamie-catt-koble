@@ -1143,6 +1143,11 @@ html:has(.sheet.page.open),body:has(.sheet.page.open){overscroll-behavior:none}
 /* social icons: ink, the same as their outline */
 .soc-btn,.soc-row a,.hello .soc-btn{color:var(--ink)!important}
 .soc-btn:hover,.soc-row a:hover{color:var(--ink)!important}
+
+/* inside a light view (menu pages, plain sheets, the journal, the laptop and the easel) the top buttons have no cream fill */
+body:has(.sheet.open:not(.menu):not(.shelf):not(.letter):not(.paper):not(.player)) :is(.menu-btn,.stub-btn,.sound,.zoom-x),
+body:has(#screen:not([hidden])) :is(.menu-btn,.stub-btn,.sound,.zoom-x),
+body:has(#easelView:not([hidden])) :is(.menu-btn,.stub-btn,.sound,.zoom-x){background:transparent!important}
 @media (max-width:760px),(max-width:1100px) and (orientation:portrait){:root{--t-title:40px;--t-card:28px;--t-quote:18px;--t-body:18px;--t-meta:14px;--t-btn:18px}}
 html .sheet h2,html .sheet .jb-flow h2,html .sheet .bar-title h2,html .sp-head h3,html .cv-title,html .td-head h2,html .sheet.menu h2,html .sheet.shelf h2,html .sheet.letter h2,html .screen-bar h2{font-family:var(--f-title)!important;font-size:var(--t-title)!important;font-weight:400!important;line-height:1.25!important;text-transform:lowercase}
 html .c-t,html .screen .c-t,html .cv-grid .c-t,html .dish b,html .fave b,html .fc-face b,html li.book b,html .jams b,html .posts b,html .work-list b,html .cv-cap b,html .jb-toc .jt-t,html .sheet h3,html .post h3,html .post h4,html .spin-title,html .t-no,html .stub-top b{font-family:var(--f-title)!important;font-size:var(--t-card)!important;font-weight:400!important;line-height:1.25!important}
@@ -4820,7 +4825,7 @@ function setNight(on) {
   sunEl.setAttribute('aria-label', on ? 'Moon. Press to make it daytime.' : 'Sun. Press to make it nighttime.');
   say(on ? 'It is nighttime. The lamps are on.' : 'It is daytime again.');
 }
-const actions = { polaroids: () => { if (zoomed) return; openFaves(); }, paperTeo: () => openPaper('teo'), paperRoutine: () => openPaper('routine'), sofaBook: () => zoomThen('sofaBook', openReading), typewriter: () => zoomThen('typewriter', openLetter), pan: () => openCooking(), teabar: () => zoomThen('teabar', () => openWeekly('drinks')), crate: () => TEO.cave ? command('come') : command('cave'), vinyl: () => zoomThen('vinyl', openRecords), books: () => zoomThen('books', () => openFaves('all')), journal: () => { if (zooming || zoomed) return; openJournal(); }, toy: () => bounceBall(), door: () => placeIdx === 2 ? goInside() : goOutside(), easel: () => zoomed === 'easel' ? closeEasel() : openEasel(), candle: () => toggleCandle(), sun: () => setNight(!svg.classList.contains('night')), ticketMachine: issueTicket, laptop: () => setDrawer(laptopState === 'closed'), teo: () => bubbles.hidden ? openBubbles() : closeBubbles(), win: nextScene };
+const actions = { polaroids: () => { if (zoomed) return; openFaves(); }, paperTeo: () => openPaper('teo'), paperRoutine: () => openPaper('routine'), sofaBook: () => zoomThen('sofaBook', openReading), typewriter: () => zoomThen('typewriter', openLetter), pan: () => openCooking(), teabar: () => zoomThen('teabar', () => openWeekly('drinks')), crate: () => TEO.cave ? command('come') : command('cave'), vinyl: () => zoomThen('vinyl', openRecords), books: () => zoomThen('books', () => openFaves('all')), journal: () => zoomThen('journal', openJournal), toy: () => bounceBall(), door: () => placeIdx === 2 ? goInside() : goOutside(), easel: () => zoomed === 'easel' ? closeEasel() : openEasel(), candle: () => toggleCandle(), sun: () => setNight(!svg.classList.contains('night')), ticketMachine: issueTicket, laptop: () => setDrawer(laptopState === 'closed'), teo: () => bubbles.hidden ? openBubbles() : closeBubbles(), win: nextScene };
 document.querySelectorAll('.hot').forEach(h => {
   // an object that is only half in view: the house first pans so it is in the middle of the screen, then the action (the zoom) runs
   const go = async () => {
@@ -4943,4 +4948,13 @@ function shortenDashes(root) {
 }
 new MutationObserver(ms => ms.forEach(m => m.addedNodes.forEach(shortenDashes))).observe(document.body, { childList: true, subtree: true });
 shortenDashes(document.body);
+
+// on the laptop screen the logo and top buttons scroll away with the content instead of staying put
+(() => {
+  const top = document.querySelector('.top');
+  const follow = el => el.addEventListener('scroll', () => { if (!$('#screen').hidden) top.style.transform = `translateY(${-el.scrollTop}px)`; }, { passive: true });
+  ['#cards', '#screenProject'].forEach(q => follow($(q)));
+  new MutationObserver(() => { if ($('#screen').hidden) top.style.transform = ''; else if (!$('#screenProject').hidden) top.style.transform = `translateY(${-$('#screenProject').scrollTop}px)`; else top.style.transform = `translateY(${-$('#cards').scrollTop}px)`; })
+    .observe($('#screen'), { attributes: true, subtree: true, attributeFilter: ['hidden', 'class'] });
+})();
 </script>
