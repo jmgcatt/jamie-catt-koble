@@ -1084,7 +1084,10 @@ html .proj-link:hover,html .paper-btn:hover{color:var(--ink)}
 body:has(.sheet.book.open) .top{z-index:21!important}
 body:has(.sheet.book.open) .zoom-x{opacity:1!important;pointer-events:auto!important;transform:none!important}
 body:has(.sheet.book.open) .menu-btn{opacity:0;pointer-events:none}
-body:has(.sheet.book.open) .top{padding-left:max(48px,env(safe-area-inset-left,0px))!important;padding-right:34px!important}
+body:has(.sheet.book.open) .zoom-x{top:38px!important;right:max(58px,env(safe-area-inset-right,0px))!important}
+@media (max-width:760px),(max-width:1100px) and (orientation:portrait){body:has(.sheet.book.open) .zoom-x{top:32px!important;right:max(40px,env(safe-area-inset-right,0px))!important}}
+body:has(.sheet.book.open) .top{padding-left:max(52px,env(safe-area-inset-left,0px))!important;padding-right:max(58px,env(safe-area-inset-right,0px))!important;padding-top:38px!important}
+@media (max-width:760px),(max-width:1100px) and (orientation:portrait){body:has(.sheet.book.open) .top{padding-left:max(40px,env(safe-area-inset-left,0px))!important;padding-right:max(40px,env(safe-area-inset-right,0px))!important;padding-top:32px!important}}
 body:has(.sheet.book.open) .mark h1{color:var(--ink)!important}
 .jb-arrows{position:absolute;right:26px;bottom:44px;z-index:6;display:flex;gap:10px}
 .jb-arrows .soc-btn{width:44px;height:44px;padding:0;cursor:pointer;background:none!important;border:1.5px solid transparent!important;border-radius:14px 11px 15px 10px / 11px 15px 10px 14px;color:var(--ink)}
