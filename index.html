@@ -130,9 +130,9 @@ button{font:inherit;color:inherit}
 .link{background:none;border:0;padding:2px 0;cursor:pointer;font-family:var(--f-hand);font-size:16px;color:var(--ink-soft);
   text-decoration:underline;text-decoration-thickness:1.5px;text-underline-offset:5px;text-decoration-color:rgba(74,58,46,.3)}
 .link:hover{color:var(--ink);text-decoration-color:var(--link)}
-:focus-visible{outline:2.5px solid var(--persimmon);outline-offset:3px}
+:focus-visible{outline:none}
 #scene :focus-visible{outline:none}
-.hot:focus-visible{filter:drop-shadow(0 0 1.5px #c9663d) drop-shadow(0 0 3px #c9663d)}
+.hot:focus-visible{filter:none}
 /* no glow around the object you're zoomed in on */
 body.zoomed .hot:focus-visible{filter:none}
 
@@ -147,7 +147,7 @@ html,body{cursor:var(--pencil)}
 .hot,button,a,label,.card,.chip,[role="button"]{cursor:var(--paw)!important}
 input[type="text"],input[type="url"]{cursor:text}
 .hot .ring{opacity:0;transition:opacity .2s}
-.hot:focus-visible .ring{opacity:1}
+.hot:focus-visible .ring{opacity:0}
 
 .night-only{opacity:0;transition:opacity .9s ease}
 #scene.night .night-only{opacity:1}
@@ -1011,12 +1011,12 @@ body:has(.sheet.page.open) .mark p{color:var(--ink-soft)!important}
 .about-grid{display:grid;grid-template-columns:minmax(0,1fr);gap:32px}
 .about-col h3{margin-top:0}
 .about-col h2{margin-bottom:22px}
-@media (min-width:900px){.about-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:64px;align-items:start}.about-grid>.about-col:first-child{position:sticky;top:108px}}
+@media (min-width:900px){.about-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:64px;align-items:start}.about-grid>.about-col:first-child{position:sticky;top:120px}}
 .hello{position:relative;margin-top:36px;padding-top:30px}
 .hello::before{content:"";position:absolute;left:0;right:0;top:0;height:7px;filter:url(#pencil);background:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 400 7' preserveAspectRatio='none'%3E%3Cpath d='M0 3.6 C40 2.4 70 4.6 120 3.4 S200 2.6 250 3.8 S340 4.4 400 3.2' fill='none' stroke='%234a3a2e' stroke-width='1.7' stroke-linecap='round'/%3E%3C/svg%3E") 0 0/100% 100% no-repeat}
 .hello-row{display:flex;align-items:center;justify-content:space-between;gap:20px;flex-wrap:wrap}
 .hello.hello-d{display:none}
-@media (min-width:900px){.hello.hello-d{display:block}.hello.hello-m{display:none}.hello-row{flex-wrap:nowrap;gap:12px}.about-grid>.about-col:first-child{max-height:calc(100vh - 124px);max-height:calc(100dvh - 124px);overflow-y:auto;scrollbar-width:none}}
+@media (min-width:900px){.hello.hello-d{display:block}.hello.hello-m{display:none}.hello-row{flex-wrap:nowrap;gap:12px}.about-grid>.about-col:first-child{max-height:calc(100vh - 140px);max-height:calc(100dvh - 140px);overflow-y:auto;scrollbar-width:none}}
 .hello-row .body-p,.hello-row .soc-row{margin:0}
 .hello .soc-btn{background:none!important}
 @media (max-width:760px),(max-width:1100px) and (orientation:portrait){.sheet.page .sheet-body{padding:100px 20px 56px!important}}
@@ -1034,7 +1034,7 @@ body:has(.sheet.page.open) .mark p{color:var(--ink-soft)!important}
 .fc-face b a{color:inherit;text-decoration:none}
 .fc-face b a:hover{color:var(--link)}
 .fc-back p{margin:0}
-.fave-dish:focus-visible .fc-face{outline:2px solid var(--link);outline-offset:2px}
+.fave-dish:focus-visible .fc-face{outline:none}
 
 /* crumpled paper pages: a portrait sheet of paper floating in the middle of the screen */
 .sheet.paper{background:transparent;border:0;filter:none}
@@ -4818,8 +4818,14 @@ function setNight(on) {
 }
 const actions = { polaroids: () => { if (zoomed) return; openFaves(); }, paperTeo: () => openPaper('teo'), paperRoutine: () => openPaper('routine'), sofaBook: () => zoomThen('sofaBook', openReading), typewriter: () => zoomThen('typewriter', openLetter), pan: () => openCooking(), teabar: () => zoomThen('teabar', () => openWeekly('drinks')), crate: () => TEO.cave ? command('come') : command('cave'), vinyl: () => zoomThen('vinyl', openRecords), books: () => zoomThen('books', () => openFaves('all')), journal: () => { if (zooming || zoomed) return; openJournal(); }, toy: () => bounceBall(), door: () => placeIdx === 2 ? goInside() : goOutside(), easel: () => zoomed === 'easel' ? closeEasel() : openEasel(), candle: () => toggleCandle(), sun: () => setNight(!svg.classList.contains('night')), ticketMachine: issueTicket, laptop: () => setDrawer(laptopState === 'closed'), teo: () => bubbles.hidden ? openBubbles() : closeBubbles(), win: nextScene };
 document.querySelectorAll('.hot').forEach(h => {
-  h.addEventListener('click', () => actions[h.id]());
-  h.addEventListener('keydown', e => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); actions[h.id](); } });
+  // an object that is only half in view: the house first pans so it is in the middle of the screen, then the action (the zoom) runs
+  const go = async () => {
+    if (moving || zooming) return;
+    if (!zoomed && !['door', 'sun', 'teo', 'toy'].includes(h.id) && placeIdx !== 2) { try { await scrollToObj(h); } catch (err) { } }
+    actions[h.id]();
+  };
+  h.addEventListener('click', go);
+  h.addEventListener('keydown', e => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); go(); } });
 });
 const scroller = $('#scroller');
 // bring an object into view: its room on wider screens, its stop on phones
