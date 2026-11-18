@@ -578,7 +578,7 @@ body:has(.sheet.menu.open) .scrim,body:has(.sheet.shelf.open) .scrim,body:has(.s
 .post.jb-flow{position:absolute;margin:0;max-width:none;column-fill:auto;font-size:16px;line-height:1.75}
 .jb-flow .jb-date{margin:0 0 22px;text-align:center;font-family:var(--f-body);font-size:13px;letter-spacing:.04em;color:var(--ink-soft)}
 .sheet .jb-flow h2{margin:0 0 6px;font-size:46px;text-align:center}
-.jb-flow img,.jb-flow video{width:100%;height:auto;max-height:calc(var(--colh) - 30px);object-fit:contain;object-position:center top}
+.jb-flow img,.jb-flow video{width:100%;height:auto;max-height:calc(var(--colh) - 30px);object-fit:cover}
 .shots img,.shots video,.post img,.post video,.posts img,.fav-img,.dish-photo,.jb-flow img,.jb-flow video,.cv-detail img,.cv-detail video,.screen-project img,.screen-project video,.art img{border:0!important;border-radius:2px!important}
 .post video,.jb-flow video,.shots video,.jb-flow img{background:none!important}
 .jb-flow figure,.jb-flow blockquote,.jb-flow img,.jb-flow video,.jb-flow h3,.jb-flow h4{break-inside:avoid}
@@ -1176,15 +1176,18 @@ body:has(.sheet.book.open) .top,body:has(.sheet.book.open) .zoom-x{animation:top
   .mark h1{transform:none}
 }
 
-/* desktop: a project page always fits the window, nothing scrolls or is cut off; the pictures just get smaller */
+/* desktop: a project page always fits the window, nothing scrolls or is cut off; the title, text and pictures share the same two columns, edge to edge */
 @media (min-width:1101px) and (hover:hover){
-  .screen-project{--fit:calc(100dvh - 470px)}
-  .cv-art.has-detail{--fit:calc(100dvh - 400px)}
-  .proj .proj-shots{align-items:start;justify-items:center}
-  .proj .proj-shots img,.proj .proj-shots video{width:auto!important;max-width:100%;height:auto!important;max-height:max(180px,var(--fit));aspect-ratio:auto!important;object-fit:contain!important}
+  .proj{--h:300px;--wl:400px;--wr:400px}
+  .proj .proj-shots{display:flex!important;justify-content:space-between;align-items:flex-start;gap:0;grid-template-columns:none!important}
+  .proj .proj-shots img,.proj .proj-shots video{width:var(--wl)!important;max-width:none!important;height:var(--h)!important;max-height:none!important;aspect-ratio:auto!important;object-fit:cover!important;object-position:center;flex:none;background:#f0e8d6!important}
+  .proj-info{display:flex!important;justify-content:space-between;align-items:flex-start;gap:0}
+  .proj-info>.proj-id{width:var(--wl);flex:none}
+  .proj-info>.proj-body{width:var(--wr);flex:none}
   .proj-info .body-p{font-size:16px!important;line-height:1.5!important}
   .proj{gap:18px}
   #lapScroll:has(.screen-project:not([hidden])){overflow-y:hidden}
+}
 }
 
 /* while a project's picture or video loads, its space is held by a soft paper tint (never an empty gap) */
@@ -2500,6 +2503,25 @@ async function openProject(i) {
 }
 const ARROW = '<path d="M5.6 14.4 Q14 13.4 22.4 14.1"/><path d="M16.8 8.2 Q20 11.2 23 14.2 Q19.8 17 17 20"/>';
 const PROJ_NAV = `<div class="proj-nav"><button class="soc-btn" type="button" data-proj="home" aria-label="Back to all projects"><svg viewBox="0 0 30 30" aria-hidden="true"><g fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M10.5 8.6 Q16 7.8 24.6 8.4"/><path d="M10.4 15.2 Q17 14.6 24.2 15.4"/><path d="M10.6 21.6 Q15.6 21.1 21.8 21.8"/></g><g fill="currentColor"><circle cx="5.6" cy="8.5" r="1.7"/><circle cx="5.4" cy="15.2" r="1.7"/><circle cx="5.7" cy="21.6" r="1.7"/></g></svg></button><span><button class="soc-btn" type="button" data-proj="prev" aria-label="Previous project"><svg viewBox="0 0 28 28" aria-hidden="true"><g fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round" transform="translate(28,0) scale(-1,1)">${ARROW}</g></svg></button><button class="soc-btn" type="button" data-proj="next" aria-label="Next project"><svg viewBox="0 0 28 28" aria-hidden="true"><g fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round">${ARROW}</g></svg></button></span></div>`;
+
+// desktop project pages: both pictures are sized to the same height so the pair spans the page edge to edge, the title sits under the left one and the text under the right one
+const SHAPE_NUM = k => { const [w, h] = String(SHAPES[k] || '16/10').split('/').map(Number); return w / h; };
+function fitProj(root) {
+  if (!root) return;
+  const proj = root.querySelector('.proj'); if (!proj) return;
+  if (!matchMedia('(min-width:1101px) and (hover:hover)').matches) return;
+  const shots = [...proj.querySelectorAll('.proj-shots > *')]; if (!shots.length) return;
+  const inLaptop = !!root.closest('#lapScroll') || root.id === 'screenProject';
+  const avail = proj.clientWidth || root.clientWidth - 40;
+  // every project gets the same two boxes in the same places: equal width, one shared height
+  const gap = 28, w = Math.floor((avail - gap) / 2);
+  const maxH = Math.max(180, innerHeight - (inLaptop ? 470 : 400));
+  const h = Math.floor(Math.min(maxH, w * .5625));
+  proj.style.setProperty('--h', h + 'px');
+  proj.style.setProperty('--wl', w + 'px');
+  proj.style.setProperty('--wr', w + 'px');
+}
+addEventListener('resize', () => { fitProj($('#screenProject')); fitProj($('#cvArt')); });
 let screenAt = -1;
 $('#screenProject').addEventListener('click', e => {
   const b = e.target.closest('[data-proj]'); if (!b) return; e.stopPropagation();
@@ -2514,6 +2536,7 @@ function showOnScreen(i) {
   screenAt = i;
   $('#cards').hidden = true; $('#screenSeg').hidden = true; $('#screen').classList.add('viewing'); pane.hidden = false; $('#lapScroll').scrollTop = 0;
   pane.querySelector('h3').setAttribute('tabindex', '-1'); pane.querySelector('h3').focus({ preventScroll: true });
+  fitProj(pane); requestAnimationFrame(() => fitProj(pane));
   say(`${p.title}, on the laptop screen.`);
 }
 function showCards() {
@@ -2817,7 +2840,6 @@ function layoutBook() {
   $('#jbook').classList.toggle('spread', spread);
   Object.assign(flow.style, { left: pad + 'px', top: top + 'px', height: colH + 'px', width: (spread ? 2 * P : P) - 2 * pad + 'px', columnWidth: P - 2 * pad + 'px', columnGap: 2 * pad + 'px', transform: 'none' });
   flow.style.setProperty('--colh', colH + 'px');
-  fillGaps(flow, P, colH);
   // the last page is the one holding the way back to the journal
   const end = flow.querySelector('.jb-end').getBoundingClientRect().left - flow.getBoundingClientRect().left + pad;
   book.n = Math.max(1, Math.floor(end / P) + 1);
@@ -4299,7 +4321,7 @@ function renderEasel() {
   }
   const p = projects.find(q => q.id === it.projectId);
   art.innerHTML = (p ? projBlock(p) : `<div class="proj"><div class="shots proj-shots"><img src="${it.url}" alt=""></div><div class="proj-info"><div class="proj-id"><h3 class="cv-title" tabindex="-1">${esc(it.title || 'Untitled')}</h3><span class="bt-year">${esc(it.year || '')}</span></div></div></div>`) + (easelItems.length > 1 ? PROJ_NAV : '');
-  art.classList.add('has-detail'); art.scrollTop = 0;
+  art.classList.add('has-detail'); art.scrollTop = 0; fitProj(art); requestAnimationFrame(() => fitProj(art));
 }
 async function initEasel() {
   if (staticSite || !window.claude || !window.claude.use) { if (!staticSite) easelState = 'error'; renderEasel(); return; }
