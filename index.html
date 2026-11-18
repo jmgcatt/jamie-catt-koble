@@ -1094,6 +1094,11 @@ body:has(.sheet.book.open) .mark h1{color:var(--ink)!important}
 .jb-arrows .soc-btn::before{content:"";position:absolute;inset:-2px;border:2.2px solid var(--ink);border-radius:inherit;pointer-events:none;filter:url(#ink)}
 .jb-arrows .soc-btn svg{width:24px;height:24px;filter:url(#ink)}
 @media (max-width:760px),(max-width:1100px) and (orientation:portrait){.jb-arrows{right:16px;bottom:calc(max(14px,env(safe-area-inset-bottom,0px)) + 20px)}}
+
+/* journal foot: contents button and back/next arrows on one line, lined up with the logo and the top buttons */
+body:has(.sheet.book.open) .jb-toc-btn{left:26px!important;right:auto!important;bottom:34px!important}
+body:has(.sheet.book.open) .jb-arrows{right:32px!important;bottom:34px!important}
+@media (max-width:760px),(max-width:1100px) and (orientation:portrait){body:has(.sheet.book.open) .jb-toc-btn{left:16px!important;bottom:calc(max(14px,env(safe-area-inset-bottom,0px)) + 18px)!important}body:has(.sheet.book.open) .jb-arrows{right:24px!important;bottom:calc(max(14px,env(safe-area-inset-bottom,0px)) + 18px)!important}}
 @media (max-width:760px),(max-width:1100px) and (orientation:portrait){:root{--t-title:40px;--t-card:28px;--t-quote:18px;--t-body:18px;--t-meta:14px;--t-btn:18px}}
 html .sheet h2,html .sheet .jb-flow h2,html .sheet .bar-title h2,html .sp-head h3,html .cv-title,html .td-head h2,html .sheet.menu h2,html .sheet.shelf h2,html .sheet.letter h2,html .screen-bar h2{font-family:var(--f-title)!important;font-size:var(--t-title)!important;font-weight:400!important;line-height:1.25!important;text-transform:lowercase}
 html .c-t,html .screen .c-t,html .cv-grid .c-t,html .dish b,html .fave b,html .fc-face b,html li.book b,html .jams b,html .posts b,html .work-list b,html .cv-cap b,html .jb-toc .jt-t,html .sheet h3,html .post h3,html .post h4,html .spin-title,html .t-no,html .stub-top b{font-family:var(--f-title)!important;font-size:var(--t-card)!important;font-weight:400!important;line-height:1.25!important}
@@ -1910,15 +1915,20 @@ function buildTeo() {
 function buildPaper() {
   const crumple = (id, x, y, rot, seed, label) => {
     const r = rng(seed), g = E('g', { id, class: 'hot', tabindex: 0, role: 'button', 'aria-label': label }, shiftTo(0));
-    // a wadded sheet: a lumpy, flattened, many-cornered shape with angular folds across it, not a round ball
-    const N = 13, pts = []; for (let i = 0; i < N; i++) { const a = i / N * Math.PI * 2 + (r() - .5) * .3, k = i % 3 === 0 ? 1.12 + r() * .25 : .7 + r() * .3; pts.push([Math.cos(a) * 14 * k * 1.25, Math.sin(a) * 14 * k * .78]); }
+    // a sheet scrunched into a ball: a rounded but lumpy, many-cornered wad, cut into angular facets that catch the light differently
+    const N = 11, R = 13, pts = []; for (let i = 0; i < N; i++) { const a = i / N * Math.PI * 2 + (r() - .5) * .35, k = .82 + r() * .3; pts.push([Math.cos(a) * R * k, Math.sin(a) * R * k * .95]); }
     const P = v => v[0].toFixed(1) + ',' + v[1].toFixed(1), outline = 'M' + pts.map(P).join('L') + 'Z';
-    const hub = [[-3, -1], [3, 2], [-1, 4], [4, -3]].map(([u, v]) => [u + (r() - .5) * 3, v + (r() - .5) * 3]);
-    const shards = [], lights = [], lines = [];
-    for (let i = 0; i < N; i++) { const h = hub[i % hub.length], p = pts[i], q = pts[(i + 1) % N], tri = `M${P(h)}L${P(p)}L${P(q)}Z`; (i % 3 === 1 ? shards : i % 3 === 2 ? lights : []).push(tri); if (i % 2 === 0) lines.push(`M${P(h)}L${P(p)}`); }
-    for (let i = 0; i < hub.length; i++) lines.push(`M${P(hub[i])}L${P(hub[(i + 1) % hub.length])}`);
-    piece(g, { fill: [[ell(x + 1, y + 9, 19, 4.4), '#4a3a2e', .2]] });
-    piece(g, { occ: outline, fill: [[outline, '#f7f2e7', 1], [shards.join(''), '#b9b09c', .6], [lights.join(''), '#ffffff', .75]], line: [outline, ...lines], lw: 1.1, color: '#7a6858', attrs: { transform: `translate(${x},${y}) rotate(${rot}) scale(1.15)` } });
+    // inner ring of points, each facet joins an outer corner to two inner ones
+    const M = 6, inner = []; for (let i = 0; i < M; i++) { const a = i / M * Math.PI * 2 + r() * .6, k = .25 + r() * .32; inner.push([Math.cos(a) * R * k, Math.sin(a) * R * k]); }
+    const dark = [], mid = [], light = [], lines = [];
+    for (let i = 0; i < N; i++) {
+      const p = pts[i], q = pts[(i + 1) % N], h = inner[Math.floor(i * M / N) % M], h2 = inner[(Math.floor(i * M / N) + 1) % M];
+      const t1 = `M${P(p)}L${P(q)}L${P(h)}Z`; (i % 3 === 0 ? dark : i % 3 === 1 ? light : mid).push(t1);
+      if (i % 2 === 0) { const t2 = `M${P(q)}L${P(h)}L${P(h2)}Z`; (i % 4 === 0 ? dark : light).push(t2); lines.push(`M${P(q)}L${P(h)}`); }
+    }
+    for (let i = 0; i < M; i++) lines.push(`M${P(inner[i])}L${P(inner[(i + 1) % M])}`);
+    piece(g, { fill: [[ell(x + 1, y + 11, 14, 3.4), '#4a3a2e', .22]] });
+    piece(g, { occ: outline, fill: [[outline, '#f4efe3', 1], [mid.join(''), '#d8d0bd', .5], [dark.join(''), '#a99f8a', .55], [light.join(''), '#ffffff', .85]], line: [outline, ...lines], lw: 1.1, color: '#7a6858', attrs: { transform: `translate(${x},${y - 2}) rotate(${rot}) scale(1.25)` } });
     return g;
   };
   crumple('paperTeo', 152, 628, -14, 7, 'A crumpled piece of paper on the floor by the daybed. Press to open it.');
