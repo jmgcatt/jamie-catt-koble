@@ -5042,4 +5042,25 @@ shortenDashes(document.body);
   pane.addEventListener('scroll', move, { passive: true });
   new MutationObserver(move).observe($('#screen'), { attributes: true, attributeFilter: ['hidden'] });
 })();
+
+// ---------- visitor stats (GoatCounter: private, no cookies, no personal data) ----------
+// Paste my GoatCounter site code here (the part before .goatcounter.com) and visits, countries and clicks start counting.
+const STATS_CODE = '';
+(() => {
+  // visiting any page of the site with ?notrack once on a device stops counting that device (kept in that browser only)
+  try { if (/[?&]notrack\b/.test(location.search)) localStorage.setItem('skipgc', 't'); } catch (e) { }
+  if (!STATS_CODE || /^(localhost|127\.0\.0\.1)$/.test(location.hostname)) return;
+  window.goatcounter = { no_onload: false, allow_local: false };
+  const sc = document.createElement('script'); sc.async = true; sc.src = 'https://gc.zgo.at/count.js'; sc.dataset.goatcounter = `https://${STATS_CODE}.goatcounter.com/count`; document.head.appendChild(sc);
+  const send = (name, title) => { try { if (localStorage.getItem('skipgc') === 't') return; if (window.goatcounter && window.goatcounter.count) window.goatcounter.count({ path: 'click/' + name, title: title, event: true }); } catch (e) { } };
+  // objects in the house (laptop, easel, typewriter, Teo, ...), menu items and the nav chips
+  document.addEventListener('click', e => {
+    const hot = e.target.closest('#scene .hot'); if (hot && hot.id) return send('object/' + hot.id, hot.getAttribute('aria-label') || hot.id);
+    const nav = e.target.closest('#menuList button'); if (nav) return send('menu/' + (nav.id || nav.textContent.trim().toLowerCase()), nav.textContent.trim());
+    const chip = e.target.closest('[data-chip]'); if (chip) return send('object/' + chip.dataset.chip, chip.textContent.trim());
+    const proj = e.target.closest('[data-open]'); if (proj && typeof projects !== 'undefined' && projects[+proj.dataset.open]) return send('project/' + projects[+proj.dataset.open].id, projects[+proj.dataset.open].title);
+    const post = e.target.closest('[data-post]'); if (post && typeof POSTS !== 'undefined' && POSTS[+post.dataset.post]) return send('journal/' + (POSTS[+post.dataset.post].key || post.dataset.post), POSTS[+post.dataset.post].title);
+    const out = e.target.closest('a[href^="http"]'); if (out) return send('link/' + new URL(out.href).hostname, out.textContent.trim().slice(0, 60));
+  }, true);
+})();
 </script>
