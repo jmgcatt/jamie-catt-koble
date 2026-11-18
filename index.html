@@ -1915,28 +1915,28 @@ function buildPaper() {
 }
 // the paper that opens: a portrait sheet of crumpled paper in the middle of the screen
 function paperSvg(seed) {
-  const r = rng(seed), W = 300, H = 420, cols = 5, rows = 7, P = [], f = p => p[0].toFixed(1) + ',' + p[1].toFixed(1);
-  for (let j = 0; j <= rows; j++) { const row = []; for (let i = 0; i <= cols; i++) { const edge = i === 0 || j === 0 || i === cols || j === rows; row.push([(W - 26) * i / cols + 13 + (r() - .5) * (edge ? 7 : 24), (H - 26) * j / rows + 13 + (r() - .5) * (edge ? 7 : 24)]); } P.push(row); }
+  const r = rng(seed), W = 300, H = 420, cols = 9, rows = 13, P = [], f = p => p[0].toFixed(1) + ',' + p[1].toFixed(1);
+  // a loose mesh of points: every little facet of the paper catches the light a bit differently
+  for (let j = 0; j <= rows; j++) { const row = []; for (let i = 0; i <= cols; i++) { const edge = i === 0 || j === 0 || i === cols || j === rows; row.push([(W - 24) * i / cols + 12 + (r() - .5) * (edge ? 6 : 30), (H - 24) * j / rows + 12 + (r() - .5) * (edge ? 6 : 30)]); } P.push(row); }
   const out = [];
   for (let i = 0; i <= cols; i++) out.push(P[0][i]); for (let j = 1; j <= rows; j++) out.push(P[j][cols]); for (let i = cols - 1; i >= 0; i--) out.push(P[rows][i]); for (let j = rows - 1; j >= 1; j--) out.push(P[j][0]);
-  // a softly wobbling edge: curves through the middles of the points
   const mid = (p, q) => [(p[0] + q[0]) / 2, (p[1] + q[1]) / 2], n = out.length;
   let outline = 'M' + f(mid(out[n - 1], out[0])); for (let i = 0; i < n; i++) outline += `Q${f(out[i])} ${f(mid(out[i], out[(i + 1) % n]))}`; outline += 'Z';
-  // soft shading patches, very faint, blurred together
-  let tris = '';
+  // light comes from the top left: each facet leans toward bright or shadow, in soft warm greys
+  let lit = '', shade = '';
   for (let j = 0; j < rows; j++) for (let i = 0; i < cols; i++) {
     const a = P[j][i], b = P[j][i + 1], c = P[j + 1][i], d = P[j + 1][i + 1], flip = r() < .5, t = flip ? [[a, b, c], [b, d, c]] : [[a, b, d], [a, d, c]];
-    t.forEach(tr => { const light = r() < .5; tris += `<path d="M${tr.map(f).join('L')}Z" fill="${light ? '#fff' : '#9a8566'}" fill-opacity="${(light ? .08 + r() * .22 : .015 + r() * .05).toFixed(3)}"/>`; });
+    t.forEach(tr => { const v = r() - .42, d2 = `M${tr.map(f).join('L')}Z`; if (v > 0) lit += `<path d="${d2}" fill-opacity="${(v * .55).toFixed(3)}"/>`; else shade += `<path d="${d2}" fill-opacity="${(-v * .3).toFixed(3)}"/>`; });
   }
-  // a handful of hand-drawn creases, each with a pale highlight beside it like a real fold
+  // a few long soft folds, drawn as thin pencil strokes with a pale edge beside them
   let dark = '', pale = '';
-  for (let k = 0; k < 11; k++) {
-    const x0 = 20 + r() * (W - 40), y0 = 20 + r() * (H - 40), ang = r() * Math.PI, len = 60 + r() * 150, pts = [];
-    for (let q = 0; q <= 4; q++) { const t = q / 4 - .5; pts.push([x0 + Math.cos(ang) * len * t + (r() - .5) * 9, y0 + Math.sin(ang) * len * t + (r() - .5) * 9]); }
+  for (let k = 0; k < 9; k++) {
+    const x0 = 20 + r() * (W - 40), y0 = 20 + r() * (H - 40), ang = -.9 + r() * 1.8 + (r() < .4 ? Math.PI / 2 : 0), len = 70 + r() * 150, pts = [];
+    for (let q = 0; q <= 4; q++) { const t = q / 4 - .5; pts.push([x0 + Math.cos(ang) * len * t + (r() - .5) * 12, y0 + Math.sin(ang) * len * t + (r() - .5) * 12]); }
     let d = 'M' + f(pts[0]); for (let q = 1; q < pts.length - 1; q++) d += `Q${f(pts[q])} ${f(mid(pts[q], pts[q + 1]))}`; d += 'L' + f(pts[pts.length - 1]);
-    dark += `<path d="${d}" stroke-width="${(.6 + r() * .6).toFixed(2)}" opacity="${(.28 + r() * .3).toFixed(2)}"/>`; pale += `<path d="${d}" transform="translate(1.1,1.3)"/>`;
+    dark += `<path d="${d}" stroke-width="${(.5 + r() * .5).toFixed(2)}" opacity="${(.14 + r() * .16).toFixed(2)}"/>`; pale += `<path d="${d}" transform="translate(1.2,1.4)"/>`;
   }
-  return `<svg viewBox="0 0 300 420" aria-hidden="true"><defs><clipPath id="paperClip"><path d="${outline}"/></clipPath><filter id="paperBlur" x="-5%" y="-5%" width="110%" height="110%"><feGaussianBlur stdDeviation="3"/></filter></defs><path d="${outline}" fill="#faf6ec"/><g clip-path="url(#paperClip)"><g filter="url(#paperBlur)">${tris}</g><g fill="none" stroke="#fff" stroke-width="1.2" opacity=".7" stroke-linecap="round">${pale}</g><g fill="none" stroke="#a89c86" stroke-linecap="round" filter="url(#pencil)">${dark}</g></g><path d="${outline}" fill="none" stroke="#85745f" stroke-width="1.3" stroke-linejoin="round" opacity=".85" filter="url(#pencil)"/></svg>`;
+  return `<svg viewBox="0 0 300 420" aria-hidden="true"><defs><clipPath id="paperClip"><path d="${outline}"/></clipPath><filter id="paperSoft" x="-5%" y="-5%" width="110%" height="110%"><feGaussianBlur stdDeviation="1"/></filter></defs><path d="${outline}" fill="#faf6ec"/><g clip-path="url(#paperClip)"><g filter="url(#paperSoft)"><g fill="#8f8068">${shade}</g><g fill="#ffffff">${lit}</g></g><g filter="url(#pencil)"><g fill="none" stroke="#fff" stroke-width="1.3" opacity=".6" stroke-linecap="round">${pale}</g><g fill="none" stroke="#9c8f78" stroke-linecap="round">${dark}</g></g><rect width="300" height="420" fill="#8f8068" opacity=".06" filter="url(#pencil)"/></g><path d="${outline}" fill="none" stroke="#85745f" stroke-width="1.2" stroke-linejoin="round" opacity=".75" filter="url(#pencil)"/></svg>`;
 }
 // Teo as a cut-out sticker: his sitting pose, redrawn at full size with a white die-cut edge, saved as a PNG with a clear background
 let teoStickerURL = null;
