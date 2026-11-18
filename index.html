@@ -1051,6 +1051,24 @@ body:has(.sheet.page.open) .mark p{color:var(--ink-soft)!important}
 html .sheet.page .seg button{font-size:14px!important}
 .sheet.page .work-grid{margin:20px 0 0;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:18px}
 .sheet.page .work-grid .c-t{font-size:var(--t-card)}
+
+/* illustration index: three across on desktop and landscape tablets, two across on phones and portrait tablets */
+.cv-art .cv-grid{grid-template-columns:repeat(3,minmax(0,1fr))}
+@media (max-width:760px),(max-width:1100px) and (orientation:portrait){.cv-art .cv-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
+
+/* the easel's canvas keeps its frame showing around the screen, like the laptop's lid */
+.canvas-view{height:100vh!important;height:100dvh!important;bottom:auto!important}
+.canvas-view::before{content:"";position:absolute;inset:0;z-index:8;pointer-events:none;border:10px solid #4a3a2e;filter:url(#pencil)}
+
+/* the home / back / next buttons on a project page stay fixed to the bottom, over a soft fade when the page scrolls under them */
+.screen-project{--pn-x:22px;--pn-bg:#fdf6e6;display:flex;flex-direction:column;padding-bottom:0}
+.cv-art.has-detail{--pn-x:22px;--pn-bg:#fffdf8}
+.cv-art.has-detail:has(.proj-nav){display:flex;flex-direction:column;align-items:stretch;justify-content:flex-start;padding-bottom:0}
+.screen-project .proj,.cv-art .proj{flex:none}
+.screen-project .proj-nav,.cv-art .proj-nav{position:sticky;bottom:0;z-index:3;margin:auto calc(var(--pn-x) * -1) 0;padding:40px var(--pn-x) 16px;background:linear-gradient(to top,var(--pn-bg) 58%,transparent)}
+@media (max-width:760px),(max-width:1100px) and (orientation:portrait){.screen-project,.cv-art.has-detail{--pn-x:14px}}
+/* long dashes in text: a touch narrower (the glyph is scaled and its box trimmed to match) */
+.dash{display:inline-block;transform:scaleX(.78);margin:0 -.11em}
 @media (max-width:760px),(max-width:1100px) and (orientation:portrait){:root{--t-title:40px;--t-card:28px;--t-quote:18px;--t-body:18px;--t-meta:14px;--t-btn:18px}}
 html .sheet h2,html .sheet .jb-flow h2,html .sheet .bar-title h2,html .sp-head h3,html .cv-title,html .td-head h2,html .sheet.menu h2,html .sheet.shelf h2,html .sheet.letter h2,html .screen-bar h2{font-family:var(--f-title)!important;font-size:var(--t-title)!important;font-weight:400!important;line-height:1.25!important;text-transform:lowercase}
 html .c-t,html .screen .c-t,html .cv-grid .c-t,html .dish b,html .fave b,html .fc-face b,html li.book b,html .jams b,html .posts b,html .work-list b,html .cv-cap b,html .jb-toc .jt-t,html .sheet h3,html .post h3,html .post h4,html .spin-title,html .t-no,html .stub-top b{font-family:var(--f-title)!important;font-size:var(--t-card)!important;font-weight:400!important;line-height:1.25!important}
@@ -3603,7 +3621,7 @@ const FAVE_STAR = '<svg class="fav-art" viewBox="0 0 120 150" aria-hidden="true"
 let favesOpen = false, faveView = 'monthly', FAVLIST = null;
 // the stack of books: my favorites, from the Favorites list in Notion (data/favorites.json)
 loadData('data/favorites.json', 'favorites').then(list => {
-  FAVLIST = (list || []).filter(f => f && typeof f.title === 'string' && f.title.trim()).map(f => ({ kind: 'favorite', title: f.title.trim(), url: safeUrl(f.url), art: FAV_ART.includes(String(f.art || '').toLowerCase()) ? String(f.art).toLowerCase() : '', color: /^#[0-9a-f]{3,8}$/i.test(f.color || '') ? f.color : '', image: safeImg(f.image), description: String(f.description || '').trim(), month: '', year: '' }));
+  FAVLIST = (list || []).filter(f => f && typeof f.title === 'string' && f.title.trim()).map(f => ({ kind: 'book', title: f.title.trim(), author: String(f.author || '').trim(), url: safeUrl(f.url), image: safeImg(f.image), description: String(f.description || '').trim(), month: '', year: '' }));
   refreshFaves();
 });
 // monthly faves are cards like the dish cards: the picture and title on the front, press to turn one over for the story
@@ -3612,7 +3630,7 @@ function favesDishes() {
   if (list === null) return `<p class="empty-note">Gathering ${all ? 'my' : 'this month\u2019s'} favorites\u2026</p>`;
   if (!list.length) return `<p class="empty-note">${all ? 'Nothing here yet. New favorites are on their way.' : 'No favorites to share just yet. Check back next month.'}</p>`;
   return `<ul class="dish-grid">${list.map(f => { const when = [f.month, f.year].filter(Boolean).join(' ');
-    return `<li class="dish fave-dish" role="button" tabindex="0" aria-pressed="false" aria-label="${esc(f.title)}, press to read about it"><div class="fc-in"><div class="fc-face fc-front">${favThumb(f) || FAVE_STAR}<b>${esc(f.title)}</b></div><div class="fc-face fc-back"><b>${linkOr(f.title, f.url)}</b>${when ? `<span class="fc-when">${esc(when)}</span>` : ''}${f.description ? `<p>${esc(f.description)}</p>` : ''}</div></div></li>`; }).join('')}</ul>`;
+    return `<li class="dish fave-dish" role="button" tabindex="0" aria-pressed="false" aria-label="${esc(f.title)}, press to read about it"><div class="fc-in"><div class="fc-face fc-front">${(all ? bookThumb(f) : favThumb(f)) || FAVE_STAR}<b>${esc(f.title)}</b></div><div class="fc-face fc-back"><b>${linkOr(f.title, f.url)}</b>${f.author ? `<span class="fc-when">${esc(f.author)}</span>` : when ? `<span class="fc-when">${esc(when)}</span>` : ''}${f.description ? `<p>${esc(f.description)}</p>` : ''}</div></div></li>`; }).join('')}</ul>`;
 }
 function openFaves(view = 'monthly') {
   faveView = view;

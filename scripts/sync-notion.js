@@ -85,17 +85,19 @@ const DATABASES = [
     sort: (a, b) => (b.date || '').localeCompare(a.date || '') || b._created.localeCompare(a._created),
   },
   {
-    env: 'NOTION_FAVORITES_DB', file: 'favorites.json', key: 'favorites', label: 'Favorites (the stack of books)', optional: true,
-    // Item (title); optional: Link (url), Description (text), Image (files, or the page cover), Art (select), Color (text, like #3f6aa0)
+    env: 'NOTION_FAVORITES_DB', file: 'favorites.json', key: 'favorites', label: 'Favorites (Books)', optional: true, soft: true,
+    // Book Title (title), Author (text), Description (text); optional: Goodreads (url, overrides the one found automatically)
     row: (p) => ({
-      title: text(p, 'Item') || text(p, 'Name') || text(p, 'Title'),
-      url: url(p, 'Link'),
+      title: text(p, 'Book Title'),
+      author: text(p, 'Author'),
       description: text(p, 'Description'),
-      art: text(p, 'Art').toLowerCase(),
-      color: text(p, 'Color'),
-      image: files(p, 'Image')[0] || cover(p),
+      url: url(p, 'Goodreads'),
     }),
     keep: (r) => r.title,
+    enrich: async (r) => {
+      const b = await findBook(r.title, r.author); r.url ||= b.url;
+      r.image = (/goodreads\.com\/(en\/)?book\/show\//.test(r.url) && await goodreadsCover(r.url)) || b.cover;
+    },
     sort: (a, b) => b._created.localeCompare(a._created),
   },
   {
@@ -291,8 +293,8 @@ async function main() {
       console.log(`${db.label}: ${rows.length} item(s) → data/${db.file}`);
     } catch (err) {
       // leave the last good file in place so the site keeps working
-      failed++;
-      console.error(`${db.label}: ${err.message}`);
+      if (db.soft) console.warn(`${db.label}: could not be read, so that section stays empty for now (${err.message}). Share the database with the Notion connection to fix it.`); else failed++;
+      if (!db.soft) console.error(`${db.label}: ${err.message}`);
     }
   }
   // remove images whose rows are gone, but only after a fully successful run
