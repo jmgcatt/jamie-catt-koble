@@ -530,13 +530,12 @@ body.playing .turntable .arm{transform:none}
 .shelf-book:hover,.shelf-book:focus-visible{transform:translateY(-10px) scale(1.04)}
 .shelf-book svg{display:block;width:100%;height:auto;overflow:visible}
 .shelf-book{padding:0;background:none;border:0;cursor:pointer}
-.shelf-row li.open .shelf-book{transform:translateY(-6px) scale(1.04)}
 .shelf-note{max-width:260px;padding:12px 16px;background:#fffaf0;border-radius:var(--wobble);line-height:1.45;text-align:center;color:var(--ink)}
 .shelf-note[hidden]{display:none}
 .shelf-note p{margin:0 0 8px}
 .shelf-note .proj-link{margin-top:4px}
 .sheet.shelf .empty-note{padding:18px 24px;background:#fffaf0;border-radius:var(--wobble);text-align:center}
-@media (hover:none){.shelf-book{transform:none;width:min(160px,36vw)}.shelf-row{gap:18px;flex-wrap:nowrap}}
+@media (hover:none){.shelf-book{transform:none;width:min(230px,58vw)}.shelf-row{gap:22px;flex-wrap:wrap}}
 @media (prefers-reduced-motion:reduce){.shelf-book{transition:none}}
 /* the menu and the record player have no close button: a click anywhere around them closes them (Escape too) */
 .sheet.menu .sheet-bar,.sheet.player .sheet-bar{display:none}
@@ -552,7 +551,8 @@ body:has(.sheet.menu.open) .scrim,body:has(.sheet.shelf.open) .scrim,body:has(.s
 .sheet.menu .dish:nth-child(3n){transform:rotate(.8deg)}
 .sheet.menu .dish b{margin:0 6px;padding-top:4px}
 .sheet.menu .empty-note{padding:18px 24px;background:#fffaf0;border-radius:var(--wobble);text-align:center}
-.sheet.book{background:none;border:0;filter:none;overflow:hidden;top:0!important;left:0!important;width:100vw!important;height:100vh!important;height:100dvh!important;max-height:none!important;transform:none!important;border-radius:0}
+.sheet.book{transition:opacity .55s ease,visibility 0s .55s!important;background:none;border:0;filter:none;overflow:hidden;top:0!important;left:0!important;width:100vw!important;height:100vh!important;height:100dvh!important;max-height:none!important;transform:none!important;border-radius:0}
+.sheet.book.open{transition:opacity .55s ease!important}
 .sheet.book .jbook{border-radius:0}
 .sheet.book .sheet-bar{position:absolute;left:34px;bottom:36px;top:auto;right:auto;z-index:6;padding:0;background:none;border:0;transform:none}
 .sheet.book .sheet-x{width:44px;height:44px;color:#1f1a17;border:0;background:none}
@@ -1117,6 +1117,23 @@ html body .routine li{font-size:16px!important}
 
 /* journal quotes: 18px on every screen */
 html body .post blockquote,html body .jb-flow blockquote{font-size:18px!important}
+
+/* opening and closing the journal: the logo and buttons glide to their new spots instead of jumping */
+.top{transition:padding .45s cubic-bezier(.4,0,.2,1)}
+.zoom-x{transition:opacity .25s ease,transform .3s ease,top .45s cubic-bezier(.4,0,.2,1),right .45s cubic-bezier(.4,0,.2,1)!important}
+.mark,.top-right{transition:opacity .3s ease}
+
+/* shelf books turn over to show the description on the back, like the monthly faves cards */
+.shelf-book{aspect-ratio:82/128;perspective:1200px}
+.shelf-book .sb-in{position:relative;display:block;width:100%;height:100%;transform-style:preserve-3d;transition:transform .6s cubic-bezier(.4,.2,.2,1)}
+.shelf-book.flipped .sb-in{transform:rotateY(180deg)}
+.shelf-book .sb-face{position:absolute;inset:0;display:block;backface-visibility:hidden;-webkit-backface-visibility:hidden}
+.shelf-book .sb-front svg{width:100%;height:100%}
+.shelf-book .sb-back{transform:rotateY(180deg);box-sizing:border-box;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;padding:14px 14px;margin:2% 2% 12% 2%;background:#fffaf0;border-radius:var(--wobble);box-shadow:inset 0 0 0 5px #fffaf0,inset 0 0 0 6.5px rgba(201,102,61,.4);text-align:center;color:var(--ink);overflow:hidden}
+.shelf-book .sb-back b{font-family:var(--f-title);font-weight:400;font-size:var(--t-card);line-height:1.15;filter:url(#ink)}
+.shelf-book .sb-back i{font-style:normal;font-size:var(--t-meta);letter-spacing:.08em;text-transform:uppercase;color:var(--ink-soft)}
+.shelf-book .sb-back p{margin:0;font-size:var(--t-body)}
+@media (max-width:760px),(max-width:1100px) and (orientation:portrait){.shelf-book .sb-back{padding:10px 12px;gap:6px}.shelf-book .sb-back b{font-size:22px}.shelf-book .sb-back p{font-size:15px;line-height:1.4}}
 @media (max-width:760px),(max-width:1100px) and (orientation:portrait){:root{--t-title:40px;--t-card:28px;--t-quote:18px;--t-body:18px;--t-meta:14px;--t-btn:18px}}
 html .sheet h2,html .sheet .jb-flow h2,html .sheet .bar-title h2,html .sp-head h3,html .cv-title,html .td-head h2,html .sheet.menu h2,html .sheet.shelf h2,html .sheet.letter h2,html .screen-bar h2{font-family:var(--f-title)!important;font-size:var(--t-title)!important;font-weight:400!important;line-height:1.25!important;text-transform:lowercase}
 html .c-t,html .screen .c-t,html .cv-grid .c-t,html .dish b,html .fave b,html .fc-face b,html li.book b,html .jams b,html .posts b,html .work-list b,html .cv-cap b,html .jb-toc .jt-t,html .sheet h3,html .post h3,html .post h4,html .spin-title,html .t-no,html .stub-top b{font-family:var(--f-title)!important;font-size:var(--t-card)!important;font-weight:400!important;line-height:1.25!important}
@@ -2697,6 +2714,29 @@ function openBook(html, toc) {
   if (document.fonts) document.fonts.ready.then(layoutBook);
   $('#jbFlow').querySelectorAll('video').forEach(v => { v.muted = true; const go = v.play(); if (go) go.catch(() => { }); });
 }
+// a picture that doesn't fit at the foot of a page would jump to the next one and leave a blank gap behind it,
+// so it is trimmed (cropped, never squashed) to fill that gap instead
+function fillGaps(flow, P, colH) {
+  const blocks = [...flow.querySelectorAll('figure, video')].filter(b => b.tagName !== 'VIDEO' || !b.closest('figure'));
+  const media = b => b.tagName === 'VIDEO' ? [b] : [...b.querySelectorAll('img, video')];
+  blocks.forEach(b => media(b).forEach(m => { m.style.height = ''; }));
+  // offsets, not screen rectangles, so the measuring isn't thrown off while the sheet is still fading in
+  const colOf = el => Math.floor((el.offsetLeft + 2) / P);
+  for (let pass = 0; pass < 8; pass++) {
+    let changed = false;
+    for (const b of blocks) {
+      if (colOf(b) < 1 || b.offsetTop > 3) continue;
+      let bottom = 0;
+      [...flow.children].forEach(c => { if (c.offsetHeight && colOf(c) === colOf(b) - 1) bottom = Math.max(bottom, c.offsetTop + c.offsetHeight); });
+      const gap = colH - bottom - 26;
+      if (gap < 80) continue;
+      const m = media(b)[0]; if (!m || m.style.height) continue;
+      media(b).forEach(x => { x.style.height = Math.floor(gap) + 'px'; });
+      changed = true; break;
+    }
+    if (!changed) break;
+  }
+}
 // the post flows through css columns, one column per page; a spread shows two pages on wide screens
 function layoutBook() {
   const pages = $('#jbPages'), flow = $('#jbFlow');
@@ -2707,6 +2747,7 @@ function layoutBook() {
   $('#jbook').classList.toggle('spread', spread);
   Object.assign(flow.style, { left: pad + 'px', top: top + 'px', height: colH + 'px', width: (spread ? 2 * P : P) - 2 * pad + 'px', columnWidth: P - 2 * pad + 'px', columnGap: 2 * pad + 'px', transform: 'none' });
   flow.style.setProperty('--colh', colH + 'px');
+  fillGaps(flow, P, colH);
   // the last page is the one holding the way back to the journal
   const end = flow.querySelector('.jb-end').getBoundingClientRect().left - flow.getBoundingClientRect().left + pad;
   book.n = Math.max(1, Math.floor(end / P) + 1);
@@ -3022,14 +3063,12 @@ function shelfArt(b) {
 }
 // each book stands on the shelf; press it to open it and read what I wrote, with a link to its page
 function shelfRow(list) {
-  return `<ul class="shelf-row">${list.map(b => { const url = safeUrl(b.url);
-    return `<li><button class="shelf-book" type="button" aria-expanded="false" aria-label="${esc(b.title + (b.author ? ' by ' + b.author : ''))}, press to read about it">${shelfArt(b)}</button><div class="shelf-note" hidden>${b.description ? `<p>${esc(b.description)}</p>` : ''}${url ? `<a class="proj-link" href="${esc(url)}" target="_blank" rel="noopener">view on goodreads \u2192</a>` : ''}</div></li>`; }).join('')}</ul>`;
+  return `<ul class="shelf-row">${list.map(b => `<li><button class="shelf-book" type="button" aria-pressed="false" aria-label="${esc(b.title + (b.author ? ' by ' + b.author : ''))}, press to turn it over and read about it"><span class="sb-in"><span class="sb-face sb-front">${shelfArt(b)}</span><span class="sb-face sb-back"><b>${esc(b.title)}</b>${b.author ? `<i>${esc(b.author)}</i>` : ''}${b.description ? `<p>${esc(b.description)}</p>` : ''}</span></span></button></li>`).join('')}</ul>`;
 }
+// press a book and it turns over to show what I wrote about it
 document.addEventListener('click', e => {
   const b = e.target.closest('.shelf-book'); if (!b) return;
-  const li = b.closest('li'), note = li.querySelector('.shelf-note'), on = note.hidden;
-  li.parentNode.querySelectorAll('li.open').forEach(x => { if (x !== li) { x.classList.remove('open'); x.querySelector('.shelf-note').hidden = true; x.querySelector('.shelf-book').setAttribute('aria-expanded', 'false'); } });
-  note.hidden = !on; li.classList.toggle('open', on); b.setAttribute('aria-expanded', on);
+  const on = !b.classList.contains('flipped'); b.classList.toggle('flipped', on); b.setAttribute('aria-pressed', on);
 });
 function shelfBooks() {
   if (readState === 'loading') return '<p class="empty-note">Finding the books\u2026</p>';
@@ -4772,7 +4811,7 @@ function setNight(on) {
   sunEl.setAttribute('aria-label', on ? 'Moon. Press to make it daytime.' : 'Sun. Press to make it nighttime.');
   say(on ? 'It is nighttime. The lamps are on.' : 'It is daytime again.');
 }
-const actions = { polaroids: () => { if (zoomed) return; openFaves(); }, paperTeo: () => openPaper('teo'), paperRoutine: () => openPaper('routine'), sofaBook: () => zoomThen('sofaBook', openReading), typewriter: () => zoomThen('typewriter', openLetter), pan: () => openCooking(), teabar: () => zoomThen('teabar', () => openWeekly('drinks')), crate: () => TEO.cave ? command('come') : command('cave'), vinyl: () => zoomThen('vinyl', openRecords), books: () => zoomThen('books', () => openFaves('all')), journal: () => zoomThen('journal', openJournal), toy: () => bounceBall(), door: () => placeIdx === 2 ? goInside() : goOutside(), easel: () => zoomed === 'easel' ? closeEasel() : openEasel(), candle: () => toggleCandle(), sun: () => setNight(!svg.classList.contains('night')), ticketMachine: issueTicket, laptop: () => setDrawer(laptopState === 'closed'), teo: () => bubbles.hidden ? openBubbles() : closeBubbles(), win: nextScene };
+const actions = { polaroids: () => { if (zoomed) return; openFaves(); }, paperTeo: () => openPaper('teo'), paperRoutine: () => openPaper('routine'), sofaBook: () => zoomThen('sofaBook', openReading), typewriter: () => zoomThen('typewriter', openLetter), pan: () => openCooking(), teabar: () => zoomThen('teabar', () => openWeekly('drinks')), crate: () => TEO.cave ? command('come') : command('cave'), vinyl: () => zoomThen('vinyl', openRecords), books: () => zoomThen('books', () => openFaves('all')), journal: () => { if (zooming || zoomed) return; openJournal(); }, toy: () => bounceBall(), door: () => placeIdx === 2 ? goInside() : goOutside(), easel: () => zoomed === 'easel' ? closeEasel() : openEasel(), candle: () => toggleCandle(), sun: () => setNight(!svg.classList.contains('night')), ticketMachine: issueTicket, laptop: () => setDrawer(laptopState === 'closed'), teo: () => bubbles.hidden ? openBubbles() : closeBubbles(), win: nextScene };
 document.querySelectorAll('.hot').forEach(h => {
   h.addEventListener('click', () => actions[h.id]());
   h.addEventListener('keydown', e => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); actions[h.id](); } });
