@@ -1154,6 +1154,9 @@ body:has(#easelView:not([hidden])) :is(.menu-btn,.stub-btn,.sound,.zoom-x){backg
 .jfly .jf-cover::before{z-index:1;filter:url(#pencil)}
 .jf-skin{position:absolute;inset:0;border-radius:4px 10px 10px 4px;background:#6a2530;border:2.6px solid #2b0c11;box-sizing:border-box;filter:url(#pencil)}
 .jfly .jf-cover b{z-index:1}
+
+/* over every dim overlay (monthly faves, dishes, books, the typewriter, the record player) the logo and top buttons stay on top */
+body:has(.sheet.open) .top{z-index:23!important}
 @media (max-width:760px),(max-width:1100px) and (orientation:portrait){:root{--t-title:40px;--t-card:28px;--t-quote:18px;--t-body:18px;--t-meta:14px;--t-btn:18px}}
 html .sheet h2,html .sheet .jb-flow h2,html .sheet .bar-title h2,html .sp-head h3,html .cv-title,html .td-head h2,html .sheet.menu h2,html .sheet.shelf h2,html .sheet.letter h2,html .screen-bar h2{font-family:var(--f-title)!important;font-size:var(--t-title)!important;font-weight:400!important;line-height:1.25!important;text-transform:lowercase}
 html .c-t,html .screen .c-t,html .cv-grid .c-t,html .dish b,html .fave b,html .fc-face b,html li.book b,html .jams b,html .posts b,html .work-list b,html .cv-cap b,html .jb-toc .jt-t,html .sheet h3,html .post h3,html .post h4,html .spin-title,html .t-no,html .stub-top b{font-family:var(--f-title)!important;font-size:var(--t-card)!important;font-weight:400!important;line-height:1.25!important}
