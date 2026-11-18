@@ -34,6 +34,7 @@ Everything in a database is published (there's no "show on site" checkbox). All 
 - **Everything is a colored-pencil illustration**: shapes drawn with the `piece()` helper and the `#pencil` filter, warm and grainy, matching the house. Flat, crisp, glossy or "UI-looking" elements look wrong. If a pencil-filtered fill lets things show through, put a solid fill underneath.
 - Interior: Korean hanok (hanji-cream walls, honey timber, maru floor, stone foundation) with a sage-green gable and a wooden roof edge. The kitchen is stone, walnut and paper lanterns.
 - Palette: ink `#4a3a2e`, soft ink `#76614f`, paper `#fbf6ec`, Bordeaux `#561c25`. **All links are Bordeaux maroon `--link: #7a2633`**, never orange.
+- **Call-to-action buttons and links** (send, download, view on the app store, and the like) are ink `#4a3a2e`, the same as "send" on the typewriter. Links inside body copy stay Bordeaux.
 - Text on any lined index card sits on the ruled lines (the "writing on the lines" snapper handles it).
 - Jamie dislikes: black borders and drop shadows on tickets and cards, backgrounds behind illustrations, close buttons where clicking outside works, captions that repeat what the drawing already says, and anything that briefly flashes the wrong look during a transition.
 - The menu ("what I'm cooking") and the record player float over the house with no paper behind them, and close when you click outside.

@@ -996,7 +996,7 @@ html button,html input,html select,html textarea,html .proj-link,html .inline-li
 .sheet.page{top:0;left:0;width:100vw;height:100vh;height:100dvh;border:0;border-radius:0;filter:none;transform:none;transition:opacity .3s,visibility 0s .3s}
 .sheet.page.open{transform:none;transition:opacity .3s}
 body:has(.sheet.page.open) .scrim{opacity:0;visibility:hidden}
-body:has(.sheet.page.open) .top{z-index:21}
+body:has(.sheet.page.open) .top,body:has(.sheet.paper.open) .top{z-index:21}
 body:has(.sheet.page.open) .mark h1{color:var(--ink)!important}
 body:has(.sheet.page.open) .mark p{color:var(--ink-soft)!important}
 .sheet.page .sheet-bar{display:none}
@@ -1069,6 +1069,23 @@ html .sheet.page .seg button{font-size:14px!important}
 @media (max-width:760px),(max-width:1100px) and (orientation:portrait){.screen-project,.cv-art.has-detail{--pn-x:14px}}
 /* long dashes in text: a touch narrower (the glyph is scaled and its box trimmed to match) */
 .dash{display:inline-block;transform:scaleX(.78);margin:0 -.11em}
+
+/* call-to-action buttons and links all use the same ink colour as "send" on the typewriter; links inside body copy stay Bordeaux */
+html .paper-btn,html .btn-ink,html .btn-plain,html .proj-link,html .read-on,html #letterSend{color:var(--ink)}
+html .proj-link:hover,html .paper-btn:hover{color:var(--ink)}
+
+/* the journal: the logo and the top buttons stay on top; back and next arrows replace the close button at the foot */
+.sheet.book #sheetClose,.sheet.book .sheet-bar{display:none!important}
+body:has(.sheet.book.open) .top{z-index:21!important}
+body:has(.sheet.book.open) .zoom-x{opacity:1!important;pointer-events:auto!important;transform:none!important}
+body:has(.sheet.book.open) .menu-btn{opacity:0;pointer-events:none}
+body:has(.sheet.book.open) .top{padding-left:max(48px,env(safe-area-inset-left,0px))!important;padding-right:34px!important}
+body:has(.sheet.book.open) .mark h1{color:var(--ink)!important}
+.jb-arrows{position:absolute;right:26px;bottom:44px;z-index:6;display:flex;gap:10px}
+.jb-arrows .soc-btn{width:44px;height:44px;padding:0;cursor:pointer;background:none!important;border:1.5px solid transparent!important;border-radius:14px 11px 15px 10px / 11px 15px 10px 14px;color:var(--ink)}
+.jb-arrows .soc-btn::before{content:"";position:absolute;inset:-2px;border:2.2px solid var(--ink);border-radius:inherit;pointer-events:none;filter:url(#ink)}
+.jb-arrows .soc-btn svg{width:24px;height:24px;filter:url(#ink)}
+@media (max-width:760px),(max-width:1100px) and (orientation:portrait){.jb-arrows{right:16px;bottom:calc(max(14px,env(safe-area-inset-bottom,0px)) + 20px)}}
 @media (max-width:760px),(max-width:1100px) and (orientation:portrait){:root{--t-title:40px;--t-card:28px;--t-quote:18px;--t-body:18px;--t-meta:14px;--t-btn:18px}}
 html .sheet h2,html .sheet .jb-flow h2,html .sheet .bar-title h2,html .sp-head h3,html .cv-title,html .td-head h2,html .sheet.menu h2,html .sheet.shelf h2,html .sheet.letter h2,html .screen-bar h2{font-family:var(--f-title)!important;font-size:var(--t-title)!important;font-weight:400!important;line-height:1.25!important;text-transform:lowercase}
 html .c-t,html .screen .c-t,html .cv-grid .c-t,html .dish b,html .fave b,html .fc-face b,html li.book b,html .jams b,html .posts b,html .work-list b,html .cv-cap b,html .jb-toc .jt-t,html .sheet h3,html .post h3,html .post h4,html .spin-title,html .t-no,html .stub-top b{font-family:var(--f-title)!important;font-size:var(--t-card)!important;font-weight:400!important;line-height:1.25!important}
@@ -1898,17 +1915,28 @@ function buildPaper() {
 }
 // the paper that opens: a portrait sheet of crumpled paper in the middle of the screen
 function paperSvg(seed) {
-  const r = rng(seed), W = 300, H = 420, cols = 5, rows = 7, P = [];
-  for (let j = 0; j <= rows; j++) { const row = []; for (let i = 0; i <= cols; i++) { const edge = i === 0 || j === 0 || i === cols || j === rows; row.push([(W - 28) * i / cols + 14 + (r() - .5) * (edge ? 9 : 26), (H - 28) * j / rows + 14 + (r() - .5) * (edge ? 9 : 26)]); } P.push(row); }
-  const f = p => p[0].toFixed(1) + ',' + p[1].toFixed(1), out = [];
+  const r = rng(seed), W = 300, H = 420, cols = 5, rows = 7, P = [], f = p => p[0].toFixed(1) + ',' + p[1].toFixed(1);
+  for (let j = 0; j <= rows; j++) { const row = []; for (let i = 0; i <= cols; i++) { const edge = i === 0 || j === 0 || i === cols || j === rows; row.push([(W - 26) * i / cols + 13 + (r() - .5) * (edge ? 7 : 24), (H - 26) * j / rows + 13 + (r() - .5) * (edge ? 7 : 24)]); } P.push(row); }
+  const out = [];
   for (let i = 0; i <= cols; i++) out.push(P[0][i]); for (let j = 1; j <= rows; j++) out.push(P[j][cols]); for (let i = cols - 1; i >= 0; i--) out.push(P[rows][i]); for (let j = rows - 1; j >= 1; j--) out.push(P[j][0]);
-  const outline = 'M' + out.map(f).join('L') + 'Z'; let tris = '', creases = '';
+  // a softly wobbling edge: curves through the middles of the points
+  const mid = (p, q) => [(p[0] + q[0]) / 2, (p[1] + q[1]) / 2], n = out.length;
+  let outline = 'M' + f(mid(out[n - 1], out[0])); for (let i = 0; i < n; i++) outline += `Q${f(out[i])} ${f(mid(out[i], out[(i + 1) % n]))}`; outline += 'Z';
+  // soft shading patches, very faint, blurred together
+  let tris = '';
   for (let j = 0; j < rows; j++) for (let i = 0; i < cols; i++) {
     const a = P[j][i], b = P[j][i + 1], c = P[j + 1][i], d = P[j + 1][i + 1], flip = r() < .5, t = flip ? [[a, b, c], [b, d, c]] : [[a, b, d], [a, d, c]];
-    t.forEach(tr => { const light = r() < .45, o = light ? .1 + r() * .35 : .03 + r() * .12; tris += `<path d="M${tr.map(f).join('L')}Z" fill="${light ? '#fff' : '#8a7656'}" fill-opacity="${o.toFixed(2)}"/>`; });
-    creases += `M${f(a)}L${f(b)}M${f(a)}L${f(c)}M${flip ? f(b) + 'L' + f(c) : f(a) + 'L' + f(d)}`;
+    t.forEach(tr => { const light = r() < .5; tris += `<path d="M${tr.map(f).join('L')}Z" fill="${light ? '#fff' : '#9a8566'}" fill-opacity="${(light ? .08 + r() * .22 : .015 + r() * .05).toFixed(3)}"/>`; });
   }
-  return `<svg viewBox="0 0 300 420" aria-hidden="true"><defs><clipPath id="paperClip"><path d="${outline}"/></clipPath></defs><path d="${outline}" fill="#faf5ea"/><g clip-path="url(#paperClip)">${tris}</g><path d="${creases}" fill="none" stroke="#a8a08c" stroke-width=".9" opacity=".6" clip-path="url(#paperClip)" filter="url(#pencil)"/><path d="${outline}" fill="none" stroke="#6f5d4c" stroke-width="1.8" stroke-linejoin="round" filter="url(#pencil)"/></svg>`;
+  // a handful of hand-drawn creases, each with a pale highlight beside it like a real fold
+  let dark = '', pale = '';
+  for (let k = 0; k < 11; k++) {
+    const x0 = 20 + r() * (W - 40), y0 = 20 + r() * (H - 40), ang = r() * Math.PI, len = 60 + r() * 150, pts = [];
+    for (let q = 0; q <= 4; q++) { const t = q / 4 - .5; pts.push([x0 + Math.cos(ang) * len * t + (r() - .5) * 9, y0 + Math.sin(ang) * len * t + (r() - .5) * 9]); }
+    let d = 'M' + f(pts[0]); for (let q = 1; q < pts.length - 1; q++) d += `Q${f(pts[q])} ${f(mid(pts[q], pts[q + 1]))}`; d += 'L' + f(pts[pts.length - 1]);
+    dark += `<path d="${d}" stroke-width="${(.6 + r() * .6).toFixed(2)}" opacity="${(.28 + r() * .3).toFixed(2)}"/>`; pale += `<path d="${d}" transform="translate(1.1,1.3)"/>`;
+  }
+  return `<svg viewBox="0 0 300 420" aria-hidden="true"><defs><clipPath id="paperClip"><path d="${outline}"/></clipPath><filter id="paperBlur" x="-5%" y="-5%" width="110%" height="110%"><feGaussianBlur stdDeviation="3"/></filter></defs><path d="${outline}" fill="#faf6ec"/><g clip-path="url(#paperClip)"><g filter="url(#paperBlur)">${tris}</g><g fill="none" stroke="#fff" stroke-width="1.2" opacity=".7" stroke-linecap="round">${pale}</g><g fill="none" stroke="#a89c86" stroke-linecap="round" filter="url(#pencil)">${dark}</g></g><path d="${outline}" fill="none" stroke="#85745f" stroke-width="1.3" stroke-linejoin="round" opacity=".85" filter="url(#pencil)"/></svg>`;
 }
 // Teo as a cut-out sticker: his sitting pose, redrawn at full size with a white die-cut edge, saved as a PNG with a clear background
 let teoStickerURL = null;
@@ -1934,7 +1962,7 @@ function openPaper(kind) {
   openSheet(`<div class="paper-page">${paperSvg(teo ? 11 : 23)}<div class="paper-content">${teo
     ? `<h2 id="sheetTitle" class="sr-only" tabindex="-1">Teo, as a sticker</h2><img class="sticker" id="teoSticker" alt="Teo, as a sticker" hidden><a class="paper-btn" id="paperDl" download="teo-sticker.png" hidden>download</a>`
     : `<h2 id="sheetTitle" tabindex="-1">morning routine</h2><ul class="routine">${ROUTINE.map(t => `<li>${esc(t)}</li>`).join('')}</ul>`}</div></div>`, false, null);
-  sheet.classList.add('paper');
+  sheet.classList.add('paper'); app.inert = false;
   if (teo) makeTeoSticker().then(url => { if (!url || !sheet.classList.contains('paper')) return; const im = $('#teoSticker'), dl = $('#paperDl'); if (!im) return; im.src = url; im.hidden = false; dl.href = url; dl.hidden = false; });
 }
 
@@ -2627,7 +2655,7 @@ function openBook(html, toc) {
   openSheet(`<div class="jbook" id="jbook"><div class="jb-pages" id="jbPages" aria-label="Click the right page to turn forward, the left page to turn back">
     <div class="jb-page jb-l"></div><div class="jb-page jb-r"></div>
     <div class="jb-view"><article class="post jb-flow" id="jbFlow">${html}${toc ? '<p class="jb-end"></p>' : ''}</article></div>
-    <span class="jb-no jb-no-l" aria-hidden="true"></span><span class="jb-no jb-no-r" aria-live="polite"></span>${toc ? '' : `<button class="jb-toc-btn" type="button" data-journal aria-label="Back to the contents"><svg viewBox="0 0 30 30" aria-hidden="true"><g fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M10.5 8.6 Q16 7.8 24.6 8.4"/><path d="M10.4 15.2 Q17 14.6 24.2 15.4"/><path d="M10.6 21.6 Q15.6 21.1 21.8 21.8"/></g><g fill="currentColor"><circle cx="5.6" cy="8.5" r="1.7"/><circle cx="5.4" cy="15.2" r="1.7"/><circle cx="5.7" cy="21.6" r="1.7"/></g></svg></button>`}</div></div>`, false, null);
+    <span class="jb-no jb-no-l" aria-hidden="true"></span><span class="jb-no jb-no-r" aria-live="polite"></span>${toc ? '' : `<button class="jb-toc-btn" type="button" data-journal aria-label="Back to the contents"><svg viewBox="0 0 30 30" aria-hidden="true"><g fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M10.5 8.6 Q16 7.8 24.6 8.4"/><path d="M10.4 15.2 Q17 14.6 24.2 15.4"/><path d="M10.6 21.6 Q15.6 21.1 21.8 21.8"/></g><g fill="currentColor"><circle cx="5.6" cy="8.5" r="1.7"/><circle cx="5.4" cy="15.2" r="1.7"/><circle cx="5.7" cy="21.6" r="1.7"/></g></svg></button>`}<div class="jb-arrows"><button class="soc-btn" type="button" data-jbstep="-1" aria-label="Previous"><svg viewBox="0 0 28 28" aria-hidden="true"><g fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round" transform="translate(28,0) scale(-1,1)"><path d="M5.6 14.4 Q14 13.4 22.4 14.1"/><path d="M16.8 8.2 Q20 11.2 23 14.2 Q19.8 17 17 20"/></g></svg></button><button class="soc-btn" type="button" data-jbstep="1" aria-label="Next"><svg viewBox="0 0 28 28" aria-hidden="true"><g fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round"><path d="M5.6 14.4 Q14 13.4 22.4 14.1"/><path d="M16.8 8.2 Q20 11.2 23 14.2 Q19.8 17 17 20"/></g></svg></button></div></div></div>`, false, null);
   sheet.classList.add('book');
   book = { at: 0, busy: false, toc };
   layoutBook();
@@ -2641,7 +2669,7 @@ function layoutBook() {
   const pages = $('#jbPages'), flow = $('#jbFlow');
   if (!book || !pages || !flow || !sheet.classList.contains('book')) return;
   const W = pages.clientWidth, H = pages.clientHeight, spread = W >= 760 && !phone.matches, P = spread ? W / 2 : W;
-  const pad = spread ? 46 : W < 480 ? 26 : 40, top = W < 480 ? 34 : 44, colH = Math.max(160, H - top - 66);
+  const pad = spread ? 46 : W < 480 ? 26 : 40, top = W < 480 ? 92 : 100, colH = Math.max(160, H - top - 66);
   Object.assign(book, { W, H, spread, P, pad, top });
   $('#jbook').classList.toggle('spread', spread);
   Object.assign(flow.style, { left: pad + 'px', top: top + 'px', height: colH + 'px', width: (spread ? 2 * P : P) - 2 * pad + 'px', columnWidth: P - 2 * pad + 'px', columnGap: 2 * pad + 'px', transform: 'none' });
@@ -2916,6 +2944,13 @@ sheet.addEventListener('pointerup', pageDragEnd); sheet.addEventListener('pointe
 sheet.addEventListener('click', e => { if (pageDragged && e.target.closest('#jbPages')) { e.preventDefault(); e.stopPropagation(); } }, true);
 sheet.addEventListener('dragstart', e => { if (e.target.closest && e.target.closest('#jbPages')) e.preventDefault(); });
 addEventListener('resize', () => { if (book) layoutBook(); });
+// back and next arrows at the foot of the notebook walk through the journal: contents, then each entry in turn
+body.addEventListener('click', e => {
+  const st = e.target.closest('[data-jbstep]'); if (!st || !book || postsState !== 'ready') return;
+  const d = +st.dataset.jbstep, cur = book.toc ? -1 : book.post;
+  const to = cur + d; if (to < -1) return openWriting(); if (to >= POSTS.length) return openWriting();
+  to === -1 ? openWriting() : openPost(to);
+});
 body.addEventListener('click', e => { const b = e.target.closest('[data-post]'); if (b) return openPost(+b.dataset.post); if (e.target.closest('[data-journal]')) openWriting(); });
 
 // every project card in a grid is as tall as the tallest one
