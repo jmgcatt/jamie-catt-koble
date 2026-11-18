@@ -4825,7 +4825,7 @@ function setNight(on) {
   sunEl.setAttribute('aria-label', on ? 'Moon. Press to make it daytime.' : 'Sun. Press to make it nighttime.');
   say(on ? 'It is nighttime. The lamps are on.' : 'It is daytime again.');
 }
-const actions = { polaroids: () => { if (zoomed) return; openFaves(); }, paperTeo: () => openPaper('teo'), paperRoutine: () => openPaper('routine'), sofaBook: () => zoomThen('sofaBook', openReading), typewriter: () => zoomThen('typewriter', openLetter), pan: () => openCooking(), teabar: () => zoomThen('teabar', () => openWeekly('drinks')), crate: () => TEO.cave ? command('come') : command('cave'), vinyl: () => zoomThen('vinyl', openRecords), books: () => zoomThen('books', () => openFaves('all')), journal: () => zoomThen('journal', openJournal), toy: () => bounceBall(), door: () => placeIdx === 2 ? goInside() : goOutside(), easel: () => zoomed === 'easel' ? closeEasel() : openEasel(), candle: () => toggleCandle(), sun: () => setNight(!svg.classList.contains('night')), ticketMachine: issueTicket, laptop: () => setDrawer(laptopState === 'closed'), teo: () => bubbles.hidden ? openBubbles() : closeBubbles(), win: nextScene };
+const actions = { polaroids: () => { if (zoomed) return; openFaves(); }, paperTeo: () => openPaper('teo'), paperRoutine: () => openPaper('routine'), sofaBook: () => zoomThen('sofaBook', openReading), typewriter: () => zoomThen('typewriter', openLetter), pan: () => openCooking(), teabar: () => zoomThen('teabar', () => openWeekly('drinks')), crate: () => TEO.cave ? command('come') : command('cave'), vinyl: () => zoomThen('vinyl', openRecords), books: () => zoomThen('books', () => openFaves('all')), journal: () => { if (zooming || zoomed) return; openJournal(); }, toy: () => bounceBall(), door: () => placeIdx === 2 ? goInside() : goOutside(), easel: () => zoomed === 'easel' ? closeEasel() : openEasel(), candle: () => toggleCandle(), sun: () => setNight(!svg.classList.contains('night')), ticketMachine: issueTicket, laptop: () => setDrawer(laptopState === 'closed'), teo: () => bubbles.hidden ? openBubbles() : closeBubbles(), win: nextScene };
 document.querySelectorAll('.hot').forEach(h => {
   // an object that is only half in view: the house first pans so it is in the middle of the screen, then the action (the zoom) runs
   const go = async () => {
@@ -4874,25 +4874,26 @@ async function bounceBall() {
 // the journal: it lifts off the desk and grows to the size of one page of the open notebook, slides right so its spine
 // sits where the notebook's spine will be, then the cover swings open and the notebook takes over
 async function openJournal() {
-  return openWriting();
-  if (reduceMotion.matches || document.querySelector('.jfly')) { if (!document.querySelector('.jfly')) openWriting(); return; }
+  if (reduceMotion.matches || document.querySelector('.jfly') || sheet.classList.contains('open')) { if (!document.querySelector('.jfly') && !sheet.classList.contains('open')) openWriting(); return; }
   const r = $('#journal').getBoundingClientRect();
-  // the open notebook fills the sheet, less the strip for the close button underneath
-  const sw = sheet.offsetWidth, sh = sheet.offsetHeight - 54, spread = sw >= 760;
-  const W = spread ? sw / 2 : sw, H = sh, top = (innerHeight - sheet.offsetHeight) / 2, mid = innerWidth / 2;
+  // the journal lifts off the desk and comes to the middle of the screen, cover showing; then the cover swings open and the notebook takes over
+  const spread = innerWidth >= 760 && !phone.matches;
+  const H = Math.min(innerHeight - 170, spread ? 560 : 520), W = Math.min(H * .72, innerWidth - 60), mid = innerWidth / 2, top = (innerHeight - H) / 2;
   const el = document.createElement('div'); el.className = 'jfly';
   el.innerHTML = '<div class="jf-page"></div><div class="jf-cover"><b></b>' + JCHARMS + '<em>JC</em></div>';
   el.style.setProperty('--jw', W + 'px');
-  Object.assign(el.style, { left: r.left + 'px', top: r.top + 'px', width: r.width + 'px', height: r.height + 'px' });
+  Object.assign(el.style, { left: r.left + 'px', top: r.top + 'px', width: r.width + 'px', height: r.height + 'px', opacity: 0 });
   document.body.appendChild(el);
   const centered = { left: mid - W / 2 + 'px', top: top + 'px', width: W + 'px', height: H + 'px' };
   const ease = 'cubic-bezier(.2,.8,.2,1)';
-  await el.animate([{ left: r.left + 'px', top: r.top + 'px', width: r.width + 'px', height: r.height + 'px', transform: 'rotate(-4deg)' }, Object.assign({ transform: 'rotate(0deg)' }, centered)], { duration: 700, easing: ease, fill: 'forwards' }).finished;
+  $('#journal').style.opacity = '0';
+  await el.animate([{ opacity: 0, left: r.left + 'px', top: r.top + 'px', width: r.width + 'px', height: r.height + 'px', transform: 'rotate(-4deg)' }, Object.assign({ opacity: 1, transform: 'rotate(0deg)' }, centered)], { duration: 800, easing: ease, fill: 'forwards' }).finished;
+  await new Promise(res => setTimeout(res, 350));
   if (spread) await el.animate([centered, Object.assign({}, centered, { left: mid + 'px' })], { duration: 450, easing: 'cubic-bezier(.45,.05,.3,1)', fill: 'forwards' }).finished;
   await el.querySelector('.jf-cover').animate([{ transform: 'rotateY(0deg)' }, { transform: 'rotateY(-180deg)' }], { duration: 750, easing: 'cubic-bezier(.4,.08,.25,1)', fill: 'forwards' }).finished;
   openWriting();
-  await el.animate([{ opacity: 1 }, { opacity: 0 }], { duration: 250, fill: 'forwards' }).finished;
-  el.remove();
+  await el.animate([{ opacity: 1 }, { opacity: 0 }], { duration: 450, fill: 'forwards' }).finished;
+  el.remove(); $('#journal').style.opacity = '';
 }
 // what's cooking: zoom in on the pan, then the week's menu
 async function openCooking() {
