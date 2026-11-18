@@ -2668,6 +2668,9 @@ sheet.addEventListener('keydown', e => {
 const loadData = (file, key) => fetch(file, { cache: 'no-store' })
   .then(r => { if (!r.ok) throw new Error('HTTP ' + r.status); return r.text(); })
   .then(t => {
+    // letters with a bar over them (like the e in aesop) aren't in the script font, so they are written as plain letters
+    const MAC = { '\u0101': 'a', '\u0113': 'e', '\u012B': 'i', '\u014D': 'o', '\u016B': 'u', '\u0100': 'A', '\u0112': 'E', '\u012A': 'I', '\u014C': 'O', '\u016A': 'U' };
+    t = t.replace(/[\u0100\u0101\u0112\u0113\u012A\u012B\u014C\u014D\u016A\u016B]/g, c => MAC[c]).replace(/\\u(0100|0101|0112|0113|012[Aa]|012[Bb]|014[Cc]|014[Dd]|016[Aa]|016[Bb])/g, (m, h) => MAC[String.fromCharCode(parseInt(h, 16))]);
     let d; try { d = JSON.parse(t); } catch (e) { throw new Error('it has a typo (' + e.message + ')'); }
     const list = Array.isArray(d) ? d : d && d[key];
     if (!Array.isArray(list)) throw new Error('it has no "' + key + '" list');
