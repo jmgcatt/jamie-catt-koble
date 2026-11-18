@@ -1985,6 +1985,8 @@ function buildPaper() {
   };
   crumple('paperTeo', 152, 628, -14, 7, 'A crumpled piece of paper on the floor by the daybed. Press to open it.');
   crumple('paperRoutine', 808, 628, 22, 13, 'A crumpled piece of paper on the floor by Teo\u2019s crate. Press to open it.');
+  // Teo always walks in front of them: they are drawn before him in the scene
+  ['paperTeo', 'paperRoutine'].forEach(id => { const grp = document.getElementById(id).parentNode, teoEl = $('#teo'); teoEl.parentNode.insertBefore(grp, teoEl); });
 }
 // the paper that opens: a portrait sheet of crumpled paper in the middle of the screen
 function paperSvg(seed) {
