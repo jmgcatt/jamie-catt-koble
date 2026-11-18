@@ -1526,14 +1526,22 @@ function buildWorkDesk() {
   const world = shiftTo(28);
   // a wall of polaroids taped up behind the easel, under the hanging plant: overlapping, tilted, not neat
   const wall = shiftTo(-424);
-  const polaroid = (x, y, rot, k, tone, tape, who) => {
-    const frame = rect(-13, -15, 26, 31), photo = rect(-10.5, -12.5, 21, 21);
-    const subject = who ? ell(0, -4, 5.4, 6.2) + 'M-9,8 Q0,-3 9,8Z' : 'M-10.5,6 Q-4,-4 2,2 T10.5,-2 V8.5 H-10.5Z';
-    const g = piece(wall, { occ: frame, fill: [[frame, '#fffdf8', 1], [photo, tone, .95], [subject, '#3a3430', .62]], line: [frame, photo, { d: 'M-10.5,10.5H8', stroke: '#9a9288', 'stroke-width': .6 }], lw: 1.1, attrs: { transform: `translate(${x},${y}) rotate(${rot}) scale(${k})` } });
+  const polaroid = (x, y, rot, k, scene, tape) => {
+    const frame = rect(-13, -15, 26, 31), photo = rect(-10.5, -12.5, 21, 21), P = {
+      teo: { bg: '#f6e4c8', fill: [[ell(-6.6, -1, 2.6, 4.6) + ell(6.6, -1, 2.6, 4.6), '#dba06a', 1], [ell(0, -2, 6.4, 6), '#fffdf7', 1], [ell(0, 0.4, 1.4, 1), '#3d2f27', 1], [ell(-2.4, -2.6, .9) + ell(2.4, -2.6, .9), '#3d2f27', 1]], line: [ell(0, -2, 6.4, 6), ell(-6.6, -1, 2.6, 4.6), ell(6.6, -1, 2.6, 4.6), 'M-1.4,2.6 q1.4,1.2 2.8,0'] },
+      sun: { bg: '#bfe0ee', fill: [[ell(5, -6, 3.3), '#f6c85a', 1], ['M-10.5,2 Q-4,-5 2,1 T10.5,-1 V8.5 H-10.5Z', '#86b57a', .95]], line: [ell(5, -6, 3.3), 'M-10.5,2 Q-4,-5 2,1 T10.5,-1'] },
+      tea: { bg: '#e6efd9', fill: [['M-5,-3H5V2Q5,6.5 0,6.5Q-5,6.5 -5,2Z', '#fffdf7', 1], [ell(0, -3, 5, 1.4), '#9fc27a', 1]], line: ['M-5,-3H5V2Q5,6.5 0,6.5Q-5,6.5 -5,2Z', ell(0, -3, 5, 1.4), 'M5,-1.5 q4,0 4,3 q0,2.5 -4,2.4', 'M-2,-6 q-1.6,-2 0,-4M2,-6 q-1.6,-2 0,-4'] },
+      plant: { bg: '#f6e0d6', fill: [['M-4,2H4L3,8H-3Z', '#e3916a', 1], [ell(-3.2, -2, 2, 4.2) + ell(3.2, -3, 2, 4.8) + ell(0, -6, 1.8, 4), '#86b57a', 1]], line: ['M-4,2H4L3,8H-3Z', ell(-3.2, -2, 2, 4.2), ell(3.2, -3, 2, 4.8), ell(0, -6, 1.8, 4), 'M0,2V-2'] },
+      croissant: { bg: '#fbe9c8', fill: [['M-8.5,3.5 Q-7,-5 0,-5 Q7,-5 8.5,3.5 Q4,1 0,1 Q-4,1 -8.5,3.5Z', '#e2b54f', 1]], line: ['M-8.5,3.5 Q-7,-5 0,-5 Q7,-5 8.5,3.5 Q4,1 0,1 Q-4,1 -8.5,3.5Z', 'M-3,-4.5 L-2,0.8M3,-4.5 L2,0.8M-6,-2.5 L-5,1.8M6,-2.5 L5,1.8'] },
+      cherries: { bg: '#e8e3f2', fill: [[ell(-3.5, 3.4, 3.2) + ell(3.6, 4.4, 3.2), '#d9534f', 1], [ell(3.5, -5.5, 3, 1.5), '#86b57a', 1]], line: [ell(-3.5, 3.4, 3.2), ell(3.6, 4.4, 3.2), 'M-3.5,0.4 Q-2,-5 0.5,-8 Q2.5,-4 3.6,1.4', ell(3.5, -5.5, 3, 1.5)] },
+      camera: { bg: '#dfe8f1', fill: [['M-7.5,-3H7.5V6H-7.5Z', '#d7dbe0', 1], [ell(0, 1.6, 3.3), '#6f88bd', 1], [rect(-5.5, -5.5, 4.5, 2.5), '#c9ccd2', 1]], line: ['M-7.5,-3H7.5V6H-7.5Z', ell(0, 1.6, 3.3), rect(-5.5, -5.5, 4.5, 2.5), 'M4,-1 h2'] }
+    }[scene];
+    const g = piece(wall, { occ: frame, fill: [[frame, '#fffdf8', 1], [photo, P.bg, .95], ...P.fill], line: [frame, photo, ...P.line, { d: 'M-10.5,10.8H7', stroke: '#9a9288', 'stroke-width': .6 }], lw: 1, attrs: { transform: `translate(${x},${y}) rotate(${rot}) scale(${k})` } });
     if (tape) piece(g, { fill: [[rect(-6, -18, 12, 5), '#ead8a6', .8]], line: [rect(-6, -18, 12, 5)], lw: .5, attrs: { transform: `rotate(${(x * 7) % 9 - 4})` } });
   };
-  [[-34, -26, -9, 1, '#8c8782', 1, 1], [-4, -32, 5, 1, '#aaa59e', 0, 0], [28, -24, -4, .95, '#706b67', 1, 1], [-40, 6, 7, .95, '#b4afa7', 0, 0], [-12, 2, -3, 1.08, '#7d7873', 1, 1], [20, 4, 6, 1, '#9c968f', 0, 1], [46, -2, -8, .9, '#aaa59e', 1, 0], [-24, 36, -5, 1, '#86817c', 0, 1], [8, 36, 4, 1, '#b8b3ab', 1, 0], [36, 32, -7, .92, '#77726d', 0, 1]]
-    .forEach(([dx, dy, r, k, tone, tape, who]) => polaroid(836 + dx, 392 + dy, r, k, tone, tape, who));
+  // two loose rows, tilted and overlapping
+  [[-42, -18, -8, 1.04, 'sun', 1], [-14, -20, 5, 1.04, 'teo', 0], [14, -17, -4, 1.04, 'tea', 1], [42, -19, 7, 1, 'cherries', 0], [-28, 16, 6, 1.06, 'plant', 0], [2, 18, -6, 1.06, 'croissant', 1], [32, 15, 5, 1.04, 'camera', 0]]
+    .forEach(([dx, dy, r, k, scene, tape]) => polaroid(836 + dx, 396 + dy, r, k, scene, tape));
   // painting easel by the archway
   const ea = E('g', { id: 'easel', class: 'hot', tabindex: 0, role: 'button', 'aria-expanded': 'false', 'aria-controls': 'easelView', 'aria-label': 'Painting easel. Press to look closely at my newest illustration work.' }, shiftTo(-424));
   paintEasel(ea);
@@ -4190,7 +4198,7 @@ async function spinAround() {
   TEO.f = f0; placeTeo();
 }
 // the toy ball
-const toy = { x: 780, y: 680 };
+const toy = { x: 780, y: 680, out: false };
 function placeToy() { const [mx, my] = at('mouth'); toyEl.setAttribute('transform', `translate(${r1(mx)},${r1(my + 9)})`); }
 function setToy(x, y) { toy.x = x; toy.y = y; toyEl.setAttribute('transform', `translate(${r1(x)},${r1(y)})`); }
 function pickToy() { TEO.carrying = true; teo.parentNode.insertBefore(toyEl, teo.nextSibling); placeToy(); }
@@ -4243,11 +4251,12 @@ const CMD = {
     setPose('sit'); await nap(250); teo.classList.add('boop'); const [nx, ny] = at('nose', -8, 0); sparkle(nx, ny); hearts(1); teoSay('Boop! Right on the nose.'); await nap(1300); teo.classList.remove('boop');
   },
   cave: async () => {
-    if (TEO.outside) { teoSay('His cave is inside. He would rather sniff around out here.'); return; }
+    if (TEO.outside) { teoSay('Teo hurries you both back inside, the ball in his mouth.'); TEO.pendingCave = true; goInside(); return; }
     if (TEO.cave) { teoSay('Teo is already tucked into his cave.'); return; }
     await walkTo(912, 616); TEO.f = 1; placeTeo(); teo.classList.add('in-cave');
     await tween(500, t => { TEO.s = 1 - .2 * t; TEO.y = 616 - 16 * t; placeTeo(); });
     TEO.cave = true; $('#cratePeek').classList.add('on'); teoSay('Teo trots into his cave, turns around, and peeks out.');
+    if (TEO.carrying) { TEO.carrying = false; setToy(858, 692); }
   },
   spin: async () => { await spinAround(); teoSay('A full spin, twice around.'); },
   paw: async () => {
@@ -4259,6 +4268,7 @@ const CMD = {
   come: async () => { const [x, y] = TEO.outside ? YARD : [602, 664]; await walkTo(x, y); setPose('sit'); teoSay('Teo comes right over and sits.'); },
   fetch: async () => {
     if (TEO.carrying) { setPose('sit'); teoSay('Teo already has the ball. Say drop.'); return; }
+    if (!!toy.out !== TEO.outside) { teoSay('The ball is ' + (TEO.outside ? 'back in the house' : 'out in the yard') + ', so no fetch right now.'); return; }
     const back = [TEO.x, TEO.y];
     teoSay('Teo trots off for the ball.');
     await walkTo(toy.x + 12, TEO.outside ? 754 : Math.max(640, Math.min(684, toy.y - 8)), 200); pickToy(); await nap(250);
@@ -4437,7 +4447,8 @@ function doorSpot() {
 function fadeTeo(to, ms) {
   const from = +getComputedStyle(teo).opacity;
   teo.style.transition = 'none';
-  return tween(ms, t => { teo.style.opacity = from + (to - from) * t; }).then(() => { teo.style.opacity = to; teo.style.transition = ''; });
+  const sync = v => { toyEl.style.opacity = TEO.carrying ? v : ''; };
+  return tween(ms, t => { teo.style.opacity = from + (to - from) * t; sync(teo.style.opacity); }).then(() => { teo.style.opacity = to; teo.style.transition = ''; sync(''); });
 }
 // stepping through the doorway: a little smaller as he goes into it, fading out (or the reverse coming in)
 async function throughDoor(coming, d) {
@@ -4446,8 +4457,9 @@ async function throughDoor(coming, d) {
   if (coming) { teo.style.opacity = 0; }
   const from = +getComputedStyle(teo).opacity;
   teo.style.transition = 'none';
-  await tween(650, t => { TEO.y = y0 + (y1 - y0) * t; TEO.s = s0 + (s1 - s0) * t; teo.style.opacity = coming ? t : from * (1 - t); placeTeo(); });
-  teo.style.opacity = coming ? 1 : 0; teo.style.transition = ''; TEO.s = 1; if (!coming) placeTeo();
+  // the ball in his mouth fades with him
+  await tween(650, t => { TEO.y = y0 + (y1 - y0) * t; TEO.s = s0 + (s1 - s0) * t; teo.style.opacity = coming ? t : from * (1 - t); if (TEO.carrying) toyEl.style.opacity = teo.style.opacity; placeTeo(); });
+  teo.style.opacity = coming ? 1 : 0; teo.style.transition = ''; TEO.s = 1; if (!coming) placeTeo(); else toyEl.style.opacity = '';
   teo.classList.remove('walking');
 }
 function teoOut() {
@@ -4455,11 +4467,13 @@ function teoOut() {
   (async () => {
     await waitIdle(); TEO.busy = true;
     try {
-      await leaveCave(); dropToy();
+      await leaveCave();
+      // he picks up his ball first and takes it with him in his mouth
+      if (!TEO.carrying) { await walkTo(toy.x + 14, Math.max(640, Math.min(684, toy.y - 8)), 200); pickToy(); await nap(250); }
       // to the front door and out through it, then round the house to the yard
       const d = doorSpot(); await walkTo(d.x, d.y + 10, 170); await throughDoor(false, d);
-      await nap(450); world.insertBefore(toyEl, $('#night')); world.insertBefore(teo, $('#night'));
-      TEO.x = 1268; TEO.y = 754; TEO.f = -1; TEO.s = 1; placeTeo(); await fadeTeo(1, 350); await walkTo(YARD[0], YARD[1], 140); TEO.f = 1; setPose('sit'); teoSay('Teo follows you outside.');
+      await nap(450); world.insertBefore(teo, $('#night')); world.insertBefore(toyEl, teo.nextSibling); toy.out = true;
+      TEO.x = 1268; TEO.y = 754; TEO.f = -1; TEO.s = 1; placeTeo(); await fadeTeo(1, 350); await walkTo(YARD[0], YARD[1], 140); TEO.f = 1; setPose('sit'); placeToy(); teoSay('Teo follows you outside, the ball in his mouth.');
     }
     finally { TEO.busy = false; }
   })();
@@ -4469,14 +4483,20 @@ function teoIn() {
   (async () => {
     await waitIdle(); TEO.busy = true;
     try {
-      dropToy(); setToy(780, 680); teo.parentNode.insertBefore(toyEl, teo);
+      // he fetches the ball from the yard if he left it there, then carries it back in
+      if (!TEO.carrying) { await walkTo(toy.x + 14, Math.max(740, Math.min(770, toy.y)), 200); pickToy(); await nap(250); }
       // round the house to the front door, and in through it
       await walkTo(1268, 754, 170); await fadeTeo(0, 300); await nap(450);
-      rooms.insertBefore(teo, $('#bedFront')); rooms.insertBefore(toyEl, teo);
+      rooms.insertBefore(teo, $('#bedFront')); rooms.insertBefore(toyEl, teo.nextSibling); toy.out = false;
       const d = doorSpot(); TEO.x = d.x; TEO.y = d.y; TEO.f = 1; placeTeo(); await throughDoor(true, d);
-      await walkTo(HOME[0], HOME[1], 140); TEO.f = 1; placeTeo(); setPose('lie');
+      if (!TEO.pendingCave) {
+        await walkTo(602, 664, 140); setPose('sit'); dropToy(); await nap(250);
+        await walkTo(HOME[0], HOME[1], 140); TEO.f = 1; placeTeo(); setPose('lie');
+      }
     }
     finally { TEO.busy = false; }
+    // asked to go to his cave from the yard: he keeps the ball and heads straight there
+    if (TEO.pendingCave) { TEO.pendingCave = false; await nap(300); command('cave'); }
   })();
 }
 function updateNav() {
