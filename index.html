@@ -1172,6 +1172,13 @@ body.z-laptop .grain{opacity:.16}
 .zoom-x{transition:opacity .35s ease!important}
 body:has(.sheet.book.open) .top,body:has(.sheet.book.open) .zoom-x{animation:topFade .5s ease}
 @keyframes topFade{from{opacity:0}to{opacity:1}}
+
+/* phones and portrait tablets: logo, sound, ticket, menu and close all share one centre line, in every view */
+@media (max-width:760px),(max-width:1100px) and (orientation:portrait){
+  .zoom-x{top:24px!important}
+  body:has(.sheet.book.open) .zoom-x{top:32px!important}
+  .mark h1{transform:none}
+}
 @media (max-width:760px),(max-width:1100px) and (orientation:portrait){:root{--t-title:40px;--t-card:28px;--t-quote:18px;--t-body:18px;--t-meta:14px;--t-btn:18px}}
 html .sheet h2,html .sheet .jb-flow h2,html .sheet .bar-title h2,html .sp-head h3,html .cv-title,html .td-head h2,html .sheet.menu h2,html .sheet.shelf h2,html .sheet.letter h2,html .screen-bar h2{font-family:var(--f-title)!important;font-size:var(--t-title)!important;font-weight:400!important;line-height:1.25!important;text-transform:lowercase}
 html .c-t,html .screen .c-t,html .cv-grid .c-t,html .dish b,html .fave b,html .fc-face b,html li.book b,html .jams b,html .posts b,html .work-list b,html .cv-cap b,html .jb-toc .jt-t,html .sheet h3,html .post h3,html .post h4,html .spin-title,html .t-no,html .stub-top b{font-family:var(--f-title)!important;font-size:var(--t-card)!important;font-weight:400!important;line-height:1.25!important}
@@ -4982,10 +4989,11 @@ function shortenDashes(root) {
 new MutationObserver(ms => ms.forEach(m => m.addedNodes.forEach(shortenDashes))).observe(document.body, { childList: true, subtree: true });
 shortenDashes(document.body);
 
-// on the laptop screen the logo and top buttons scroll away with the content (one scroller holds the whole page)
+// on the laptop screen the whole top (logo, volume, ticket and the close button) scrolls away with the content
 (() => {
-  const top = document.querySelector('.top'), pane = $('#lapScroll');
-  pane.addEventListener('scroll', () => { top.style.transform = `translateY(${-pane.scrollTop}px)`; }, { passive: true });
-  new MutationObserver(() => { if ($('#screen').hidden) top.style.transform = ''; else top.style.transform = `translateY(${-pane.scrollTop}px)`; }).observe($('#screen'), { attributes: true, attributeFilter: ['hidden'] });
+  const els = [document.querySelector('.top'), $('#zoomX')], pane = $('#lapScroll');
+  const move = () => { const y = $('#screen').hidden ? '' : `0 ${-pane.scrollTop}px`; els.forEach(e => { e.style.translate = y; }); };
+  pane.addEventListener('scroll', move, { passive: true });
+  new MutationObserver(move).observe($('#screen'), { attributes: true, attributeFilter: ['hidden'] });
 })();
 </script>
