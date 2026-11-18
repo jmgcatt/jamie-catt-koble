@@ -1134,6 +1134,11 @@ html body .post blockquote,html body .jb-flow blockquote{font-size:18px!importan
 .shelf-book .sb-back i{font-style:normal;font-size:var(--t-meta);letter-spacing:.08em;text-transform:uppercase;color:var(--ink-soft)}
 .shelf-book .sb-back p{margin:0;font-size:var(--t-body)}
 @media (max-width:760px),(max-width:1100px) and (orientation:portrait){.shelf-book .sb-back{padding:10px 12px;gap:6px}.shelf-book .sb-back b{font-size:22px}.shelf-book .sb-back p{font-size:15px;line-height:1.4}}
+
+/* full-page menu pages never bounce or show the scene behind when scrolled past the top or bottom */
+.sheet.page{overscroll-behavior:none;-webkit-overflow-scrolling:auto;background-color:#fffdf8;background-attachment:scroll!important}
+.sheet.page::before{content:"";position:fixed;inset:0;z-index:-1;background:#fffdf8}
+html:has(.sheet.page.open),body:has(.sheet.page.open){overscroll-behavior:none}
 @media (max-width:760px),(max-width:1100px) and (orientation:portrait){:root{--t-title:40px;--t-card:28px;--t-quote:18px;--t-body:18px;--t-meta:14px;--t-btn:18px}}
 html .sheet h2,html .sheet .jb-flow h2,html .sheet .bar-title h2,html .sp-head h3,html .cv-title,html .td-head h2,html .sheet.menu h2,html .sheet.shelf h2,html .sheet.letter h2,html .screen-bar h2{font-family:var(--f-title)!important;font-size:var(--t-title)!important;font-weight:400!important;line-height:1.25!important;text-transform:lowercase}
 html .c-t,html .screen .c-t,html .cv-grid .c-t,html .dish b,html .fave b,html .fc-face b,html li.book b,html .jams b,html .posts b,html .work-list b,html .cv-cap b,html .jb-toc .jt-t,html .sheet h3,html .post h3,html .post h4,html .spin-title,html .t-no,html .stub-top b{font-family:var(--f-title)!important;font-size:var(--t-card)!important;font-weight:400!important;line-height:1.25!important}
